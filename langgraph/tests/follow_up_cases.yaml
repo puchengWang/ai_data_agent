@@ -1,0 +1,53 @@
+cases:
+  - name: follow_up_decline_level
+    session_id: follow-up-test-001
+    turns:
+      - question: "统计 2026-05-08 到 2026-05-14 各用户等级新增用户趋势"
+        expected_is_follow_up: false
+        expected_context_used: false
+        expected_aggregation_type: trend_by_dimension
+
+      - question: "哪个等级下降最多？"
+        expected_is_follow_up: true
+        expected_context_used: true
+        expected_memory_only: true
+
+  - name: follow_up_growth_level
+    session_id: follow-up-test-002
+    turns:
+      - question: "统计 2026-05-08 到 2026-05-14 各用户等级新增用户趋势"
+        expected_is_follow_up: false
+        expected_context_used: false
+        expected_aggregation_type: trend_by_dimension
+
+      - question: "哪个等级增长最多？"
+        expected_is_follow_up: true
+        expected_context_used: true
+        expected_memory_only: true
+
+  - name: reset_context_new_question
+    session_id: follow-up-test-003
+    turns:
+      - question: "统计 2026-05-08 到 2026-05-14 各用户等级新增用户趋势"
+        expected_is_follow_up: false
+        expected_context_used: false
+        expected_aggregation_type: trend_by_dimension
+
+      - question: "重新开始，统计 2026-05-14 新增用户数量"
+        expected_is_follow_up: false
+        expected_reset_context: true
+        expected_context_used: false
+        expected_aggregation_type: normal
+
+  - name: complete_new_question_should_not_use_context
+    session_id: follow-up-test-004
+    turns:
+      - question: "统计 2026-05-08 到 2026-05-14 各用户等级新增用户趋势"
+        expected_is_follow_up: false
+        expected_context_used: false
+        expected_aggregation_type: trend_by_dimension
+
+      - question: "统计 2026-05-14 新增用户数量"
+        expected_is_follow_up: false
+        expected_context_used: false
+        expected_aggregation_type: normal

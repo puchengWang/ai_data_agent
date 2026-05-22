@@ -1,0 +1,108 @@
+{
+  "session_id": "follow-up-test-004",
+  "turns": [
+    {
+      "question": "统计 2026-05-08 到 2026-05-14 各用户等级新增用户趋势",
+      "resolved_question": "统计 2026-05-08 到 2026-05-14 各用户等级新增用户趋势",
+      "answer": "根据分析结果，2026-05-08 到 2026-05-14 各用户等级新增用户趋势如下：\n\n1. 0级用户：\n   - 趋势波动较大，呈现先降后升的趋势。\n   - 最高点出现在2026-05-08（1287人），最低点在2026-05-09（252人）。\n   - 波动水平高，波动比率为63.89%。\n   - 存在多个异常点，其中2026-05-08（上升89.4%）和2026-05-09（下降62.91%）最为明显。\n\n2. 3级用户：\n   - 整体趋势呈现先降后小幅波动的态势。\n   - 最高点出现在2026-05-08（23人），最低点在2026-05-09和2026-05-13（均为6人）。\n   - 波动水平高，波动比率为61.79%。\n   - 存在多个异常点，其中2026-05-08（上升94.37%）最为明显。\n\n3. 2级用户：\n   - 仅有2026-05-13和2026-05-14两天的数据，呈上升趋势。\n   - 最高点为2026-05-14（20人），最低点为2026-05-13（8人）。\n   - 波动水平高，波动比率为60.64%。\n   - 由于数据不足，未检测到异常点。\n\n总体而言，0级用户的新增数量最多，且波动最为明显。所有用户等级都呈现高波动性，其中0级用户的波动最大。增长最明显的是0级用户在2026-05-08的新增量，而下降",
+      "aggregation_type": "trend_by_dimension",
+      "trace_file": "traces/follow-up-complete_new_question_should_not_use_context-turn-1-1779454854.json",
+      "used_memory_only": false
+    },
+    {
+      "question": "统计 2026-05-14 新增用户数量",
+      "resolved_question": "统计 2026-05-14 新增用户数量",
+      "answer": "2026年5月14日的新增用户数量为926人。",
+      "aggregation_type": "normal",
+      "trace_file": "traces/follow-up-complete_new_question_should_not_use_context-turn-2-1779454865.json",
+      "used_memory_only": false
+    }
+  ],
+  "last_context": {
+    "question": "统计 2026-05-14 新增用户数量",
+    "resolved_question": "统计 2026-05-14 新增用户数量",
+    "aggregation_type": "normal",
+    "metric": "user_count",
+    "dimension": null,
+    "params": {
+      "start_time": "2026-05-14",
+      "end_time": "2026-05-15"
+    },
+    "tasks": [
+      {
+        "task_id": "single_task",
+        "task_name": "普通查询",
+        "metric": "user_count",
+        "params": {
+          "start_time": "2026-05-14",
+          "end_time": "2026-05-15"
+        }
+      }
+    ],
+    "query_plans": [
+      {
+        "protocol_version": "1.0",
+        "task_id": "single_task",
+        "task_name": "普通查询",
+        "metric": "user_count",
+        "business_name": "用户数量",
+        "engine": "aurora_mysql",
+        "datasource": "user",
+        "query_type": "sql",
+        "sql": "SELECT COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s",
+        "params": [
+          "2026-05-14",
+          "2026-05-15"
+        ],
+        "meta": {
+          "engine": "aurora_mysql",
+          "datasource": "user",
+          "database": "user",
+          "table": "users"
+        }
+      }
+    ],
+    "aggregation_result": {
+      "aggregation_type": "normal",
+      "analysis": {
+        "tool_results": [
+          {
+            "protocol_version": "1.0",
+            "task_id": "single_task",
+            "task_name": "普通查询",
+            "success": true,
+            "data": {
+              "value": 926
+            },
+            "error": null,
+            "latency_ms": 131,
+            "query_plan": {
+              "protocol_version": "1.0",
+              "task_id": "single_task",
+              "task_name": "普通查询",
+              "metric": "user_count",
+              "business_name": "用户数量",
+              "engine": "aurora_mysql",
+              "datasource": "user",
+              "query_type": "sql",
+              "sql": "SELECT COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s",
+              "params": [
+                "2026-05-14",
+                "2026-05-15"
+              ],
+              "meta": {
+                "engine": "aurora_mysql",
+                "datasource": "user",
+                "database": "user",
+                "table": "users"
+              }
+            }
+          }
+        ]
+      },
+      "operator_results": {},
+      "error": null
+    },
+    "answer": "2026年5月14日的新增用户数量为926人。"
+  }
+}

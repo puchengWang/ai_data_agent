@@ -5,6 +5,9 @@ from app.planner.aggregation_planner import build_aggregation_plan
 # from app.planner.comparison_engine import calculate_change
 from app.analysis.operator_registry import OPERATOR_REGISTRY
 
+from app.memory.session_store import load_session, save_session
+from app.memory.context_resolver import resolve_question_with_context
+
 from app.summary.summary_template_loader import load_summary_template
 from app.analysis.operator_executor import execute_analysis_operators
 
@@ -13,6 +16,86 @@ from app.llm.bedrock_client import invoke_bedrock_json, invoke_bedrock_text
 from app.semantic.semantic_engine import resolve_metric
 from app.semantic.query_compiler import compile_metric_query
 from app.tools.lambda_sql_tool import invoke_sql_executor_with_query_plan
+
+
+
+
+def can_answer_from_memory(state: AgentState) -> bool:
+    if not state.get("is_follow_up"):
+        return False
+
+    inherited_context = state.get("inherited_context") or {}
+
+    last_analysis = inherited_context.get("last_analysis")
+
+    if not last_analysis:
+        return False
+
+    question = state.get("question", "")
+
+    memory_answer_keywords = [
+        "哪个",
+        "哪一个",
+        "下降最多",
+        "增长最多",
+        "最高",
+        "最低",
+        "最多",
+        "最少",
+    ]
+
+    return any(keyword in question for keyword in memory_answer_keywords)
+
+
+def answer_from_memory_node(state: AgentState) -> AgentState:
+    inherited_context = state.get("inherited_context", {})
+    last_analysis = inherited_context.get("last_analysis")
+
+    prompt = f"""
+你是一个企业数据分析助手。
+
+用户当前问题：
+{state["question"]}
+
+这是上一轮已经完成的结构化分析结果：
+{last_analysis}
+
+请只基于上一轮分析结果回答当前问题。
+不要重新假设数据，不要生成新的查询。
+如果上一轮结果不足以回答，请明确说明。
+"""
+
+    answer = invoke_bedrock_text(prompt)
+
+    return {
+        **state,
+        "answer": answer,
+        "used_memory_only": True,
+        "memory_answer_source": "last_analysis",
+    }
+
+
+def load_memory_node(state: AgentState) -> AgentState:
+    session_id = state.get("session_id", "default-session")
+    session_data = load_session(session_id)
+
+    resolved = resolve_question_with_context(
+        question=state["question"],
+        last_context=session_data.get("last_context") or {},
+    )
+
+    inherited_context = resolved.get("inherited_context") or {}
+
+    return {
+        **state,
+        "session_id": session_id,
+        "memory": session_data,
+        "resolved_question": resolved.get("resolved_question", state["question"]),
+        "is_follow_up": resolved.get("is_follow_up", False),
+        "reset_context": resolved.get("reset_context", False),
+        "context_strategy": resolved.get("context_strategy", {}),
+        "inherited_context": inherited_context,
+    }
 
 def aggregation_analysis_node(state: AgentState) -> AgentState:
     aggregation_plan = state.get("aggregation_plan", {})
@@ -239,71 +322,67 @@ def build_analysis_input(
         "tool_results": tool_results,
     }
 
+
 def plan_tasks_node(state: AgentState) -> AgentState:
-    question = state["question"]
+    original_question = state["question"]
+
+    if state.get("is_follow_up"):
+        question_for_llm = state.get("resolved_question") or original_question
+    else:
+        question_for_llm = original_question
+
+    request_id = state.get("request_id", "langgraph-session-test")
     start_ms = now_ms()
 
     prompt = f"""
 你是 AI Data Agent 的语义解析器。
+
 你只能输出 JSON，不要输出解释，不要使用 Markdown。
+
 当前支持的业务指标：
 
 metric: user_count
-
 业务含义：用户数量
 说明：
 - 可用于统计某时间段新增用户数量
-- 可用于统计截止某日用户总数
-- 可用于普通用户数量查询
-- 可用于趋势分析
-
-请从用户问题中识别：
-
-1. metric
-2. params
+- 可用于趋势分析、分组分析、TopN分析、分布分析、对比分析
 
 时间参数规则：
 1. 如果用户问“某日新增用户”，则：
    start_time = 当天日期
    end_time = 次日日期
 
-2. 如果用户问“最近N天趋势”，则：
+2. 如果用户问“某个日期范围的趋势”，则：
    start_time = 起始日期
    end_time = 结束日期的次日
    grain = day
 
-3. 如果用户问“2026-05-10 到 2026-05-17 的趋势”，则：
-   start_time = 2026-05-10
-   end_time = 2026-05-18
-   grain = day
+3. 如果用户问“相比/对比/增长/下降”，只输出当前周期 start_time/end_time，系统会自动生成对比周期。
 
-4. 如果用户问“相比/对比/增长/下降”，保留当前周期 start_time/end_time，后续系统会自动生成对比周期。
-
+4. 如果用户问“按某个维度统计”或“各用户等级”，可以输出 dimension；如果不能确定，可以不输出，系统会从语义配置中解析。
 
 用户问题：
-
-{question}
+{question_for_llm}
 
 输出格式：
 
 {{
-
-  "question": "{question}",
   "metric": "user_count",
   "params": {{
     "start_time": "YYYY-MM-DD",
     "end_time": "YYYY-MM-DD",
-    "grain": "day"
+    "grain": "day",
+    "dimension": "可选",
+    "limit": "可选"
   }}
 }}
-
 """
 
     parsed = invoke_bedrock_json(prompt)
 
-    # 生产建议：原始问题由系统维护，不信任 LLM 返回的 question
-    parsed["original_question"] = question
-    parsed["question"] = question
+    parsed["user_question"] = original_question
+    parsed["question"] = question_for_llm
+    parsed["original_question"] = question_for_llm
 
     aggregation_plan = build_aggregation_plan(parsed)
 
@@ -311,11 +390,20 @@ metric: user_count
         **state,
         "aggregation_plan": aggregation_plan,
         "tasks": aggregation_plan["tasks"],
-        "request_id": state.get("request_id", "langgraph-aggregation-test-001"),
+        "request_id": request_id,
         "error": None,
         "trace": {
-            "request_id": state.get("request_id", "langgraph-aggregation-test-001"),
-            "question": question,
+            "request_id": request_id,
+            "question": original_question,
+            "resolved_question": question_for_llm,
+            "is_follow_up": state.get("is_follow_up"),
+            "reset_context": state.get("reset_context"),
+            "context_used": bool(
+                state.get("is_follow_up")
+                and state.get("inherited_context")
+            ),
+            "context_strategy": state.get("context_strategy"),
+            "inherited_context": state.get("inherited_context"),
             "start_ms": start_ms,
             "steps": [
                 {
@@ -330,6 +418,7 @@ metric: user_count
             ],
         },
     }
+
 
 def compile_queries_node(state: AgentState) -> AgentState:
     query_plans = []
@@ -477,21 +566,100 @@ def summarize_node(state: AgentState) -> AgentState:
         "trace_file": trace_file,
     }
     
+
+def route_after_memory(state: AgentState) -> str:
+    decision = can_answer_from_memory(state)
+
+    print("route_after_memory:")
+    print("  is_follow_up =", state.get("is_follow_up"))
+    print("  inherited_context keys =", (state.get("inherited_context") or {}).keys())
+    print("  has last_analysis =", bool((state.get("inherited_context") or {}).get("last_analysis")))
+    print("  question =", state.get("question"))
+    print("  decision =", decision)
+
+    if decision:
+        return "answer_from_memory"
+
+    return "plan_tasks"
+    
+
 def build_graph():
     workflow = StateGraph(AgentState)
 
+    workflow.add_node("load_memory", load_memory_node)
+    workflow.add_node("answer_from_memory", answer_from_memory_node)
     workflow.add_node("plan_tasks", plan_tasks_node)
     workflow.add_node("compile_queries", compile_queries_node)
     workflow.add_node("execute_queries", execute_queries_node)
     workflow.add_node("aggregation_analysis", aggregation_analysis_node)
     workflow.add_node("summarize", summarize_node)
+    workflow.add_node("save_memory", save_memory_node)
 
-    workflow.set_entry_point("plan_tasks")
+    workflow.set_entry_point("load_memory")
+
+    workflow.add_conditional_edges(
+        "load_memory",
+        route_after_memory,
+        {
+            "answer_from_memory": "answer_from_memory",
+            "plan_tasks": "plan_tasks",
+        },
+    )
+
+    workflow.add_edge("answer_from_memory", "save_memory")
 
     workflow.add_edge("plan_tasks", "compile_queries")
     workflow.add_edge("compile_queries", "execute_queries")
     workflow.add_edge("execute_queries", "aggregation_analysis")
     workflow.add_edge("aggregation_analysis", "summarize")
-    workflow.add_edge("summarize", END)
+    workflow.add_edge("summarize", "save_memory")
+    workflow.add_edge("save_memory", END)
 
     return workflow.compile()
+
+
+def save_memory_node(state: AgentState) -> AgentState:
+    session_id = state.get("session_id", "default-session")
+    session_data = state.get("memory", {
+        "session_id": session_id,
+        "turns": [],
+        "last_context": {},
+    })
+
+    aggregation_plan = state.get("aggregation_plan", {})
+
+    last_context = {
+        "question": state.get("question"),
+        "resolved_question": state.get("resolved_question"),
+        "aggregation_type": aggregation_plan.get("aggregation_type"),
+        "metric": None,
+        "dimension": aggregation_plan.get("dimension"),
+        "params": None,
+        "tasks": state.get("tasks"),
+        "query_plans": state.get("query_plans"),
+        "aggregation_result": state.get("aggregation_result"),
+        "answer": state.get("answer"),
+    }
+
+    tasks = state.get("tasks", [])
+    if tasks:
+        last_context["metric"] = tasks[0].get("metric")
+        last_context["params"] = tasks[0].get("params")
+
+    session_data.setdefault("turns", []).append({
+        "question": state.get("question"),
+        "resolved_question": state.get("resolved_question"),
+        "answer": state.get("answer"),
+        "aggregation_type": aggregation_plan.get("aggregation_type"),
+        "trace_file": state.get("trace_file"),
+        "used_memory_only": state.get("used_memory_only", False),
+    })
+
+    session_data["last_context"] = last_context
+
+    save_session(session_id, session_data)
+
+    return {
+        **state,
+        "memory": session_data,
+    }    

@@ -4,6 +4,18 @@ from typing_extensions import TypedDict
 
 class AgentState(TypedDict, total=False):
     question: str
+    resolved_question: str
+    is_follow_up: bool
+    reset_context: bool
+    context_strategy: Dict[str, Any]
+    inherited_context: Dict[str, Any]
+
+    used_memory_only: bool
+    memory_answer_source: str
+
+    session_id: str
+    memory: Dict[str, Any]
+
     aggregation_plan: Dict[str, Any]
     aggregation_result: Dict[str, Any]
     tasks: List[Dict[str, Any]]

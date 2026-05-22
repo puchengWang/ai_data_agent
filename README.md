@@ -59,7 +59,7 @@ AI Data Agent
 
 ```txt
 ✅ Aggregation Planner
-Analysis Operators
+✅ Analysis Operators
 Query DAG
 
 Note:
@@ -78,7 +78,7 @@ S3 Executor
 ```
 
 ### 第五阶段 Analytics Agent
-目标: 达到分析水平，像个专业分析师
+目标: 达到分析水平，像个专业分析师，拥有图表与统计更强的能力。
 
 ```txt
 Python Tool
@@ -89,13 +89,16 @@ Statistical Engine
 ### 第六阶段 Memory + Session Context
 目标: 通过上下文存储和理解，实现多轮分析，可对某数据的持续钻取和追问分析。
 ```txt
-Session Memory
+✅ Session Memory
 Context Inheritance
 Drill Down Memory
 Conversation Semantic Context
 Memory Compression
 Semantic Memory
 ```
+
+说明: 系统通过Session Memory后，具备上下文继承、基于上轮结果回答、上下文重置、完整新问题不误继承、回归测试保护 
+
 
 ### 第七阶段 Production Engineering
 目标: 完全达到生产系统要求，实现在aws 生态部署

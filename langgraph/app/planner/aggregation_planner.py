@@ -248,17 +248,16 @@ def build_trend_tasks(
 
 
 def build_aggregation_plan(parsed_question: Dict[str, Any]) -> Dict[str, Any]:
-    question = parsed_question.get("original_question") or parsed_question["question"]
-#    question = parsed_question["question"]
+    question = (
+        parsed_question.get("original_question")
+        or parsed_question.get("question")
+    )
 
     metric = parsed_question["metric"]
-    params = parsed_question["params"]
+    params = parsed_question.get("params", {})
 
-    print("parsed_question =", parsed_question)
     aggregation_type = detect_aggregation_type(question)
 
-    print("detected aggregation_type =", aggregation_type)
-    
     if aggregation_type == "normal":
         return {
             "aggregation_type": "normal",
@@ -267,29 +266,29 @@ def build_aggregation_plan(parsed_question: Dict[str, Any]) -> Dict[str, Any]:
                     "task_id": "single_task",
                     "task_name": "普通查询",
                     "metric": metric,
-                    "params": params
+                    "params": params,
                 }
-            ]
+            ],
         }
 
     if aggregation_type == "compare_by_dimension":
         metric_def = resolve_metric(metric)
-    
+
         dimension = (
-            params.get("dimension")
-            or resolve_dimension_from_question(question, metric_def)
+            resolve_dimension_from_question(question, metric_def)
+            or params.get("dimension")
         )
-    
+
         if not dimension:
             raise ValueError("compare_by_dimension query requires dimension")
-    
+
         tasks = build_compare_by_dimension_tasks(
             metric=metric,
             current_start=params["start_time"],
             current_end=params["end_time"],
             dimension=dimension,
         )
-    
+
         return {
             "aggregation_type": "compare_by_dimension",
             "compare_mode": "period_over_period",
@@ -297,30 +296,17 @@ def build_aggregation_plan(parsed_question: Dict[str, Any]) -> Dict[str, Any]:
             "tasks": tasks,
         }
 
-    if aggregation_type == "compare":
-        tasks = build_compare_tasks(
-            metric=metric,
-            current_start=params["start_time"],
-            current_end=params["end_time"]
-        )
-
-        return {
-            "aggregation_type": "compare",
-            "compare_mode": "period_over_period",
-            "tasks": tasks
-        }
-    
     if aggregation_type == "trend_by_dimension":
         metric_def = resolve_metric(metric)
-    
+
         dimension = (
-            params.get("dimension")
-            or resolve_dimension_from_question(question, metric_def)
+            resolve_dimension_from_question(question, metric_def)
+            or params.get("dimension")
         )
-    
+
         if not dimension:
             raise ValueError("trend_by_dimension query requires dimension")
-    
+
         tasks = build_trend_by_dimension_tasks(
             metric=metric,
             start_time=params["start_time"],
@@ -328,7 +314,7 @@ def build_aggregation_plan(parsed_question: Dict[str, Any]) -> Dict[str, Any]:
             dimension=dimension,
             grain=params.get("grain", "day"),
         )
-    
+
         return {
             "aggregation_type": "trend_by_dimension",
             "dimension": dimension,
@@ -341,57 +327,41 @@ def build_aggregation_plan(parsed_question: Dict[str, Any]) -> Dict[str, Any]:
             metric=metric,
             start_time=params["start_time"],
             end_time=params["end_time"],
-            grain=params.get("grain", "day")
+            grain=params.get("grain", "day"),
         )
 
         return {
             "aggregation_type": "trend",
             "grain": params.get("grain", "day"),
-            "tasks": tasks
+            "tasks": tasks,
         }
 
-    if aggregation_type == "group_by":
-        metric_def = resolve_metric(metric)
-    
-        dimension = (
-            params.get("dimension")
-            or resolve_dimension_from_question(question, metric_def)
+    if aggregation_type == "compare":
+        tasks = build_compare_tasks(
+            metric=metric,
+            current_start=params["start_time"],
+            current_end=params["end_time"],
         )
-    
-        if not dimension:
-            raise ValueError("group_by query requires dimension")
-    
+
         return {
-            "aggregation_type": "group_by",
-            "dimension": dimension,
-            "tasks": [
-                {
-                    "task_id": "group_by_001",
-                    "task_name": f"按{dimension}分组统计",
-                    "metric": metric,
-                    "params": {
-                        **params,
-                        "dimension": dimension,
-                    },
-                    "dimension": dimension,
-                }
-            ]
+            "aggregation_type": "compare",
+            "compare_mode": "period_over_period",
+            "tasks": tasks,
         }
-    
 
     if aggregation_type == "top_n":
         metric_def = resolve_metric(metric)
-    
+
         dimension = (
-            params.get("dimension")
-            or resolve_dimension_from_question(question, metric_def)
+            resolve_dimension_from_question(question, metric_def)
+            or params.get("dimension")
         )
-    
+
         if not dimension:
             raise ValueError("top_n query requires dimension")
-    
+
         limit = params.get("limit") or extract_limit(question, default=10)
-    
+
         return {
             "aggregation_type": "top_n",
             "dimension": dimension,
@@ -412,21 +382,20 @@ def build_aggregation_plan(parsed_question: Dict[str, Any]) -> Dict[str, Any]:
                     "limit": limit,
                     "order": "desc",
                 }
-            ]
+            ],
         }
-    
 
     if aggregation_type == "distribution":
         metric_def = resolve_metric(metric)
-    
+
         dimension = (
-            params.get("dimension")
-            or resolve_dimension_from_question(question, metric_def)
+            resolve_dimension_from_question(question, metric_def)
+            or params.get("dimension")
         )
-    
+
         if not dimension:
             raise ValueError("distribution query requires dimension")
-    
+
         return {
             "aggregation_type": "distribution",
             "dimension": dimension,
@@ -441,10 +410,38 @@ def build_aggregation_plan(parsed_question: Dict[str, Any]) -> Dict[str, Any]:
                     },
                     "dimension": dimension,
                 }
-            ]
+            ],
+        }
+
+    if aggregation_type == "group_by":
+        metric_def = resolve_metric(metric)
+
+        dimension = (
+            resolve_dimension_from_question(question, metric_def)
+            or params.get("dimension")
+        )
+
+        if not dimension:
+            raise ValueError("group_by query requires dimension")
+
+        return {
+            "aggregation_type": "group_by",
+            "dimension": dimension,
+            "tasks": [
+                {
+                    "task_id": "group_by_001",
+                    "task_name": f"按{dimension}分组统计",
+                    "metric": metric,
+                    "params": {
+                        **params,
+                        "dimension": dimension,
+                    },
+                    "dimension": dimension,
+                }
+            ],
         }
 
     return {
         "aggregation_type": "unknown",
-        "tasks": []
+        "tasks": [],
     }
