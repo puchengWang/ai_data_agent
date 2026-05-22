@@ -1,0 +1,20 @@
+CREATE TABLE `users` (
+  `rid` bigint unsigned NOT NULL DEFAULT '0' COMMENT '用户唯一 ID',
+  `name` varchar(100) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT '' COMMENT '用户登录用户名',
+  `passwd` varchar(32) NOT NULL DEFAULT '' COMMENT '用户登录密码密文，目前采用 MD5 加密方式',
+  `email` varchar(50) NOT NULL DEFAULT '' COMMENT '用户邮件地址',
+  `maxbind` tinyint unsigned NOT NULL DEFAULT '2' COMMENT '用户允许的最大绑定设备数量',
+  `phone` varchar(16) DEFAULT NULL COMMENT '用户电话号码',
+  `edate` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '用户到期时间',
+  `valid` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '用户帐号是否可用，位标：0-是否可连接',
+  `purchase` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '用户的支付状态，位标：0-是否支付，1-是否购买',
+  `level` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '用户的服务等级，0-过期，1-试用，2-青铜，3-铂金',
+  `atime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录生成时间',
+  `utime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录最后修改时间',
+  PRIMARY KEY (`rid`),
+  UNIQUE KEY `name` (`name`),
+  KEY `email` (`email`(6)),
+  KEY `edate` (`edate`),
+  KEY `utime` (`utime`),
+  KEY `atime` (`atime`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='保存用户相关信息';

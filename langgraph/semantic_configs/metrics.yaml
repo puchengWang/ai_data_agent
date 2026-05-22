@@ -1,0 +1,15 @@
+metrics:
+  users_count:
+    business_name: 保存用户相关信息数量
+    description: 统计 保存用户相关信息 的数量
+    table: users
+    measure: COUNT(rid)
+    time_field: null
+    metric_type: count
+    dimensions: []
+    filters: []
+    meta:
+      engine: aurora_mysql
+      datasource: user
+      database: user
+      table: users

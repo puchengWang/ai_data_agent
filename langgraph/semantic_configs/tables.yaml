@@ -1,0 +1,73 @@
+tables:
+  users:
+    datasource: aurora_mysql
+    database: user
+    physical_table: users
+    business_name: 保存用户相关信息
+    description: 保存用户相关信息
+    primary_key: rid
+    default_time_field: atime
+    owner: data_team
+    tags:
+    - users
+    fields:
+      rid:
+        business_name: rid
+        type: bigint
+        description: ''
+        semantic_type: identifier
+      name:
+        business_name: name
+        type: varchar(100)
+        description: ''
+        semantic_type: pii
+      passwd:
+        business_name: passwd
+        type: varchar(32)
+        description: ''
+        semantic_type: attribute
+      email:
+        business_name: email
+        type: varchar(50)
+        description: ''
+        semantic_type: pii
+      maxbind:
+        business_name: maxbind
+        type: tinyint
+        description: ''
+        semantic_type: attribute
+      phone:
+        business_name: phone
+        type: varchar(16)
+        description: ''
+        semantic_type: pii
+      edate:
+        business_name: edate
+        type: datetime
+        description: ''
+        semantic_type: attribute
+      valid:
+        business_name: valid
+        type: tinyint
+        description: ''
+        semantic_type: attribute
+      purchase:
+        business_name: purchase
+        type: tinyint
+        description: ''
+        semantic_type: attribute
+      level:
+        business_name: level
+        type: tinyint
+        description: ''
+        semantic_type: dimension
+      atime:
+        business_name: atime
+        type: datetime
+        description: ''
+        semantic_type: activity_time
+      utime:
+        business_name: utime
+        type: datetime
+        description: ''
+        semantic_type: time

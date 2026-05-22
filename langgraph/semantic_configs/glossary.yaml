@@ -1,0 +1,6 @@
+terms:
+  保存用户相关信息:
+    description: 保存用户相关信息
+    tables:
+    - users
+    fields: []
