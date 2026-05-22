@@ -63,3 +63,8 @@ cd langgraph
 
 python3.13 main.py
 ```
+
+## 第二步: DDL转换为metrics 信息
+```bash
+python3.13 -m semantic_generator.generate --ddl ddl/users.sql
+```
