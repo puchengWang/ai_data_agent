@@ -57,122 +57,62 @@ def build_response(
 # Lambda 主入口
 # =========================================================
 def lambda_handler(event, context):
-
-    # -----------------------------------------------------
-    # 输入结构
-    # -----------------------------------------------------
-    #
-    # {
-    #   "intent": "count_users_by_atime",
-    #   "params": {
-    #       "start_time": "2026-05-19",
-    #       "end_time": "2026-05-20"
-    #   },
-    #   "request_id": "test-001"
-    # }
-    #
-    # -----------------------------------------------------
-
-    intent = event.get("intent")
-    params = event.get("params", {})
     request_id = event.get("request_id")
+    query_plan = event.get("query_plan")
 
-    # =====================================================
-    # 当前仅支持固定 Intent
-    # =====================================================
-    if intent != "count_users_by_atime":
-
+    if not query_plan:
         return build_response(
             success=False,
-            intent=intent,
+            intent=None,
             request_id=request_id,
-            error=f"Unsupported intent: {intent}",
-            meta={
-                "source": "aurora_mysql",
-                "database": DB_NAME,
-                "table": "users"
-            }
+            error="Missing query_plan"
         )
 
-    # =====================================================
-    # 参数读取
-    # =====================================================
-    start_time = params.get("start_time")
-    end_time = params.get("end_time")
+    sql = query_plan.get("sql")
+    sql_params = query_plan.get("params", [])
+    metric = query_plan.get("metric")
 
-    if not start_time or not end_time:
-
+    if not sql:
         return build_response(
             success=False,
-            intent=intent,
+            intent=metric,
             request_id=request_id,
-            error="Missing required params: start_time, end_time",
-            meta={
-                "source": "aurora_mysql",
-                "database": DB_NAME,
-                "table": "users"
-            }
+            error="Missing sql in query_plan"
         )
-
-    # =====================================================
-    # 固定 SQL
-    # =====================================================
-    sql = """
-        SELECT COUNT(rid) AS count
-        FROM users
-        WHERE atime > %s
-          AND atime < %s
-    """
 
     try:
-
-        # =================================================
-        # 连接数据库
-        # =================================================
         conn = get_connection()
 
         with conn.cursor() as cursor:
-
-            cursor.execute(sql, (start_time, end_time))
-
+            cursor.execute(sql, sql_params)
             result = cursor.fetchone()
 
         conn.close()
 
-        # =================================================
-        # 返回成功结果
-        # =================================================
-        return build_response(
-            success=True,
-            intent=intent,
-            request_id=request_id,
-            data={
-                "count": result["count"]
+        return {
+            "success": True,
+            "metric": metric,
+            "request_id": request_id,
+            "data": {
+                "value": result["value"]
             },
-            sql=sql.strip(),
-            error=None,
-            meta={
-                "source": "aurora_mysql",
-                "database": DB_NAME,
-                "table": "users"
-            }
-        )
+            "sql": sql,
+            "params": sql_params,
+            "error": None,
+            "meta": query_plan.get("meta", {})
+        }
 
     except Exception as e:
-
-        # =================================================
-        # 返回异常结果
-        # =================================================
-        return build_response(
-            success=False,
-            intent=intent,
-            request_id=request_id,
-            data=None,
-            sql=sql.strip(),
-            error=str(e),
-            meta={
-                "source": "aurora_mysql",
-                "database": DB_NAME,
-                "table": "users"
-            }
-        )
+        return {
+            "protocol_version": "1.0",
+            "success": False,
+            "task_id": query_plan.get("task_id"),
+            "task_name": query_plan.get("task_name"),
+            "metric": metric,
+            "request_id": request_id,
+            "data": None,
+            "sql": sql,
+            "params": sql_params,
+            "error": str(e),
+            "meta": query_plan.get("meta", {})
+        }

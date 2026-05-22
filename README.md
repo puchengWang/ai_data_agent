@@ -56,7 +56,7 @@ S3 Executor
 ```
 
 ### 第五阶段 Analytics Agent
-目标: 达到分析水平
+目标: 达到分析水平，像个专业分析师
 
 ```txt
 Python Tool

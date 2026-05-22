@@ -1,4 +1,5 @@
 from app.protocols.query_protocol import build_query_plan
+from app.semantic.measure_builder import build_measure
 
 
 def compile_metric_query(task: dict, metric_def: dict) -> dict:
@@ -8,13 +9,24 @@ def compile_metric_query(task: dict, metric_def: dict) -> dict:
     params = task.get("params", {})
 
     table = metric_def["table"]
-    measure = metric_def["measure"]
+    measure = build_measure(metric_def)
     time_field = metric_def.get("time_field")
+    meta = metric_def.get("meta", {})
 
-    sql = f"""
-        SELECT {measure} AS value
-        FROM {table}
-    """
+    dimension = task.get("dimension") or params.get("dimension")
+    limit = task.get("limit") or params.get("limit")
+    order = task.get("order") or params.get("order", "desc")
+
+    if dimension:
+        sql = f"""
+            SELECT {dimension} AS dimension_value, {measure} AS value
+            FROM {table}
+        """
+    else:
+        sql = f"""
+            SELECT {measure} AS value
+            FROM {table}
+        """
 
     sql_params = []
     conditions = []
@@ -39,7 +51,16 @@ def compile_metric_query(task: dict, metric_def: dict) -> dict:
     if conditions:
         sql += "\nWHERE " + "\n  AND ".join(conditions)
 
-    meta = metric_def.get("meta", {})
+    if dimension:
+        sql += f"\nGROUP BY {dimension}"
+
+        if order == "asc":
+            sql += "\nORDER BY value ASC"
+        else:
+            sql += "\nORDER BY value DESC"
+
+        if limit:
+            sql += f"\nLIMIT {int(limit)}"
 
     return build_query_plan(
         task_id=task_id,

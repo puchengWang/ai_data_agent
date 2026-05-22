@@ -57,9 +57,9 @@ tables:
         description: ''
         semantic_type: attribute
       level:
-        business_name: level
+        business_name: 用户等级
         type: tinyint
-        description: ''
+        description: '用户等级'
         semantic_type: dimension
       atime:
         business_name: atime

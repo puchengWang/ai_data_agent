@@ -1,6 +1,9 @@
 from langgraph.graph import StateGraph, END
 from app.observability.tracer import now_ms, write_trace
 from app.protocols.query_protocol import build_tool_result
+from app.planner.aggregation_planner import build_aggregation_plan
+from app.planner.comparison_engine import calculate_change
+from app.summary.summary_template_loader import load_summary_template
 
 from app.state import AgentState
 from app.llm.bedrock_client import invoke_bedrock_json, invoke_bedrock_text
@@ -8,79 +11,373 @@ from app.semantic.semantic_engine import resolve_metric
 from app.semantic.query_compiler import compile_metric_query
 from app.tools.lambda_sql_tool import invoke_sql_executor_with_query_plan
 
+def aggregation_analysis_node(state: AgentState) -> AgentState:
+    aggregation_plan = state.get("aggregation_plan", {})
+    aggregation_type = aggregation_plan.get("aggregation_type")
+
+    aggregation_result = {
+        "aggregation_type": aggregation_type,
+        "analysis": None,
+        "error": None,
+    }
+
+    if aggregation_type == "compare":
+        results_by_task_id = {
+            item["task_id"]: item
+            for item in state.get("tool_results", [])
+        }
+
+        current_result = results_by_task_id.get("current_period")
+        previous_result = results_by_task_id.get("previous_period")
+
+        if not current_result or not previous_result:
+            aggregation_result["error"] = "Missing current_period or previous_period result"
+
+        elif not current_result.get("success") or not previous_result.get("success"):
+            aggregation_result["error"] = "Current or previous period query failed"
+
+        else:
+            current_value = current_result["data"]["value"]
+            previous_value = previous_result["data"]["value"]
+
+            change_result = calculate_change(
+                current_value=current_value,
+                previous_value=previous_value,
+            )
+
+            aggregation_result["analysis"] = {
+                "current_value": current_value,
+                "previous_value": previous_value,
+                "change": change_result["change"],
+                "change_rate": change_result["change_rate"],
+            }
+
+    elif aggregation_type == "trend":
+        time_series = []
+
+        for item in state.get("tool_results", []):
+            query_plan = item.get("query_plan", {})
+            params = query_plan.get("params", [])
+
+            time_label = None
+
+            # 优先从 query_plan.meta 或 params 推断
+            if query_plan.get("meta", {}).get("time_label"):
+                time_label = query_plan["meta"]["time_label"]
+            elif len(params) >= 1:
+                time_label = params[0]
+
+            if item.get("success"):
+                value = item.get("data", {}).get("value")
+            else:
+                value = None
+
+            time_series.append({
+                "time_label": time_label,
+                "task_id": item.get("task_id"),
+                "task_name": item.get("task_name"),
+                "value": value,
+                "success": item.get("success"),
+                "error": item.get("error"),
+            })
+
+        valid_values = [
+            x["value"] for x in time_series
+            if x["success"] and x["value"] is not None
+        ]
+
+        if not valid_values:
+            aggregation_result["error"] = "No valid trend data"
+
+        else:
+            aggregation_result["analysis"] = {
+                "grain": aggregation_plan.get("grain", "day"),
+                "time_series": time_series,
+                "summary_stats": {
+                    "points": len(valid_values),
+                    "min": min(valid_values),
+                    "max": max(valid_values),
+                    "start_value": valid_values[0],
+                    "end_value": valid_values[-1],
+                    "change": valid_values[-1] - valid_values[0],
+                }
+            }
+
+    elif aggregation_type == "group_by":
+        group_rows = []
+    
+        for item in state.get("tool_results", []):
+            if item.get("success"):
+                rows = item.get("data", {}).get("rows", [])
+                group_rows.extend(rows)
+    
+        if not group_rows:
+            aggregation_result["error"] = "No valid group_by data"
+        else:
+            aggregation_result["analysis"] = {
+                "dimension": aggregation_plan.get("dimension"),
+                "groups": group_rows,
+                "group_count": len(group_rows),
+                "total_value": sum(row.get("value", 0) for row in group_rows),
+            }
+
+    elif aggregation_type == "top_n":
+        rows = []
+    
+        for item in state.get("tool_results", []):
+            if item.get("success"):
+                rows.extend(item.get("data", {}).get("rows", []))
+    
+        if not rows:
+            aggregation_result["error"] = "No valid top_n data"
+        else:
+            aggregation_result["analysis"] = {
+                "dimension": aggregation_plan.get("dimension"),
+                "limit": aggregation_plan.get("limit"),
+                "order": aggregation_plan.get("order", "desc"),
+                "rows": rows,
+                "top_item": rows[0] if rows else None,
+            }
+
+    elif aggregation_type == "distribution":
+        rows = []
+    
+        for item in state.get("tool_results", []):
+            if item.get("success"):
+                rows.extend(item.get("data", {}).get("rows", []))
+    
+        if not rows:
+            aggregation_result["error"] = "No valid distribution data"
+        else:
+            total_value = sum(row.get("value", 0) or 0 for row in rows)
+    
+            distribution_rows = []
+    
+            for row in rows:
+                value = row.get("value", 0) or 0
+    
+                if total_value == 0:
+                    percentage = None
+                else:
+                    percentage = round(value / total_value * 100, 2)
+    
+                distribution_rows.append({
+                    "dimension_value": row.get("dimension_value"),
+                    "value": value,
+                    "percentage": percentage,
+                })
+    
+            aggregation_result["analysis"] = {
+                "dimension": aggregation_plan.get("dimension"),
+                "total_value": total_value,
+                "groups": distribution_rows,
+                "group_count": len(distribution_rows),
+            }
+
+    elif aggregation_type == "compare_by_dimension":
+        results_by_task_id = {
+            item["task_id"]: item
+            for item in state.get("tool_results", [])
+        }
+    
+        current_result = results_by_task_id.get("current_dimension_period")
+        previous_result = results_by_task_id.get("previous_dimension_period")
+    
+        if not current_result or not previous_result:
+            aggregation_result["error"] = "Missing current_dimension_period or previous_dimension_period result"
+    
+        elif not current_result.get("success") or not previous_result.get("success"):
+            aggregation_result["error"] = "Current or previous dimension period query failed"
+    
+        else:
+            current_rows = current_result.get("data", {}).get("rows", [])
+            previous_rows = previous_result.get("data", {}).get("rows", [])
+    
+            previous_map = {
+                str(row.get("dimension_value")): row.get("value", 0) or 0
+                for row in previous_rows
+            }
+    
+            current_map = {
+                str(row.get("dimension_value")): row.get("value", 0) or 0
+                for row in current_rows
+            }
+    
+            dimension_values = sorted(
+                set(current_map.keys()) | set(previous_map.keys())
+            )
+    
+            comparison_rows = []
+    
+            for dimension_value in dimension_values:
+                current_value = current_map.get(dimension_value, 0)
+                previous_value = previous_map.get(dimension_value, 0)
+    
+                change_result = calculate_change(
+                    current_value=current_value,
+                    previous_value=previous_value,
+                )
+    
+                comparison_rows.append({
+                    "dimension_value": dimension_value,
+                    "current_value": current_value,
+                    "previous_value": previous_value,
+                    "change": change_result["change"],
+                    "change_rate": change_result["change_rate"],
+                })
+    
+            aggregation_result["analysis"] = {
+                "dimension": aggregation_plan.get("dimension"),
+                "compare_mode": aggregation_plan.get("compare_mode"),
+                "rows": comparison_rows,
+            }
+
+    elif aggregation_type == "trend_by_dimension":
+        series_map = {}
+    
+        for item in state.get("tool_results", []):
+            query_plan = item.get("query_plan", {})
+            params = query_plan.get("params", [])
+    
+            time_label = params[0] if params else None
+    
+            if not item.get("success"):
+                continue
+    
+            rows = item.get("data", {}).get("rows", [])
+    
+            for row in rows:
+                dimension_value = str(row.get("dimension_value"))
+                value = row.get("value", 0) or 0
+    
+                if dimension_value not in series_map:
+                    series_map[dimension_value] = []
+    
+                series_map[dimension_value].append({
+                    "time_label": time_label,
+                    "value": value,
+                })
+    
+        if not series_map:
+            aggregation_result["error"] = "No valid trend_by_dimension data"
+        else:
+            aggregation_result["analysis"] = {
+                "dimension": aggregation_plan.get("dimension"),
+                "grain": aggregation_plan.get("grain", "day"),
+                "series": series_map,
+                "series_count": len(series_map),
+            }
+
+    trace = state.get("trace", {})
+    steps = trace.get("steps", [])
+
+    steps.append({
+        "step": "aggregation_analysis",
+        "status": "success" if not aggregation_result.get("error") else "partial_success",
+        "output": aggregation_result,
+        "timestamp_ms": now_ms(),
+    })
+
+    trace["steps"] = steps
+
+    return {
+        **state,
+        "aggregation_result": aggregation_result,
+        "trace": trace,
+    }
+
 
 def plan_tasks_node(state: AgentState) -> AgentState:
     question = state["question"]
     start_ms = now_ms()
 
     prompt = f"""
-你是 AI Data Agent 的任务规划器。
-
+你是 AI Data Agent 的语义解析器。
 你只能输出 JSON，不要输出解释，不要使用 Markdown。
-
-当前系统支持的业务指标：
+当前支持的业务指标：
 
 metric: user_count
+
 业务含义：用户数量
 说明：
-- 可以用于统计当前用户总数
-- 可以用于统计截止某日期的用户总数
-- 可以用于统计某一天或某个时间段内的用户数量变化
+- 可用于统计某时间段新增用户数量
+- 可用于统计截止某日用户总数
+- 可用于普通用户数量查询
+- 可用于趋势分析
+
+请从用户问题中识别：
+
+1. metric
+2. params
 
 时间参数规则：
-1. 如果问题是“某天新增多少用户”，输出 start_time 和 end_time
-   例如：2026-05-14 新增用户
-   start_time = 2026-05-14
-   end_time = 2026-05-15
+1. 如果用户问“某日新增用户”，则：
+   start_time = 当天日期
+   end_time = 次日日期
 
-2. 如果问题是“截止某天用户总数”，输出 end_time
-   例如：截止 2026-05-14 用户总数
-   end_time = 2026-05-15
+2. 如果用户问“最近N天趋势”，则：
+   start_time = 起始日期
+   end_time = 结束日期的次日
+   grain = day
 
-3. 如果一个问题包含多个统计需求，请拆成多个 tasks。
+3. 如果用户问“2026-05-10 到 2026-05-17 的趋势”，则：
+   start_time = 2026-05-10
+   end_time = 2026-05-18
+   grain = day
+
+4. 如果用户问“相比/对比/增长/下降”，保留当前周期 start_time/end_time，后续系统会自动生成对比周期。
+
 
 用户问题：
+
 {question}
 
-请输出如下 JSON：
+输出格式：
 
 {{
-  "tasks": [
-    {{
-      "task_id": "task_001",
-      "task_name": "任务名称",
-      "metric": "user_count",
-      "params": {{
-        "start_time": "YYYY-MM-DD",
-        "end_time": "YYYY-MM-DD"
-      }}
-    }}
-  ]
+
+  "question": "{question}",
+  "metric": "user_count",
+  "params": {{
+    "start_time": "YYYY-MM-DD",
+    "end_time": "YYYY-MM-DD",
+    "grain": "day"
+  }}
 }}
+
 """
 
     parsed = invoke_bedrock_json(prompt)
 
+    # 生产建议：原始问题由系统维护，不信任 LLM 返回的 question
+    parsed["original_question"] = question
+    parsed["question"] = question
+
+    aggregation_plan = build_aggregation_plan(parsed)
+
     return {
         **state,
-        "tasks": parsed["tasks"],
-        "request_id": state.get("request_id", "langgraph-multitask-test-001"),
+        "aggregation_plan": aggregation_plan,
+        "tasks": aggregation_plan["tasks"],
+        "request_id": state.get("request_id", "langgraph-aggregation-test-001"),
         "error": None,
         "trace": {
-            "request_id": state.get("request_id", "langgraph-multitask-test-001"),
+            "request_id": state.get("request_id", "langgraph-aggregation-test-001"),
             "question": question,
             "start_ms": start_ms,
             "steps": [
                 {
                     "step": "plan_tasks",
                     "status": "success",
-                    "output": parsed,
+                    "output": {
+                        "parsed": parsed,
+                        "aggregation_plan": aggregation_plan,
+                    },
                     "timestamp_ms": now_ms(),
                 }
             ],
         },
     }
-
 
 def compile_queries_node(state: AgentState) -> AgentState:
     query_plans = []
@@ -183,38 +480,20 @@ def execute_queries_node(state: AgentState) -> AgentState:
         "trace": trace,
     }
 
+
 def summarize_node(state: AgentState) -> AgentState:
-    prompt = f"""
-你是一个企业数据分析助手。
+    aggregation_type = state.get("aggregation_plan", {}).get("aggregation_type", "normal")
 
-请根据用户问题、任务列表、查询计划、执行结果和错误信息，生成简洁、可信的中文回答。
+    template = load_summary_template(aggregation_type)
 
-要求：
-1. 不要输出 JSON
-2. 不要解释底层代码
-3. 不要编造额外信息
-4. 每个子问题都要回答
-5. 如果某个任务成功，正常回答结果
-6. 如果某个任务失败，明确说明该子问题暂时无法回答，并给出失败原因
-7. 如果部分成功部分失败，要先回答成功项，再说明失败项
-
-用户问题：
-{state["question"]}
-
-任务列表：
-{state.get("tasks")}
-
-查询计划：
-{state.get("query_plans")}
-
-编译错误：
-{state.get("compile_errors")}
-
-执行结果：
-{state.get("tool_results")}
-
-请直接输出最终中文回答。
-"""
+    prompt = template.format(
+        question=state.get("question"),
+        tasks=state.get("tasks"),
+        query_plans=state.get("query_plans"),
+        tool_results=state.get("tool_results"),
+        aggregation_result=state.get("aggregation_result"),
+        compile_errors=state.get("compile_errors"),
+    )
 
     answer = invoke_bedrock_text(prompt)
 
@@ -225,6 +504,8 @@ def summarize_node(state: AgentState) -> AgentState:
         "step": "summarize",
         "status": "success",
         "output": {
+            "aggregation_type": aggregation_type,
+            "template": f"{aggregation_type}.txt",
             "answer": answer,
         },
         "timestamp_ms": now_ms(),
@@ -243,21 +524,22 @@ def summarize_node(state: AgentState) -> AgentState:
         "trace": trace,
         "trace_file": trace_file,
     }
-
-
+    
 def build_graph():
     workflow = StateGraph(AgentState)
 
     workflow.add_node("plan_tasks", plan_tasks_node)
     workflow.add_node("compile_queries", compile_queries_node)
     workflow.add_node("execute_queries", execute_queries_node)
+    workflow.add_node("aggregation_analysis", aggregation_analysis_node)
     workflow.add_node("summarize", summarize_node)
 
     workflow.set_entry_point("plan_tasks")
 
     workflow.add_edge("plan_tasks", "compile_queries")
     workflow.add_edge("compile_queries", "execute_queries")
-    workflow.add_edge("execute_queries", "summarize")
+    workflow.add_edge("execute_queries", "aggregation_analysis")
+    workflow.add_edge("aggregation_analysis", "summarize")
     workflow.add_edge("summarize", END)
 
     return workflow.compile()

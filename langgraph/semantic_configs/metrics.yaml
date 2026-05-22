@@ -1,12 +1,15 @@
 metrics:
   user_count:
-    business_name: 用户表数量
-    description: 统计 用户表 的数量
+    business_name: 用户数量
+    description: 统计用户数量
     table: users
+    aggregation: count
+    field: rid
     measure: COUNT(rid)
     time_field: atime
-    metric_type: count_by_time
-    dimensions: []
+    metric_type: normal
+    dimensions: 
+      - level
     filters: []
     meta:
       engine: aurora_mysql

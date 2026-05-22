@@ -7,7 +7,7 @@ def main():
     graph = build_graph()
 
     initial_state = {
-        "question": "统计截止2026-05-14的用户总数有多少？5月14日新增了多少用户？5月14日新增用户数是否大于5月13日？",
+        "question": "统计 2026-05-14 新增用户的用户等级分布",
         "request_id": "langgraph-multitask-test-001",
     }
 
