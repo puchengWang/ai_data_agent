@@ -5,11 +5,12 @@ METRICS = {
         "table": "users",
         "measure": "COUNT(rid)",
         "time_field": "atime",
-        "default_grain": "day",
+        "metric_type": "count_by_time",
         "dimensions": [],
         "filters": [],
         "meta": {
-            "source": "aurora_mysql",
+            "engine": "aws_aurora",
+            "datasource": "aurora_mysql",
             "database": "user",
             "table": "users"
         }

@@ -1,22 +1,54 @@
-def compile_metric_query(metric_name: str, metric_def: dict, params: dict) -> dict:
+from app.protocols.query_protocol import build_query_plan
+
+
+def compile_metric_query(task: dict, metric_def: dict) -> dict:
+    task_id = task["task_id"]
+    task_name = task["task_name"]
+    metric_name = task["metric"]
+    params = task.get("params", {})
+
     table = metric_def["table"]
     measure = metric_def["measure"]
-    time_field = metric_def["time_field"]
-
-    start_time = params["start_time"]
-    end_time = params["end_time"]
+    time_field = metric_def.get("time_field")
 
     sql = f"""
         SELECT {measure} AS value
         FROM {table}
-        WHERE {time_field} > %s
-          AND {time_field} < %s
     """
 
-    return {
-        "metric": metric_name,
-        "business_name": metric_def["business_name"],
-        "sql": sql.strip(),
-        "params": [start_time, end_time],
-        "meta": metric_def.get("meta", {})
-    }
+    sql_params = []
+    conditions = []
+
+    if time_field:
+        start_time = params.get("start_time")
+        end_time = params.get("end_time")
+
+        if start_time and end_time:
+            conditions.append(f"{time_field} >= %s")
+            conditions.append(f"{time_field} < %s")
+            sql_params.extend([start_time, end_time])
+
+        elif end_time:
+            conditions.append(f"{time_field} < %s")
+            sql_params.append(end_time)
+
+        elif start_time:
+            conditions.append(f"{time_field} >= %s")
+            sql_params.append(start_time)
+
+    if conditions:
+        sql += "\nWHERE " + "\n  AND ".join(conditions)
+
+    meta = metric_def.get("meta", {})
+
+    return build_query_plan(
+        task_id=task_id,
+        task_name=task_name,
+        metric=metric_name,
+        business_name=metric_def["business_name"],
+        engine=meta.get("engine", "aurora_mysql"),
+        datasource=meta.get("datasource", "user"),
+        sql=sql.strip(),
+        params=sql_params,
+        meta=meta,
+    )

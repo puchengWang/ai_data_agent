@@ -1,14 +1,15 @@
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 from typing_extensions import TypedDict
 
 
 class AgentState(TypedDict, total=False):
     question: str
-    metric: str
-    metric_def: Dict[str, Any]
-    params: Dict[str, Any]
-    query_plan: Dict[str, Any]
+    tasks: List[Dict[str, Any]]
+    query_plans: List[Dict[str, Any]]
+    tool_results: List[Dict[str, Any]]
+    compile_errors: List[Dict[str, Any]]
     request_id: str
-    tool_result: Dict[str, Any]
     answer: str
     error: Optional[str]
+    trace: Dict[str, Any]
+    trace_file: str

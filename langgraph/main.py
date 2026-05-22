@@ -7,8 +7,8 @@ def main():
     graph = build_graph()
 
     initial_state = {
-        "question": "统计2026-05-13到2026-05-14的用户有多少？",
-        "request_id": "langgraph-semantic-test-001",
+        "question": "统计截止2026-05-14的用户总数有多少？5月14日新增了多少用户？5月14日新增用户数是否大于5月13日？",
+        "request_id": "langgraph-multitask-test-001",
     }
 
     result = graph.invoke(initial_state)
