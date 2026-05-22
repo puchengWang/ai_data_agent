@@ -1,0 +1,111 @@
+{
+  "total": 8,
+  "passed": 8,
+  "failed": 0,
+  "results": [
+    {
+      "case_name": "normal_user_count",
+      "question": "2026-05-14 新增用户数量是多少？",
+      "success": true,
+      "errors": [],
+      "duration_ms": 4227,
+      "expected_aggregation_type": "normal",
+      "actual_aggregation_type": "normal",
+      "query_plan_count": 1,
+      "tool_result_count": 1,
+      "snapshot_path": "/Users/murphy/projects/ai_data_agent/langgraph/tests/snapshots/normal_user_count.json",
+      "answer": "2026年5月14日的新增用户数量是926人。"
+    },
+    {
+      "case_name": "compare_user_count",
+      "question": "2026-05-14 新增用户相比前一天增长多少？",
+      "success": true,
+      "errors": [],
+      "duration_ms": 4097,
+      "expected_aggregation_type": "compare",
+      "actual_aggregation_type": "compare",
+      "query_plan_count": 2,
+      "tool_result_count": 2,
+      "snapshot_path": "/Users/murphy/projects/ai_data_agent/langgraph/tests/snapshots/compare_user_count.json",
+      "answer": "2026-05-14 新增用户数为 926，相比前一天（2026-05-13）的 336 增加了 590 人，增长率为 175.6%。新增用户数量有显著增长。"
+    },
+    {
+      "case_name": "trend_user_count",
+      "question": "统计 2026-05-08 到 2026-05-14 每天新增用户趋势",
+      "success": true,
+      "errors": [],
+      "duration_ms": 8276,
+      "expected_aggregation_type": "trend",
+      "actual_aggregation_type": "trend",
+      "query_plan_count": 7,
+      "tool_result_count": 7,
+      "snapshot_path": "/Users/murphy/projects/ai_data_agent/langgraph/tests/snapshots/trend_user_count.json",
+      "answer": "根据统计结果，2026-05-08 到 2026-05-14 期间每天新增用户趋势如下：\n\n时间范围：2026-05-08 至 2026-05-14\n起始值：1310（2026-05-08）\n结束值：926（2026-05-14）\n最高值：1310（2026-05-08）\n最低值：0（2026-05-10）\n\n整体趋势呈现波动下降。新增用户数从第一天的1310人急剧下降到第二天的258人，第三天（2026-05-10）降至0。之后出现反弹，2026-05-11达到1006人，随后两天维持在300多人的水平，最后一天（2026-05-14）又上升到926人。\n\n值得注意的是，2026-05-10（周日）没有新增用户，这可能需要进一步调查原因。整体来看，工作日的新增用户数量普遍高于周末。"
+    },
+    {
+      "case_name": "group_by_level",
+      "question": "统计 2026-05-14 按用户等级的新增用户数量",
+      "success": true,
+      "errors": [],
+      "duration_ms": 3570,
+      "expected_aggregation_type": "group_by",
+      "actual_aggregation_type": "group_by",
+      "query_plan_count": 1,
+      "tool_result_count": 1,
+      "snapshot_path": "/Users/murphy/projects/ai_data_agent/langgraph/tests/snapshots/group_by_level.json",
+      "answer": "2026-05-14按用户等级的新增用户数量统计如下:\n\n0级: 897人\n2级: 20人\n3级: 9人\n\n总计新增用户926人。其中0级用户数量最多,为897人。"
+    },
+    {
+      "case_name": "top_n_level",
+      "question": "统计 2026-05-14 新增用户最多的前3个用户等级",
+      "success": true,
+      "errors": [],
+      "duration_ms": 4532,
+      "expected_aggregation_type": "top_n",
+      "actual_aggregation_type": "top_n",
+      "query_plan_count": 1,
+      "tool_result_count": 1,
+      "snapshot_path": "/Users/murphy/projects/ai_data_agent/langgraph/tests/snapshots/top_n_level.json",
+      "answer": "根据分析结果，2026-05-14 新增用户最多的前3个用户等级为:\n\n1. 等级 0: 897 名新用户\n2. 等级 2: 20 名新用户  \n3. 等级 3: 9 名新用户\n\n其中新增用户最多的是等级 0,共有 897 名新用户。"
+    },
+    {
+      "case_name": "distribution_level",
+      "question": "统计 2026-05-14 新增用户的用户等级分布",
+      "success": true,
+      "errors": [],
+      "duration_ms": 5585,
+      "expected_aggregation_type": "distribution",
+      "actual_aggregation_type": "distribution",
+      "query_plan_count": 1,
+      "tool_result_count": 1,
+      "snapshot_path": "/Users/murphy/projects/ai_data_agent/langgraph/tests/snapshots/distribution_level.json",
+      "answer": "根据分析结果,2026-05-14新增用户的用户等级分布如下:\n\n- 0级用户:897人,占比96.87%\n- 2级用户:20人,占比2.16% \n- 3级用户:9人,占比0.97%\n\n总计新增用户926人。其中0级用户占比最高,达到96.87%。"
+    },
+    {
+      "case_name": "compare_by_dimension_level",
+      "question": "2026-05-14 各用户等级相比前一天新增用户增长多少？",
+      "success": true,
+      "errors": [],
+      "duration_ms": 6516,
+      "expected_aggregation_type": "compare_by_dimension",
+      "actual_aggregation_type": "compare_by_dimension",
+      "query_plan_count": 2,
+      "tool_result_count": 2,
+      "snapshot_path": "/Users/murphy/projects/ai_data_agent/langgraph/tests/snapshots/compare_by_dimension_level.json",
+      "answer": "根据分析结果，2026-05-14各用户等级相比前一天新增用户的增长情况如下：\n\n0级用户:\n- 当前值: 897\n- 对比值: 322\n- 变化值: +575\n- 变化率: +178.57%\n\n2级用户:\n- 当前值: 20\n- 对比值: 8\n- 变化值: +12\n- 变化率: +150.00%\n\n3级用户:\n- 当前值: 9\n- 对比值: 6\n- 变化值: +3\n- 变化率: +50.00%\n\n增长最多的是0级用户,新增575人。\n增长率最高的也是0级用户,增长了178.57%。\n\n所有用户等级都呈现增长趋势,没有出现下降的情况。"
+    },
+    {
+      "case_name": "trend_by_dimension_level",
+      "question": "统计 2026-05-08 到 2026-05-14 各用户等级新增用户趋势",
+      "success": true,
+      "errors": [],
+      "duration_ms": 10333,
+      "expected_aggregation_type": "trend_by_dimension",
+      "actual_aggregation_type": "trend_by_dimension",
+      "query_plan_count": 7,
+      "tool_result_count": 7,
+      "snapshot_path": "/Users/murphy/projects/ai_data_agent/langgraph/tests/snapshots/trend_by_dimension_level.json",
+      "answer": "根据2026年5月8日至14日各用户等级新增用户趋势分析结果：\n\n1. 0级用户:\n新增用户数波动较大，5月8日达到峰值1287人，随后下降，5月11日又出现回升至987人，5月14日为897人。总体呈现先降后升的趋势。\n\n2. 3级用户:\n新增用户数较少且波动不大，最高为5月8日的23人，最低为5月9日和13日的6人。整体呈现小幅下降趋势。\n\n3. 2级用户:\n仅在5月12日至14日有数据，呈现明显上升趋势，从3人增加到20人。\n\n增长最明显的是2级用户，虽然只有3天数据，但增长速度快。\n\n下降最明显的是0级用户，从5月8日的峰值1287人下降到5月9日的252人，降幅较大。\n\n总体来看，0级用户新增数量最多，但波动较大；3级用户新增数量较少且相对稳定；2级用户虽然数据较少，但呈现快速增长趋势。"
+    }
+  ]
+}

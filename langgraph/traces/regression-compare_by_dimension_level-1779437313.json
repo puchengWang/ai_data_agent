@@ -1,0 +1,253 @@
+{
+  "request_id": "regression-compare_by_dimension_level-1779437313",
+  "question": "2026-05-14 各用户等级相比前一天新增用户增长多少？",
+  "start_ms": 1779437313395,
+  "steps": [
+    {
+      "step": "plan_tasks",
+      "status": "success",
+      "output": {
+        "parsed": {
+          "question": "2026-05-14 各用户等级相比前一天新增用户增长多少？",
+          "metric": "user_count",
+          "params": {
+            "start_time": "2026-05-14",
+            "end_time": "2026-05-15",
+            "grain": "day"
+          },
+          "original_question": "2026-05-14 各用户等级相比前一天新增用户增长多少？"
+        },
+        "aggregation_plan": {
+          "aggregation_type": "compare_by_dimension",
+          "compare_mode": "period_over_period",
+          "dimension": "level",
+          "tasks": [
+            {
+              "task_id": "current_dimension_period",
+              "task_name": "当前周期按level统计",
+              "metric": "user_count",
+              "params": {
+                "start_time": "2026-05-14",
+                "end_time": "2026-05-15",
+                "dimension": "level"
+              },
+              "dimension": "level"
+            },
+            {
+              "task_id": "previous_dimension_period",
+              "task_name": "对比周期按level统计",
+              "metric": "user_count",
+              "params": {
+                "start_time": "2026-05-13",
+                "end_time": "2026-05-14",
+                "dimension": "level"
+              },
+              "dimension": "level"
+            }
+          ]
+        }
+      },
+      "timestamp_ms": 1779437315272
+    },
+    {
+      "step": "compile_queries",
+      "status": "success",
+      "output": {
+        "query_plans": [
+          {
+            "protocol_version": "1.0",
+            "task_id": "current_dimension_period",
+            "task_name": "当前周期按level统计",
+            "metric": "user_count",
+            "business_name": "用户数量",
+            "engine": "aurora_mysql",
+            "datasource": "user",
+            "query_type": "sql",
+            "sql": "SELECT level AS dimension_value, COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s\nGROUP BY level\nORDER BY value DESC",
+            "params": [
+              "2026-05-14",
+              "2026-05-15"
+            ],
+            "meta": {
+              "engine": "aurora_mysql",
+              "datasource": "user",
+              "database": "user",
+              "table": "users"
+            }
+          },
+          {
+            "protocol_version": "1.0",
+            "task_id": "previous_dimension_period",
+            "task_name": "对比周期按level统计",
+            "metric": "user_count",
+            "business_name": "用户数量",
+            "engine": "aurora_mysql",
+            "datasource": "user",
+            "query_type": "sql",
+            "sql": "SELECT level AS dimension_value, COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s\nGROUP BY level\nORDER BY value DESC",
+            "params": [
+              "2026-05-13",
+              "2026-05-14"
+            ],
+            "meta": {
+              "engine": "aurora_mysql",
+              "datasource": "user",
+              "database": "user",
+              "table": "users"
+            }
+          }
+        ],
+        "compile_errors": []
+      },
+      "timestamp_ms": 1779437315273
+    },
+    {
+      "step": "execute_queries",
+      "status": "success",
+      "output": {
+        "tool_results": [
+          {
+            "protocol_version": "1.0",
+            "task_id": "current_dimension_period",
+            "task_name": "当前周期按level统计",
+            "success": true,
+            "data": {
+              "rows": [
+                {
+                  "dimension_value": 0,
+                  "value": 897
+                },
+                {
+                  "dimension_value": 2,
+                  "value": 20
+                },
+                {
+                  "dimension_value": 3,
+                  "value": 9
+                }
+              ]
+            },
+            "error": null,
+            "latency_ms": 117,
+            "query_plan": {
+              "protocol_version": "1.0",
+              "task_id": "current_dimension_period",
+              "task_name": "当前周期按level统计",
+              "metric": "user_count",
+              "business_name": "用户数量",
+              "engine": "aurora_mysql",
+              "datasource": "user",
+              "query_type": "sql",
+              "sql": "SELECT level AS dimension_value, COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s\nGROUP BY level\nORDER BY value DESC",
+              "params": [
+                "2026-05-14",
+                "2026-05-15"
+              ],
+              "meta": {
+                "engine": "aurora_mysql",
+                "datasource": "user",
+                "database": "user",
+                "table": "users"
+              }
+            }
+          },
+          {
+            "protocol_version": "1.0",
+            "task_id": "previous_dimension_period",
+            "task_name": "对比周期按level统计",
+            "success": true,
+            "data": {
+              "rows": [
+                {
+                  "dimension_value": 0,
+                  "value": 322
+                },
+                {
+                  "dimension_value": 2,
+                  "value": 8
+                },
+                {
+                  "dimension_value": 3,
+                  "value": 6
+                }
+              ]
+            },
+            "error": null,
+            "latency_ms": 118,
+            "query_plan": {
+              "protocol_version": "1.0",
+              "task_id": "previous_dimension_period",
+              "task_name": "对比周期按level统计",
+              "metric": "user_count",
+              "business_name": "用户数量",
+              "engine": "aurora_mysql",
+              "datasource": "user",
+              "query_type": "sql",
+              "sql": "SELECT level AS dimension_value, COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s\nGROUP BY level\nORDER BY value DESC",
+              "params": [
+                "2026-05-13",
+                "2026-05-14"
+              ],
+              "meta": {
+                "engine": "aurora_mysql",
+                "datasource": "user",
+                "database": "user",
+                "table": "users"
+              }
+            }
+          }
+        ]
+      },
+      "timestamp_ms": 1779437315509
+    },
+    {
+      "step": "aggregation_analysis",
+      "status": "success",
+      "output": {
+        "aggregation_type": "compare_by_dimension",
+        "analysis": {
+          "dimension": "level",
+          "compare_mode": "period_over_period",
+          "rows": [
+            {
+              "dimension_value": "0",
+              "current_value": 897,
+              "previous_value": 322,
+              "change": 575,
+              "change_rate": 178.57
+            },
+            {
+              "dimension_value": "2",
+              "current_value": 20,
+              "previous_value": 8,
+              "change": 12,
+              "change_rate": 150.0
+            },
+            {
+              "dimension_value": "3",
+              "current_value": 9,
+              "previous_value": 6,
+              "change": 3,
+              "change_rate": 50.0
+            }
+          ]
+        },
+        "error": null
+      },
+      "timestamp_ms": 1779437315510
+    },
+    {
+      "step": "summarize",
+      "status": "success",
+      "output": {
+        "aggregation_type": "compare_by_dimension",
+        "template": "compare_by_dimension.txt",
+        "answer": "根据分析结果，2026-05-14各用户等级相比前一天新增用户的增长情况如下：\n\n0级用户:\n- 当前值: 897\n- 对比值: 322\n- 变化值: +575\n- 变化率: +178.57%\n\n2级用户:\n- 当前值: 20\n- 对比值: 8\n- 变化值: +12\n- 变化率: +150.00%\n\n3级用户:\n- 当前值: 9\n- 对比值: 6\n- 变化值: +3\n- 变化率: +50.00%\n\n增长最多的是0级用户,新增575人。\n增长率最高的也是0级用户,增长了178.57%。\n\n所有用户等级都呈现增长趋势,没有出现下降的情况。"
+      },
+      "timestamp_ms": 1779437319908
+    }
+  ],
+  "answer": "根据分析结果，2026-05-14各用户等级相比前一天新增用户的增长情况如下：\n\n0级用户:\n- 当前值: 897\n- 对比值: 322\n- 变化值: +575\n- 变化率: +178.57%\n\n2级用户:\n- 当前值: 20\n- 对比值: 8\n- 变化值: +12\n- 变化率: +150.00%\n\n3级用户:\n- 当前值: 9\n- 对比值: 6\n- 变化值: +3\n- 变化率: +50.00%\n\n增长最多的是0级用户,新增575人。\n增长率最高的也是0级用户,增长了178.57%。\n\n所有用户等级都呈现增长趋势,没有出现下降的情况。",
+  "end_ms": 1779437319908,
+  "total_latency_ms": 6513
+}

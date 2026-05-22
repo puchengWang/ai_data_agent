@@ -1,42 +1,48 @@
 {
-  "request_id": "langgraph-multitask-test-001",
-  "question": "统计 2026-05-14 新增用户的用户等级分布",
-  "start_ms": 1779436196998,
+  "request_id": "regression-top_n_level-1779437303",
+  "question": "统计 2026-05-14 新增用户最多的前3个用户等级",
+  "start_ms": 1779437303273,
   "steps": [
     {
       "step": "plan_tasks",
       "status": "success",
       "output": {
         "parsed": {
-          "question": "统计 2026-05-14 新增用户的用户等级分布",
+          "question": "统计 2026-05-14 新增用户最多的前3个用户等级",
           "metric": "user_count",
           "params": {
             "start_time": "2026-05-14",
             "end_time": "2026-05-15",
             "grain": "day"
           },
-          "original_question": "统计 2026-05-14 新增用户的用户等级分布"
+          "original_question": "统计 2026-05-14 新增用户最多的前3个用户等级"
         },
         "aggregation_plan": {
-          "aggregation_type": "distribution",
+          "aggregation_type": "top_n",
           "dimension": "level",
+          "limit": 3,
+          "order": "desc",
           "tasks": [
             {
-              "task_id": "distribution_001",
-              "task_name": "按level统计分布",
+              "task_id": "top_n_001",
+              "task_name": "按level统计 Top 3",
               "metric": "user_count",
               "params": {
                 "start_time": "2026-05-14",
                 "end_time": "2026-05-15",
                 "grain": "day",
-                "dimension": "level"
+                "dimension": "level",
+                "limit": 3,
+                "order": "desc"
               },
-              "dimension": "level"
+              "dimension": "level",
+              "limit": 3,
+              "order": "desc"
             }
           ]
         }
       },
-      "timestamp_ms": 1779436199398
+      "timestamp_ms": 1779437305160
     },
     {
       "step": "compile_queries",
@@ -45,14 +51,14 @@
         "query_plans": [
           {
             "protocol_version": "1.0",
-            "task_id": "distribution_001",
-            "task_name": "按level统计分布",
+            "task_id": "top_n_001",
+            "task_name": "按level统计 Top 3",
             "metric": "user_count",
             "business_name": "用户数量",
             "engine": "aurora_mysql",
             "datasource": "user",
             "query_type": "sql",
-            "sql": "SELECT level AS dimension_value, COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s\nGROUP BY level\nORDER BY value DESC",
+            "sql": "SELECT level AS dimension_value, COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s\nGROUP BY level\nORDER BY value DESC\nLIMIT 3",
             "params": [
               "2026-05-14",
               "2026-05-15"
@@ -67,7 +73,7 @@
         ],
         "compile_errors": []
       },
-      "timestamp_ms": 1779436199399
+      "timestamp_ms": 1779437305161
     },
     {
       "step": "execute_queries",
@@ -76,8 +82,8 @@
         "tool_results": [
           {
             "protocol_version": "1.0",
-            "task_id": "distribution_001",
-            "task_name": "按level统计分布",
+            "task_id": "top_n_001",
+            "task_name": "按level统计 Top 3",
             "success": true,
             "data": {
               "rows": [
@@ -96,17 +102,17 @@
               ]
             },
             "error": null,
-            "latency_ms": 511,
+            "latency_ms": 113,
             "query_plan": {
               "protocol_version": "1.0",
-              "task_id": "distribution_001",
-              "task_name": "按level统计分布",
+              "task_id": "top_n_001",
+              "task_name": "按level统计 Top 3",
               "metric": "user_count",
               "business_name": "用户数量",
               "engine": "aurora_mysql",
               "datasource": "user",
               "query_type": "sql",
-              "sql": "SELECT level AS dimension_value, COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s\nGROUP BY level\nORDER BY value DESC",
+              "sql": "SELECT level AS dimension_value, COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s\nGROUP BY level\nORDER BY value DESC\nLIMIT 3",
               "params": [
                 "2026-05-14",
                 "2026-05-15"
@@ -121,51 +127,52 @@
           }
         ]
       },
-      "timestamp_ms": 1779436199910
+      "timestamp_ms": 1779437305274
     },
     {
       "step": "aggregation_analysis",
       "status": "success",
       "output": {
-        "aggregation_type": "distribution",
+        "aggregation_type": "top_n",
         "analysis": {
           "dimension": "level",
-          "total_value": 926,
-          "groups": [
+          "limit": 3,
+          "order": "desc",
+          "rows": [
             {
               "dimension_value": 0,
-              "value": 897,
-              "percentage": 96.87
+              "value": 897
             },
             {
               "dimension_value": 2,
-              "value": 20,
-              "percentage": 2.16
+              "value": 20
             },
             {
               "dimension_value": 3,
-              "value": 9,
-              "percentage": 0.97
+              "value": 9
             }
           ],
-          "group_count": 3
+          "top_item": {
+            "dimension_value": 0,
+            "value": 897
+          }
         },
         "error": null
       },
-      "timestamp_ms": 1779436199911
+      "timestamp_ms": 1779437305274
     },
     {
       "step": "summarize",
       "status": "success",
       "output": {
-        "aggregation_type": "distribution",
-        "template": "distribution.txt",
-        "answer": "根据分析结果,2026-05-14新增用户的用户等级分布如下:\n\n- 0级用户:897人,占比96.87%\n- 2级用户:20人,占比2.16% \n- 3级用户:9人,占比0.97%\n\n总计新增用户926人。其中0级用户占比最高,达到96.87%。"
+        "aggregation_type": "top_n",
+        "template": "top_n.txt",
+        "answer": "根据分析结果，2026-05-14 新增用户最多的前3个用户等级为:\n\n1. 等级 0: 897 名新用户\n2. 等级 2: 20 名新用户  \n3. 等级 3: 9 名新用户\n\n其中新增用户最多的是等级 0,共有 897 名新用户。"
       },
-      "timestamp_ms": 1779436202364
+      "timestamp_ms": 1779437307801
     }
   ],
-  "answer": "根据分析结果,2026-05-14新增用户的用户等级分布如下:\n\n- 0级用户:897人,占比96.87%\n- 2级用户:20人,占比2.16% \n- 3级用户:9人,占比0.97%\n\n总计新增用户926人。其中0级用户占比最高,达到96.87%。",
-  "end_ms": 1779436202364,
-  "total_latency_ms": 5366
+  "answer": "根据分析结果，2026-05-14 新增用户最多的前3个用户等级为:\n\n1. 等级 0: 897 名新用户\n2. 等级 2: 20 名新用户  \n3. 等级 3: 9 名新用户\n\n其中新增用户最多的是等级 0,共有 897 名新用户。",
+  "end_ms": 1779437307801,
+  "total_latency_ms": 4528
 }

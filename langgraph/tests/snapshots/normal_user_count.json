@@ -1,0 +1,231 @@
+{
+  "question": "2026-05-14 新增用户数量是多少？",
+  "aggregation_plan": {
+    "aggregation_type": "normal",
+    "tasks": [
+      {
+        "task_id": "single_task",
+        "task_name": "普通查询",
+        "metric": "user_count",
+        "params": {
+          "start_time": "2026-05-14",
+          "end_time": "2026-05-15",
+          "grain": "day"
+        }
+      }
+    ]
+  },
+  "aggregation_result": {
+    "aggregation_type": "normal",
+    "analysis": null,
+    "error": null
+  },
+  "tasks": [
+    {
+      "task_id": "single_task",
+      "task_name": "普通查询",
+      "metric": "user_count",
+      "params": {
+        "start_time": "2026-05-14",
+        "end_time": "2026-05-15",
+        "grain": "day"
+      }
+    }
+  ],
+  "query_plans": [
+    {
+      "protocol_version": "1.0",
+      "task_id": "single_task",
+      "task_name": "普通查询",
+      "metric": "user_count",
+      "business_name": "用户数量",
+      "engine": "aurora_mysql",
+      "datasource": "user",
+      "query_type": "sql",
+      "sql": "SELECT COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s",
+      "params": [
+        "2026-05-14",
+        "2026-05-15"
+      ],
+      "meta": {
+        "engine": "aurora_mysql",
+        "datasource": "user",
+        "database": "user",
+        "table": "users"
+      }
+    }
+  ],
+  "tool_results": [
+    {
+      "protocol_version": "1.0",
+      "task_id": "single_task",
+      "task_name": "普通查询",
+      "success": true,
+      "data": {
+        "value": 926
+      },
+      "error": null,
+      "latency_ms": 977,
+      "query_plan": {
+        "protocol_version": "1.0",
+        "task_id": "single_task",
+        "task_name": "普通查询",
+        "metric": "user_count",
+        "business_name": "用户数量",
+        "engine": "aurora_mysql",
+        "datasource": "user",
+        "query_type": "sql",
+        "sql": "SELECT COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s",
+        "params": [
+          "2026-05-14",
+          "2026-05-15"
+        ],
+        "meta": {
+          "engine": "aurora_mysql",
+          "datasource": "user",
+          "database": "user",
+          "table": "users"
+        }
+      }
+    }
+  ],
+  "compile_errors": [],
+  "request_id": "regression-normal_user_count-1779437283",
+  "answer": "2026年5月14日的新增用户数量是926人。",
+  "error": null,
+  "trace": {
+    "request_id": "regression-normal_user_count-1779437283",
+    "question": "2026-05-14 新增用户数量是多少？",
+    "start_ms": 1779437283094,
+    "steps": [
+      {
+        "step": "plan_tasks",
+        "status": "success",
+        "output": {
+          "parsed": {
+            "question": "2026-05-14 新增用户数量是多少？",
+            "metric": "user_count",
+            "params": {
+              "start_time": "2026-05-14",
+              "end_time": "2026-05-15",
+              "grain": "day"
+            },
+            "original_question": "2026-05-14 新增用户数量是多少？"
+          },
+          "aggregation_plan": {
+            "aggregation_type": "normal",
+            "tasks": [
+              {
+                "task_id": "single_task",
+                "task_name": "普通查询",
+                "metric": "user_count",
+                "params": {
+                  "start_time": "2026-05-14",
+                  "end_time": "2026-05-15",
+                  "grain": "day"
+                }
+              }
+            ]
+          }
+        },
+        "timestamp_ms": 1779437285235
+      },
+      {
+        "step": "compile_queries",
+        "status": "success",
+        "output": {
+          "query_plans": [
+            {
+              "protocol_version": "1.0",
+              "task_id": "single_task",
+              "task_name": "普通查询",
+              "metric": "user_count",
+              "business_name": "用户数量",
+              "engine": "aurora_mysql",
+              "datasource": "user",
+              "query_type": "sql",
+              "sql": "SELECT COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s",
+              "params": [
+                "2026-05-14",
+                "2026-05-15"
+              ],
+              "meta": {
+                "engine": "aurora_mysql",
+                "datasource": "user",
+                "database": "user",
+                "table": "users"
+              }
+            }
+          ],
+          "compile_errors": []
+        },
+        "timestamp_ms": 1779437285237
+      },
+      {
+        "step": "execute_queries",
+        "status": "success",
+        "output": {
+          "tool_results": [
+            {
+              "protocol_version": "1.0",
+              "task_id": "single_task",
+              "task_name": "普通查询",
+              "success": true,
+              "data": {
+                "value": 926
+              },
+              "error": null,
+              "latency_ms": 977,
+              "query_plan": {
+                "protocol_version": "1.0",
+                "task_id": "single_task",
+                "task_name": "普通查询",
+                "metric": "user_count",
+                "business_name": "用户数量",
+                "engine": "aurora_mysql",
+                "datasource": "user",
+                "query_type": "sql",
+                "sql": "SELECT COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s",
+                "params": [
+                  "2026-05-14",
+                  "2026-05-15"
+                ],
+                "meta": {
+                  "engine": "aurora_mysql",
+                  "datasource": "user",
+                  "database": "user",
+                  "table": "users"
+                }
+              }
+            }
+          ]
+        },
+        "timestamp_ms": 1779437286214
+      },
+      {
+        "step": "aggregation_analysis",
+        "status": "success",
+        "output": {
+          "aggregation_type": "normal",
+          "analysis": null,
+          "error": null
+        },
+        "timestamp_ms": 1779437286215
+      },
+      {
+        "step": "summarize",
+        "status": "success",
+        "output": {
+          "aggregation_type": "normal",
+          "template": "normal.txt",
+          "answer": "2026年5月14日的新增用户数量是926人。"
+        },
+        "timestamp_ms": 1779437287319
+      }
+    ],
+    "answer": "2026年5月14日的新增用户数量是926人。",
+    "end_ms": 1779437287319,
+    "total_latency_ms": 4225
+  },
+  "trace_file": "traces/regression-normal_user_count-1779437283.json"
+}

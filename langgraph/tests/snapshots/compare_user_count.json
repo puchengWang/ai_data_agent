@@ -1,0 +1,373 @@
+{
+  "question": "2026-05-14 新增用户相比前一天增长多少？",
+  "aggregation_plan": {
+    "aggregation_type": "compare",
+    "compare_mode": "period_over_period",
+    "tasks": [
+      {
+        "task_id": "current_period",
+        "task_name": "当前周期",
+        "metric": "user_count",
+        "params": {
+          "start_time": "2026-05-14",
+          "end_time": "2026-05-15"
+        }
+      },
+      {
+        "task_id": "previous_period",
+        "task_name": "对比周期",
+        "metric": "user_count",
+        "params": {
+          "start_time": "2026-05-13",
+          "end_time": "2026-05-14"
+        }
+      }
+    ]
+  },
+  "aggregation_result": {
+    "aggregation_type": "compare",
+    "analysis": {
+      "current_value": 926,
+      "previous_value": 336,
+      "change": 590,
+      "change_rate": 175.6
+    },
+    "error": null
+  },
+  "tasks": [
+    {
+      "task_id": "current_period",
+      "task_name": "当前周期",
+      "metric": "user_count",
+      "params": {
+        "start_time": "2026-05-14",
+        "end_time": "2026-05-15"
+      }
+    },
+    {
+      "task_id": "previous_period",
+      "task_name": "对比周期",
+      "metric": "user_count",
+      "params": {
+        "start_time": "2026-05-13",
+        "end_time": "2026-05-14"
+      }
+    }
+  ],
+  "query_plans": [
+    {
+      "protocol_version": "1.0",
+      "task_id": "current_period",
+      "task_name": "当前周期",
+      "metric": "user_count",
+      "business_name": "用户数量",
+      "engine": "aurora_mysql",
+      "datasource": "user",
+      "query_type": "sql",
+      "sql": "SELECT COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s",
+      "params": [
+        "2026-05-14",
+        "2026-05-15"
+      ],
+      "meta": {
+        "engine": "aurora_mysql",
+        "datasource": "user",
+        "database": "user",
+        "table": "users"
+      }
+    },
+    {
+      "protocol_version": "1.0",
+      "task_id": "previous_period",
+      "task_name": "对比周期",
+      "metric": "user_count",
+      "business_name": "用户数量",
+      "engine": "aurora_mysql",
+      "datasource": "user",
+      "query_type": "sql",
+      "sql": "SELECT COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s",
+      "params": [
+        "2026-05-13",
+        "2026-05-14"
+      ],
+      "meta": {
+        "engine": "aurora_mysql",
+        "datasource": "user",
+        "database": "user",
+        "table": "users"
+      }
+    }
+  ],
+  "tool_results": [
+    {
+      "protocol_version": "1.0",
+      "task_id": "current_period",
+      "task_name": "当前周期",
+      "success": true,
+      "data": {
+        "value": 926
+      },
+      "error": null,
+      "latency_ms": 124,
+      "query_plan": {
+        "protocol_version": "1.0",
+        "task_id": "current_period",
+        "task_name": "当前周期",
+        "metric": "user_count",
+        "business_name": "用户数量",
+        "engine": "aurora_mysql",
+        "datasource": "user",
+        "query_type": "sql",
+        "sql": "SELECT COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s",
+        "params": [
+          "2026-05-14",
+          "2026-05-15"
+        ],
+        "meta": {
+          "engine": "aurora_mysql",
+          "datasource": "user",
+          "database": "user",
+          "table": "users"
+        }
+      }
+    },
+    {
+      "protocol_version": "1.0",
+      "task_id": "previous_period",
+      "task_name": "对比周期",
+      "success": true,
+      "data": {
+        "value": 336
+      },
+      "error": null,
+      "latency_ms": 105,
+      "query_plan": {
+        "protocol_version": "1.0",
+        "task_id": "previous_period",
+        "task_name": "对比周期",
+        "metric": "user_count",
+        "business_name": "用户数量",
+        "engine": "aurora_mysql",
+        "datasource": "user",
+        "query_type": "sql",
+        "sql": "SELECT COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s",
+        "params": [
+          "2026-05-13",
+          "2026-05-14"
+        ],
+        "meta": {
+          "engine": "aurora_mysql",
+          "datasource": "user",
+          "database": "user",
+          "table": "users"
+        }
+      }
+    }
+  ],
+  "compile_errors": [],
+  "request_id": "regression-compare_user_count-1779437287",
+  "answer": "2026-05-14 新增用户数为 926，相比前一天（2026-05-13）的 336 增加了 590 人，增长率为 175.6%。新增用户数量有显著增长。",
+  "error": null,
+  "trace": {
+    "request_id": "regression-compare_user_count-1779437287",
+    "question": "2026-05-14 新增用户相比前一天增长多少？",
+    "start_ms": 1779437287324,
+    "steps": [
+      {
+        "step": "plan_tasks",
+        "status": "success",
+        "output": {
+          "parsed": {
+            "question": "2026-05-14 新增用户相比前一天增长多少？",
+            "metric": "user_count",
+            "params": {
+              "start_time": "2026-05-14",
+              "end_time": "2026-05-15",
+              "grain": "day"
+            },
+            "original_question": "2026-05-14 新增用户相比前一天增长多少？"
+          },
+          "aggregation_plan": {
+            "aggregation_type": "compare",
+            "compare_mode": "period_over_period",
+            "tasks": [
+              {
+                "task_id": "current_period",
+                "task_name": "当前周期",
+                "metric": "user_count",
+                "params": {
+                  "start_time": "2026-05-14",
+                  "end_time": "2026-05-15"
+                }
+              },
+              {
+                "task_id": "previous_period",
+                "task_name": "对比周期",
+                "metric": "user_count",
+                "params": {
+                  "start_time": "2026-05-13",
+                  "end_time": "2026-05-14"
+                }
+              }
+            ]
+          }
+        },
+        "timestamp_ms": 1779437289164
+      },
+      {
+        "step": "compile_queries",
+        "status": "success",
+        "output": {
+          "query_plans": [
+            {
+              "protocol_version": "1.0",
+              "task_id": "current_period",
+              "task_name": "当前周期",
+              "metric": "user_count",
+              "business_name": "用户数量",
+              "engine": "aurora_mysql",
+              "datasource": "user",
+              "query_type": "sql",
+              "sql": "SELECT COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s",
+              "params": [
+                "2026-05-14",
+                "2026-05-15"
+              ],
+              "meta": {
+                "engine": "aurora_mysql",
+                "datasource": "user",
+                "database": "user",
+                "table": "users"
+              }
+            },
+            {
+              "protocol_version": "1.0",
+              "task_id": "previous_period",
+              "task_name": "对比周期",
+              "metric": "user_count",
+              "business_name": "用户数量",
+              "engine": "aurora_mysql",
+              "datasource": "user",
+              "query_type": "sql",
+              "sql": "SELECT COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s",
+              "params": [
+                "2026-05-13",
+                "2026-05-14"
+              ],
+              "meta": {
+                "engine": "aurora_mysql",
+                "datasource": "user",
+                "database": "user",
+                "table": "users"
+              }
+            }
+          ],
+          "compile_errors": []
+        },
+        "timestamp_ms": 1779437289165
+      },
+      {
+        "step": "execute_queries",
+        "status": "success",
+        "output": {
+          "tool_results": [
+            {
+              "protocol_version": "1.0",
+              "task_id": "current_period",
+              "task_name": "当前周期",
+              "success": true,
+              "data": {
+                "value": 926
+              },
+              "error": null,
+              "latency_ms": 124,
+              "query_plan": {
+                "protocol_version": "1.0",
+                "task_id": "current_period",
+                "task_name": "当前周期",
+                "metric": "user_count",
+                "business_name": "用户数量",
+                "engine": "aurora_mysql",
+                "datasource": "user",
+                "query_type": "sql",
+                "sql": "SELECT COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s",
+                "params": [
+                  "2026-05-14",
+                  "2026-05-15"
+                ],
+                "meta": {
+                  "engine": "aurora_mysql",
+                  "datasource": "user",
+                  "database": "user",
+                  "table": "users"
+                }
+              }
+            },
+            {
+              "protocol_version": "1.0",
+              "task_id": "previous_period",
+              "task_name": "对比周期",
+              "success": true,
+              "data": {
+                "value": 336
+              },
+              "error": null,
+              "latency_ms": 105,
+              "query_plan": {
+                "protocol_version": "1.0",
+                "task_id": "previous_period",
+                "task_name": "对比周期",
+                "metric": "user_count",
+                "business_name": "用户数量",
+                "engine": "aurora_mysql",
+                "datasource": "user",
+                "query_type": "sql",
+                "sql": "SELECT COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s",
+                "params": [
+                  "2026-05-13",
+                  "2026-05-14"
+                ],
+                "meta": {
+                  "engine": "aurora_mysql",
+                  "datasource": "user",
+                  "database": "user",
+                  "table": "users"
+                }
+              }
+            }
+          ]
+        },
+        "timestamp_ms": 1779437289394
+      },
+      {
+        "step": "aggregation_analysis",
+        "status": "success",
+        "output": {
+          "aggregation_type": "compare",
+          "analysis": {
+            "current_value": 926,
+            "previous_value": 336,
+            "change": 590,
+            "change_rate": 175.6
+          },
+          "error": null
+        },
+        "timestamp_ms": 1779437289395
+      },
+      {
+        "step": "summarize",
+        "status": "success",
+        "output": {
+          "aggregation_type": "compare",
+          "template": "compare.txt",
+          "answer": "2026-05-14 新增用户数为 926，相比前一天（2026-05-13）的 336 增加了 590 人，增长率为 175.6%。新增用户数量有显著增长。"
+        },
+        "timestamp_ms": 1779437291416
+      }
+    ],
+    "answer": "2026-05-14 新增用户数为 926，相比前一天（2026-05-13）的 336 增加了 590 人，增长率为 175.6%。新增用户数量有显著增长。",
+    "end_ms": 1779437291416,
+    "total_latency_ms": 4092
+  },
+  "trace_file": "traces/regression-compare_user_count-1779437287.json"
+}

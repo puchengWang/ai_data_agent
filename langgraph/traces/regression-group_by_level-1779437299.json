@@ -1,29 +1,29 @@
 {
-  "request_id": "langgraph-multitask-test-001",
-  "question": "统计 2026-05-14 新增用户的用户等级分布",
-  "start_ms": 1779436196998,
+  "request_id": "regression-group_by_level-1779437299",
+  "question": "统计 2026-05-14 按用户等级的新增用户数量",
+  "start_ms": 1779437299701,
   "steps": [
     {
       "step": "plan_tasks",
       "status": "success",
       "output": {
         "parsed": {
-          "question": "统计 2026-05-14 新增用户的用户等级分布",
+          "question": "统计 2026-05-14 按用户等级的新增用户数量",
           "metric": "user_count",
           "params": {
             "start_time": "2026-05-14",
             "end_time": "2026-05-15",
             "grain": "day"
           },
-          "original_question": "统计 2026-05-14 新增用户的用户等级分布"
+          "original_question": "统计 2026-05-14 按用户等级的新增用户数量"
         },
         "aggregation_plan": {
-          "aggregation_type": "distribution",
+          "aggregation_type": "group_by",
           "dimension": "level",
           "tasks": [
             {
-              "task_id": "distribution_001",
-              "task_name": "按level统计分布",
+              "task_id": "group_by_001",
+              "task_name": "按level分组统计",
               "metric": "user_count",
               "params": {
                 "start_time": "2026-05-14",
@@ -36,7 +36,7 @@
           ]
         }
       },
-      "timestamp_ms": 1779436199398
+      "timestamp_ms": 1779437301532
     },
     {
       "step": "compile_queries",
@@ -45,8 +45,8 @@
         "query_plans": [
           {
             "protocol_version": "1.0",
-            "task_id": "distribution_001",
-            "task_name": "按level统计分布",
+            "task_id": "group_by_001",
+            "task_name": "按level分组统计",
             "metric": "user_count",
             "business_name": "用户数量",
             "engine": "aurora_mysql",
@@ -67,7 +67,7 @@
         ],
         "compile_errors": []
       },
-      "timestamp_ms": 1779436199399
+      "timestamp_ms": 1779437301532
     },
     {
       "step": "execute_queries",
@@ -76,8 +76,8 @@
         "tool_results": [
           {
             "protocol_version": "1.0",
-            "task_id": "distribution_001",
-            "task_name": "按level统计分布",
+            "task_id": "group_by_001",
+            "task_name": "按level分组统计",
             "success": true,
             "data": {
               "rows": [
@@ -96,11 +96,11 @@
               ]
             },
             "error": null,
-            "latency_ms": 511,
+            "latency_ms": 121,
             "query_plan": {
               "protocol_version": "1.0",
-              "task_id": "distribution_001",
-              "task_name": "按level统计分布",
+              "task_id": "group_by_001",
+              "task_name": "按level分组统计",
               "metric": "user_count",
               "business_name": "用户数量",
               "engine": "aurora_mysql",
@@ -121,51 +121,48 @@
           }
         ]
       },
-      "timestamp_ms": 1779436199910
+      "timestamp_ms": 1779437301654
     },
     {
       "step": "aggregation_analysis",
       "status": "success",
       "output": {
-        "aggregation_type": "distribution",
+        "aggregation_type": "group_by",
         "analysis": {
           "dimension": "level",
-          "total_value": 926,
           "groups": [
             {
               "dimension_value": 0,
-              "value": 897,
-              "percentage": 96.87
+              "value": 897
             },
             {
               "dimension_value": 2,
-              "value": 20,
-              "percentage": 2.16
+              "value": 20
             },
             {
               "dimension_value": 3,
-              "value": 9,
-              "percentage": 0.97
+              "value": 9
             }
           ],
-          "group_count": 3
+          "group_count": 3,
+          "total_value": 926
         },
         "error": null
       },
-      "timestamp_ms": 1779436199911
+      "timestamp_ms": 1779437301655
     },
     {
       "step": "summarize",
       "status": "success",
       "output": {
-        "aggregation_type": "distribution",
-        "template": "distribution.txt",
-        "answer": "根据分析结果,2026-05-14新增用户的用户等级分布如下:\n\n- 0级用户:897人,占比96.87%\n- 2级用户:20人,占比2.16% \n- 3级用户:9人,占比0.97%\n\n总计新增用户926人。其中0级用户占比最高,达到96.87%。"
+        "aggregation_type": "group_by",
+        "template": "group_by.txt",
+        "answer": "2026-05-14按用户等级的新增用户数量统计如下:\n\n0级: 897人\n2级: 20人\n3级: 9人\n\n总计新增用户926人。其中0级用户数量最多,为897人。"
       },
-      "timestamp_ms": 1779436202364
+      "timestamp_ms": 1779437303267
     }
   ],
-  "answer": "根据分析结果,2026-05-14新增用户的用户等级分布如下:\n\n- 0级用户:897人,占比96.87%\n- 2级用户:20人,占比2.16% \n- 3级用户:9人,占比0.97%\n\n总计新增用户926人。其中0级用户占比最高,达到96.87%。",
-  "end_ms": 1779436202364,
-  "total_latency_ms": 5366
+  "answer": "2026-05-14按用户等级的新增用户数量统计如下:\n\n0级: 897人\n2级: 20人\n3级: 9人\n\n总计新增用户926人。其中0级用户数量最多,为897人。",
+  "end_ms": 1779437303267,
+  "total_latency_ms": 3566
 }

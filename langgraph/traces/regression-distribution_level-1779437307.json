@@ -1,7 +1,7 @@
 {
-  "request_id": "langgraph-multitask-test-001",
+  "request_id": "regression-distribution_level-1779437307",
   "question": "统计 2026-05-14 新增用户的用户等级分布",
-  "start_ms": 1779436196998,
+  "start_ms": 1779437307808,
   "steps": [
     {
       "step": "plan_tasks",
@@ -36,7 +36,7 @@
           ]
         }
       },
-      "timestamp_ms": 1779436199398
+      "timestamp_ms": 1779437309880
     },
     {
       "step": "compile_queries",
@@ -67,7 +67,7 @@
         ],
         "compile_errors": []
       },
-      "timestamp_ms": 1779436199399
+      "timestamp_ms": 1779437309881
     },
     {
       "step": "execute_queries",
@@ -96,7 +96,7 @@
               ]
             },
             "error": null,
-            "latency_ms": 511,
+            "latency_ms": 114,
             "query_plan": {
               "protocol_version": "1.0",
               "task_id": "distribution_001",
@@ -121,7 +121,7 @@
           }
         ]
       },
-      "timestamp_ms": 1779436199910
+      "timestamp_ms": 1779437309995
     },
     {
       "step": "aggregation_analysis",
@@ -152,7 +152,7 @@
         },
         "error": null
       },
-      "timestamp_ms": 1779436199911
+      "timestamp_ms": 1779437309996
     },
     {
       "step": "summarize",
@@ -162,10 +162,10 @@
         "template": "distribution.txt",
         "answer": "根据分析结果,2026-05-14新增用户的用户等级分布如下:\n\n- 0级用户:897人,占比96.87%\n- 2级用户:20人,占比2.16% \n- 3级用户:9人,占比0.97%\n\n总计新增用户926人。其中0级用户占比最高,达到96.87%。"
       },
-      "timestamp_ms": 1779436202364
+      "timestamp_ms": 1779437313388
     }
   ],
   "answer": "根据分析结果,2026-05-14新增用户的用户等级分布如下:\n\n- 0级用户:897人,占比96.87%\n- 2级用户:20人,占比2.16% \n- 3级用户:9人,占比0.97%\n\n总计新增用户926人。其中0级用户占比最高,达到96.87%。",
-  "end_ms": 1779436202364,
-  "total_latency_ms": 5366
+  "end_ms": 1779437313388,
+  "total_latency_ms": 5580
 }

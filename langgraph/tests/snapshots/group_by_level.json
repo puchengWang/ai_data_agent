@@ -1,0 +1,301 @@
+{
+  "question": "统计 2026-05-14 按用户等级的新增用户数量",
+  "aggregation_plan": {
+    "aggregation_type": "group_by",
+    "dimension": "level",
+    "tasks": [
+      {
+        "task_id": "group_by_001",
+        "task_name": "按level分组统计",
+        "metric": "user_count",
+        "params": {
+          "start_time": "2026-05-14",
+          "end_time": "2026-05-15",
+          "grain": "day",
+          "dimension": "level"
+        },
+        "dimension": "level"
+      }
+    ]
+  },
+  "aggregation_result": {
+    "aggregation_type": "group_by",
+    "analysis": {
+      "dimension": "level",
+      "groups": [
+        {
+          "dimension_value": 0,
+          "value": 897
+        },
+        {
+          "dimension_value": 2,
+          "value": 20
+        },
+        {
+          "dimension_value": 3,
+          "value": 9
+        }
+      ],
+      "group_count": 3,
+      "total_value": 926
+    },
+    "error": null
+  },
+  "tasks": [
+    {
+      "task_id": "group_by_001",
+      "task_name": "按level分组统计",
+      "metric": "user_count",
+      "params": {
+        "start_time": "2026-05-14",
+        "end_time": "2026-05-15",
+        "grain": "day",
+        "dimension": "level"
+      },
+      "dimension": "level"
+    }
+  ],
+  "query_plans": [
+    {
+      "protocol_version": "1.0",
+      "task_id": "group_by_001",
+      "task_name": "按level分组统计",
+      "metric": "user_count",
+      "business_name": "用户数量",
+      "engine": "aurora_mysql",
+      "datasource": "user",
+      "query_type": "sql",
+      "sql": "SELECT level AS dimension_value, COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s\nGROUP BY level\nORDER BY value DESC",
+      "params": [
+        "2026-05-14",
+        "2026-05-15"
+      ],
+      "meta": {
+        "engine": "aurora_mysql",
+        "datasource": "user",
+        "database": "user",
+        "table": "users"
+      }
+    }
+  ],
+  "tool_results": [
+    {
+      "protocol_version": "1.0",
+      "task_id": "group_by_001",
+      "task_name": "按level分组统计",
+      "success": true,
+      "data": {
+        "rows": [
+          {
+            "dimension_value": 0,
+            "value": 897
+          },
+          {
+            "dimension_value": 2,
+            "value": 20
+          },
+          {
+            "dimension_value": 3,
+            "value": 9
+          }
+        ]
+      },
+      "error": null,
+      "latency_ms": 121,
+      "query_plan": {
+        "protocol_version": "1.0",
+        "task_id": "group_by_001",
+        "task_name": "按level分组统计",
+        "metric": "user_count",
+        "business_name": "用户数量",
+        "engine": "aurora_mysql",
+        "datasource": "user",
+        "query_type": "sql",
+        "sql": "SELECT level AS dimension_value, COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s\nGROUP BY level\nORDER BY value DESC",
+        "params": [
+          "2026-05-14",
+          "2026-05-15"
+        ],
+        "meta": {
+          "engine": "aurora_mysql",
+          "datasource": "user",
+          "database": "user",
+          "table": "users"
+        }
+      }
+    }
+  ],
+  "compile_errors": [],
+  "request_id": "regression-group_by_level-1779437299",
+  "answer": "2026-05-14按用户等级的新增用户数量统计如下:\n\n0级: 897人\n2级: 20人\n3级: 9人\n\n总计新增用户926人。其中0级用户数量最多,为897人。",
+  "error": null,
+  "trace": {
+    "request_id": "regression-group_by_level-1779437299",
+    "question": "统计 2026-05-14 按用户等级的新增用户数量",
+    "start_ms": 1779437299701,
+    "steps": [
+      {
+        "step": "plan_tasks",
+        "status": "success",
+        "output": {
+          "parsed": {
+            "question": "统计 2026-05-14 按用户等级的新增用户数量",
+            "metric": "user_count",
+            "params": {
+              "start_time": "2026-05-14",
+              "end_time": "2026-05-15",
+              "grain": "day"
+            },
+            "original_question": "统计 2026-05-14 按用户等级的新增用户数量"
+          },
+          "aggregation_plan": {
+            "aggregation_type": "group_by",
+            "dimension": "level",
+            "tasks": [
+              {
+                "task_id": "group_by_001",
+                "task_name": "按level分组统计",
+                "metric": "user_count",
+                "params": {
+                  "start_time": "2026-05-14",
+                  "end_time": "2026-05-15",
+                  "grain": "day",
+                  "dimension": "level"
+                },
+                "dimension": "level"
+              }
+            ]
+          }
+        },
+        "timestamp_ms": 1779437301532
+      },
+      {
+        "step": "compile_queries",
+        "status": "success",
+        "output": {
+          "query_plans": [
+            {
+              "protocol_version": "1.0",
+              "task_id": "group_by_001",
+              "task_name": "按level分组统计",
+              "metric": "user_count",
+              "business_name": "用户数量",
+              "engine": "aurora_mysql",
+              "datasource": "user",
+              "query_type": "sql",
+              "sql": "SELECT level AS dimension_value, COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s\nGROUP BY level\nORDER BY value DESC",
+              "params": [
+                "2026-05-14",
+                "2026-05-15"
+              ],
+              "meta": {
+                "engine": "aurora_mysql",
+                "datasource": "user",
+                "database": "user",
+                "table": "users"
+              }
+            }
+          ],
+          "compile_errors": []
+        },
+        "timestamp_ms": 1779437301532
+      },
+      {
+        "step": "execute_queries",
+        "status": "success",
+        "output": {
+          "tool_results": [
+            {
+              "protocol_version": "1.0",
+              "task_id": "group_by_001",
+              "task_name": "按level分组统计",
+              "success": true,
+              "data": {
+                "rows": [
+                  {
+                    "dimension_value": 0,
+                    "value": 897
+                  },
+                  {
+                    "dimension_value": 2,
+                    "value": 20
+                  },
+                  {
+                    "dimension_value": 3,
+                    "value": 9
+                  }
+                ]
+              },
+              "error": null,
+              "latency_ms": 121,
+              "query_plan": {
+                "protocol_version": "1.0",
+                "task_id": "group_by_001",
+                "task_name": "按level分组统计",
+                "metric": "user_count",
+                "business_name": "用户数量",
+                "engine": "aurora_mysql",
+                "datasource": "user",
+                "query_type": "sql",
+                "sql": "SELECT level AS dimension_value, COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s\nGROUP BY level\nORDER BY value DESC",
+                "params": [
+                  "2026-05-14",
+                  "2026-05-15"
+                ],
+                "meta": {
+                  "engine": "aurora_mysql",
+                  "datasource": "user",
+                  "database": "user",
+                  "table": "users"
+                }
+              }
+            }
+          ]
+        },
+        "timestamp_ms": 1779437301654
+      },
+      {
+        "step": "aggregation_analysis",
+        "status": "success",
+        "output": {
+          "aggregation_type": "group_by",
+          "analysis": {
+            "dimension": "level",
+            "groups": [
+              {
+                "dimension_value": 0,
+                "value": 897
+              },
+              {
+                "dimension_value": 2,
+                "value": 20
+              },
+              {
+                "dimension_value": 3,
+                "value": 9
+              }
+            ],
+            "group_count": 3,
+            "total_value": 926
+          },
+          "error": null
+        },
+        "timestamp_ms": 1779437301655
+      },
+      {
+        "step": "summarize",
+        "status": "success",
+        "output": {
+          "aggregation_type": "group_by",
+          "template": "group_by.txt",
+          "answer": "2026-05-14按用户等级的新增用户数量统计如下:\n\n0级: 897人\n2级: 20人\n3级: 9人\n\n总计新增用户926人。其中0级用户数量最多,为897人。"
+        },
+        "timestamp_ms": 1779437303267
+      }
+    ],
+    "answer": "2026-05-14按用户等级的新增用户数量统计如下:\n\n0级: 897人\n2级: 20人\n3级: 9人\n\n总计新增用户926人。其中0级用户数量最多,为897人。",
+    "end_ms": 1779437303267,
+    "total_latency_ms": 3566
+  },
+  "trace_file": "traces/regression-group_by_level-1779437299.json"
+}

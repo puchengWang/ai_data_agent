@@ -1,0 +1,1185 @@
+{
+  "question": "统计 2026-05-08 到 2026-05-14 每天新增用户趋势",
+  "aggregation_plan": {
+    "aggregation_type": "trend",
+    "grain": "day",
+    "tasks": [
+      {
+        "task_id": "trend_001",
+        "task_name": "2026-05-08 指标值",
+        "metric": "user_count",
+        "params": {
+          "start_time": "2026-05-08",
+          "end_time": "2026-05-09",
+          "time_label": "2026-05-08"
+        }
+      },
+      {
+        "task_id": "trend_002",
+        "task_name": "2026-05-09 指标值",
+        "metric": "user_count",
+        "params": {
+          "start_time": "2026-05-09",
+          "end_time": "2026-05-10",
+          "time_label": "2026-05-09"
+        }
+      },
+      {
+        "task_id": "trend_003",
+        "task_name": "2026-05-10 指标值",
+        "metric": "user_count",
+        "params": {
+          "start_time": "2026-05-10",
+          "end_time": "2026-05-11",
+          "time_label": "2026-05-10"
+        }
+      },
+      {
+        "task_id": "trend_004",
+        "task_name": "2026-05-11 指标值",
+        "metric": "user_count",
+        "params": {
+          "start_time": "2026-05-11",
+          "end_time": "2026-05-12",
+          "time_label": "2026-05-11"
+        }
+      },
+      {
+        "task_id": "trend_005",
+        "task_name": "2026-05-12 指标值",
+        "metric": "user_count",
+        "params": {
+          "start_time": "2026-05-12",
+          "end_time": "2026-05-13",
+          "time_label": "2026-05-12"
+        }
+      },
+      {
+        "task_id": "trend_006",
+        "task_name": "2026-05-13 指标值",
+        "metric": "user_count",
+        "params": {
+          "start_time": "2026-05-13",
+          "end_time": "2026-05-14",
+          "time_label": "2026-05-13"
+        }
+      },
+      {
+        "task_id": "trend_007",
+        "task_name": "2026-05-14 指标值",
+        "metric": "user_count",
+        "params": {
+          "start_time": "2026-05-14",
+          "end_time": "2026-05-15",
+          "time_label": "2026-05-14"
+        }
+      }
+    ]
+  },
+  "aggregation_result": {
+    "aggregation_type": "trend",
+    "analysis": {
+      "grain": "day",
+      "time_series": [
+        {
+          "time_label": "2026-05-08",
+          "task_id": "trend_001",
+          "task_name": "2026-05-08 指标值",
+          "value": 1310,
+          "success": true,
+          "error": null
+        },
+        {
+          "time_label": "2026-05-09",
+          "task_id": "trend_002",
+          "task_name": "2026-05-09 指标值",
+          "value": 258,
+          "success": true,
+          "error": null
+        },
+        {
+          "time_label": "2026-05-10",
+          "task_id": "trend_003",
+          "task_name": "2026-05-10 指标值",
+          "value": 0,
+          "success": true,
+          "error": null
+        },
+        {
+          "time_label": "2026-05-11",
+          "task_id": "trend_004",
+          "task_name": "2026-05-11 指标值",
+          "value": 1006,
+          "success": true,
+          "error": null
+        },
+        {
+          "time_label": "2026-05-12",
+          "task_id": "trend_005",
+          "task_name": "2026-05-12 指标值",
+          "value": 340,
+          "success": true,
+          "error": null
+        },
+        {
+          "time_label": "2026-05-13",
+          "task_id": "trend_006",
+          "task_name": "2026-05-13 指标值",
+          "value": 336,
+          "success": true,
+          "error": null
+        },
+        {
+          "time_label": "2026-05-14",
+          "task_id": "trend_007",
+          "task_name": "2026-05-14 指标值",
+          "value": 926,
+          "success": true,
+          "error": null
+        }
+      ],
+      "summary_stats": {
+        "points": 7,
+        "min": 0,
+        "max": 1310,
+        "start_value": 1310,
+        "end_value": 926,
+        "change": -384
+      }
+    },
+    "error": null
+  },
+  "tasks": [
+    {
+      "task_id": "trend_001",
+      "task_name": "2026-05-08 指标值",
+      "metric": "user_count",
+      "params": {
+        "start_time": "2026-05-08",
+        "end_time": "2026-05-09",
+        "time_label": "2026-05-08"
+      }
+    },
+    {
+      "task_id": "trend_002",
+      "task_name": "2026-05-09 指标值",
+      "metric": "user_count",
+      "params": {
+        "start_time": "2026-05-09",
+        "end_time": "2026-05-10",
+        "time_label": "2026-05-09"
+      }
+    },
+    {
+      "task_id": "trend_003",
+      "task_name": "2026-05-10 指标值",
+      "metric": "user_count",
+      "params": {
+        "start_time": "2026-05-10",
+        "end_time": "2026-05-11",
+        "time_label": "2026-05-10"
+      }
+    },
+    {
+      "task_id": "trend_004",
+      "task_name": "2026-05-11 指标值",
+      "metric": "user_count",
+      "params": {
+        "start_time": "2026-05-11",
+        "end_time": "2026-05-12",
+        "time_label": "2026-05-11"
+      }
+    },
+    {
+      "task_id": "trend_005",
+      "task_name": "2026-05-12 指标值",
+      "metric": "user_count",
+      "params": {
+        "start_time": "2026-05-12",
+        "end_time": "2026-05-13",
+        "time_label": "2026-05-12"
+      }
+    },
+    {
+      "task_id": "trend_006",
+      "task_name": "2026-05-13 指标值",
+      "metric": "user_count",
+      "params": {
+        "start_time": "2026-05-13",
+        "end_time": "2026-05-14",
+        "time_label": "2026-05-13"
+      }
+    },
+    {
+      "task_id": "trend_007",
+      "task_name": "2026-05-14 指标值",
+      "metric": "user_count",
+      "params": {
+        "start_time": "2026-05-14",
+        "end_time": "2026-05-15",
+        "time_label": "2026-05-14"
+      }
+    }
+  ],
+  "query_plans": [
+    {
+      "protocol_version": "1.0",
+      "task_id": "trend_001",
+      "task_name": "2026-05-08 指标值",
+      "metric": "user_count",
+      "business_name": "用户数量",
+      "engine": "aurora_mysql",
+      "datasource": "user",
+      "query_type": "sql",
+      "sql": "SELECT COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s",
+      "params": [
+        "2026-05-08",
+        "2026-05-09"
+      ],
+      "meta": {
+        "engine": "aurora_mysql",
+        "datasource": "user",
+        "database": "user",
+        "table": "users"
+      }
+    },
+    {
+      "protocol_version": "1.0",
+      "task_id": "trend_002",
+      "task_name": "2026-05-09 指标值",
+      "metric": "user_count",
+      "business_name": "用户数量",
+      "engine": "aurora_mysql",
+      "datasource": "user",
+      "query_type": "sql",
+      "sql": "SELECT COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s",
+      "params": [
+        "2026-05-09",
+        "2026-05-10"
+      ],
+      "meta": {
+        "engine": "aurora_mysql",
+        "datasource": "user",
+        "database": "user",
+        "table": "users"
+      }
+    },
+    {
+      "protocol_version": "1.0",
+      "task_id": "trend_003",
+      "task_name": "2026-05-10 指标值",
+      "metric": "user_count",
+      "business_name": "用户数量",
+      "engine": "aurora_mysql",
+      "datasource": "user",
+      "query_type": "sql",
+      "sql": "SELECT COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s",
+      "params": [
+        "2026-05-10",
+        "2026-05-11"
+      ],
+      "meta": {
+        "engine": "aurora_mysql",
+        "datasource": "user",
+        "database": "user",
+        "table": "users"
+      }
+    },
+    {
+      "protocol_version": "1.0",
+      "task_id": "trend_004",
+      "task_name": "2026-05-11 指标值",
+      "metric": "user_count",
+      "business_name": "用户数量",
+      "engine": "aurora_mysql",
+      "datasource": "user",
+      "query_type": "sql",
+      "sql": "SELECT COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s",
+      "params": [
+        "2026-05-11",
+        "2026-05-12"
+      ],
+      "meta": {
+        "engine": "aurora_mysql",
+        "datasource": "user",
+        "database": "user",
+        "table": "users"
+      }
+    },
+    {
+      "protocol_version": "1.0",
+      "task_id": "trend_005",
+      "task_name": "2026-05-12 指标值",
+      "metric": "user_count",
+      "business_name": "用户数量",
+      "engine": "aurora_mysql",
+      "datasource": "user",
+      "query_type": "sql",
+      "sql": "SELECT COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s",
+      "params": [
+        "2026-05-12",
+        "2026-05-13"
+      ],
+      "meta": {
+        "engine": "aurora_mysql",
+        "datasource": "user",
+        "database": "user",
+        "table": "users"
+      }
+    },
+    {
+      "protocol_version": "1.0",
+      "task_id": "trend_006",
+      "task_name": "2026-05-13 指标值",
+      "metric": "user_count",
+      "business_name": "用户数量",
+      "engine": "aurora_mysql",
+      "datasource": "user",
+      "query_type": "sql",
+      "sql": "SELECT COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s",
+      "params": [
+        "2026-05-13",
+        "2026-05-14"
+      ],
+      "meta": {
+        "engine": "aurora_mysql",
+        "datasource": "user",
+        "database": "user",
+        "table": "users"
+      }
+    },
+    {
+      "protocol_version": "1.0",
+      "task_id": "trend_007",
+      "task_name": "2026-05-14 指标值",
+      "metric": "user_count",
+      "business_name": "用户数量",
+      "engine": "aurora_mysql",
+      "datasource": "user",
+      "query_type": "sql",
+      "sql": "SELECT COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s",
+      "params": [
+        "2026-05-14",
+        "2026-05-15"
+      ],
+      "meta": {
+        "engine": "aurora_mysql",
+        "datasource": "user",
+        "database": "user",
+        "table": "users"
+      }
+    }
+  ],
+  "tool_results": [
+    {
+      "protocol_version": "1.0",
+      "task_id": "trend_001",
+      "task_name": "2026-05-08 指标值",
+      "success": true,
+      "data": {
+        "value": 1310
+      },
+      "error": null,
+      "latency_ms": 108,
+      "query_plan": {
+        "protocol_version": "1.0",
+        "task_id": "trend_001",
+        "task_name": "2026-05-08 指标值",
+        "metric": "user_count",
+        "business_name": "用户数量",
+        "engine": "aurora_mysql",
+        "datasource": "user",
+        "query_type": "sql",
+        "sql": "SELECT COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s",
+        "params": [
+          "2026-05-08",
+          "2026-05-09"
+        ],
+        "meta": {
+          "engine": "aurora_mysql",
+          "datasource": "user",
+          "database": "user",
+          "table": "users"
+        }
+      }
+    },
+    {
+      "protocol_version": "1.0",
+      "task_id": "trend_002",
+      "task_name": "2026-05-09 指标值",
+      "success": true,
+      "data": {
+        "value": 258
+      },
+      "error": null,
+      "latency_ms": 119,
+      "query_plan": {
+        "protocol_version": "1.0",
+        "task_id": "trend_002",
+        "task_name": "2026-05-09 指标值",
+        "metric": "user_count",
+        "business_name": "用户数量",
+        "engine": "aurora_mysql",
+        "datasource": "user",
+        "query_type": "sql",
+        "sql": "SELECT COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s",
+        "params": [
+          "2026-05-09",
+          "2026-05-10"
+        ],
+        "meta": {
+          "engine": "aurora_mysql",
+          "datasource": "user",
+          "database": "user",
+          "table": "users"
+        }
+      }
+    },
+    {
+      "protocol_version": "1.0",
+      "task_id": "trend_003",
+      "task_name": "2026-05-10 指标值",
+      "success": true,
+      "data": {
+        "value": 0
+      },
+      "error": null,
+      "latency_ms": 102,
+      "query_plan": {
+        "protocol_version": "1.0",
+        "task_id": "trend_003",
+        "task_name": "2026-05-10 指标值",
+        "metric": "user_count",
+        "business_name": "用户数量",
+        "engine": "aurora_mysql",
+        "datasource": "user",
+        "query_type": "sql",
+        "sql": "SELECT COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s",
+        "params": [
+          "2026-05-10",
+          "2026-05-11"
+        ],
+        "meta": {
+          "engine": "aurora_mysql",
+          "datasource": "user",
+          "database": "user",
+          "table": "users"
+        }
+      }
+    },
+    {
+      "protocol_version": "1.0",
+      "task_id": "trend_004",
+      "task_name": "2026-05-11 指标值",
+      "success": true,
+      "data": {
+        "value": 1006
+      },
+      "error": null,
+      "latency_ms": 116,
+      "query_plan": {
+        "protocol_version": "1.0",
+        "task_id": "trend_004",
+        "task_name": "2026-05-11 指标值",
+        "metric": "user_count",
+        "business_name": "用户数量",
+        "engine": "aurora_mysql",
+        "datasource": "user",
+        "query_type": "sql",
+        "sql": "SELECT COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s",
+        "params": [
+          "2026-05-11",
+          "2026-05-12"
+        ],
+        "meta": {
+          "engine": "aurora_mysql",
+          "datasource": "user",
+          "database": "user",
+          "table": "users"
+        }
+      }
+    },
+    {
+      "protocol_version": "1.0",
+      "task_id": "trend_005",
+      "task_name": "2026-05-12 指标值",
+      "success": true,
+      "data": {
+        "value": 340
+      },
+      "error": null,
+      "latency_ms": 121,
+      "query_plan": {
+        "protocol_version": "1.0",
+        "task_id": "trend_005",
+        "task_name": "2026-05-12 指标值",
+        "metric": "user_count",
+        "business_name": "用户数量",
+        "engine": "aurora_mysql",
+        "datasource": "user",
+        "query_type": "sql",
+        "sql": "SELECT COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s",
+        "params": [
+          "2026-05-12",
+          "2026-05-13"
+        ],
+        "meta": {
+          "engine": "aurora_mysql",
+          "datasource": "user",
+          "database": "user",
+          "table": "users"
+        }
+      }
+    },
+    {
+      "protocol_version": "1.0",
+      "task_id": "trend_006",
+      "task_name": "2026-05-13 指标值",
+      "success": true,
+      "data": {
+        "value": 336
+      },
+      "error": null,
+      "latency_ms": 123,
+      "query_plan": {
+        "protocol_version": "1.0",
+        "task_id": "trend_006",
+        "task_name": "2026-05-13 指标值",
+        "metric": "user_count",
+        "business_name": "用户数量",
+        "engine": "aurora_mysql",
+        "datasource": "user",
+        "query_type": "sql",
+        "sql": "SELECT COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s",
+        "params": [
+          "2026-05-13",
+          "2026-05-14"
+        ],
+        "meta": {
+          "engine": "aurora_mysql",
+          "datasource": "user",
+          "database": "user",
+          "table": "users"
+        }
+      }
+    },
+    {
+      "protocol_version": "1.0",
+      "task_id": "trend_007",
+      "task_name": "2026-05-14 指标值",
+      "success": true,
+      "data": {
+        "value": 926
+      },
+      "error": null,
+      "latency_ms": 117,
+      "query_plan": {
+        "protocol_version": "1.0",
+        "task_id": "trend_007",
+        "task_name": "2026-05-14 指标值",
+        "metric": "user_count",
+        "business_name": "用户数量",
+        "engine": "aurora_mysql",
+        "datasource": "user",
+        "query_type": "sql",
+        "sql": "SELECT COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s",
+        "params": [
+          "2026-05-14",
+          "2026-05-15"
+        ],
+        "meta": {
+          "engine": "aurora_mysql",
+          "datasource": "user",
+          "database": "user",
+          "table": "users"
+        }
+      }
+    }
+  ],
+  "compile_errors": [],
+  "request_id": "regression-trend_user_count-1779437291",
+  "answer": "根据统计结果，2026-05-08 到 2026-05-14 期间每天新增用户趋势如下：\n\n时间范围：2026-05-08 至 2026-05-14\n起始值：1310（2026-05-08）\n结束值：926（2026-05-14）\n最高值：1310（2026-05-08）\n最低值：0（2026-05-10）\n\n整体趋势呈现波动下降。新增用户数从第一天的1310人急剧下降到第二天的258人，第三天（2026-05-10）降至0。之后出现反弹，2026-05-11达到1006人，随后两天维持在300多人的水平，最后一天（2026-05-14）又上升到926人。\n\n值得注意的是，2026-05-10（周日）没有新增用户，这可能需要进一步调查原因。整体来看，工作日的新增用户数量普遍高于周末。",
+  "error": null,
+  "trace": {
+    "request_id": "regression-trend_user_count-1779437291",
+    "question": "统计 2026-05-08 到 2026-05-14 每天新增用户趋势",
+    "start_ms": 1779437291422,
+    "steps": [
+      {
+        "step": "plan_tasks",
+        "status": "success",
+        "output": {
+          "parsed": {
+            "question": "统计 2026-05-08 到 2026-05-14 每天新增用户趋势",
+            "metric": "user_count",
+            "params": {
+              "start_time": "2026-05-08",
+              "end_time": "2026-05-15",
+              "grain": "day"
+            },
+            "original_question": "统计 2026-05-08 到 2026-05-14 每天新增用户趋势"
+          },
+          "aggregation_plan": {
+            "aggregation_type": "trend",
+            "grain": "day",
+            "tasks": [
+              {
+                "task_id": "trend_001",
+                "task_name": "2026-05-08 指标值",
+                "metric": "user_count",
+                "params": {
+                  "start_time": "2026-05-08",
+                  "end_time": "2026-05-09",
+                  "time_label": "2026-05-08"
+                }
+              },
+              {
+                "task_id": "trend_002",
+                "task_name": "2026-05-09 指标值",
+                "metric": "user_count",
+                "params": {
+                  "start_time": "2026-05-09",
+                  "end_time": "2026-05-10",
+                  "time_label": "2026-05-09"
+                }
+              },
+              {
+                "task_id": "trend_003",
+                "task_name": "2026-05-10 指标值",
+                "metric": "user_count",
+                "params": {
+                  "start_time": "2026-05-10",
+                  "end_time": "2026-05-11",
+                  "time_label": "2026-05-10"
+                }
+              },
+              {
+                "task_id": "trend_004",
+                "task_name": "2026-05-11 指标值",
+                "metric": "user_count",
+                "params": {
+                  "start_time": "2026-05-11",
+                  "end_time": "2026-05-12",
+                  "time_label": "2026-05-11"
+                }
+              },
+              {
+                "task_id": "trend_005",
+                "task_name": "2026-05-12 指标值",
+                "metric": "user_count",
+                "params": {
+                  "start_time": "2026-05-12",
+                  "end_time": "2026-05-13",
+                  "time_label": "2026-05-12"
+                }
+              },
+              {
+                "task_id": "trend_006",
+                "task_name": "2026-05-13 指标值",
+                "metric": "user_count",
+                "params": {
+                  "start_time": "2026-05-13",
+                  "end_time": "2026-05-14",
+                  "time_label": "2026-05-13"
+                }
+              },
+              {
+                "task_id": "trend_007",
+                "task_name": "2026-05-14 指标值",
+                "metric": "user_count",
+                "params": {
+                  "start_time": "2026-05-14",
+                  "end_time": "2026-05-15",
+                  "time_label": "2026-05-14"
+                }
+              }
+            ]
+          }
+        },
+        "timestamp_ms": 1779437293320
+      },
+      {
+        "step": "compile_queries",
+        "status": "success",
+        "output": {
+          "query_plans": [
+            {
+              "protocol_version": "1.0",
+              "task_id": "trend_001",
+              "task_name": "2026-05-08 指标值",
+              "metric": "user_count",
+              "business_name": "用户数量",
+              "engine": "aurora_mysql",
+              "datasource": "user",
+              "query_type": "sql",
+              "sql": "SELECT COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s",
+              "params": [
+                "2026-05-08",
+                "2026-05-09"
+              ],
+              "meta": {
+                "engine": "aurora_mysql",
+                "datasource": "user",
+                "database": "user",
+                "table": "users"
+              }
+            },
+            {
+              "protocol_version": "1.0",
+              "task_id": "trend_002",
+              "task_name": "2026-05-09 指标值",
+              "metric": "user_count",
+              "business_name": "用户数量",
+              "engine": "aurora_mysql",
+              "datasource": "user",
+              "query_type": "sql",
+              "sql": "SELECT COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s",
+              "params": [
+                "2026-05-09",
+                "2026-05-10"
+              ],
+              "meta": {
+                "engine": "aurora_mysql",
+                "datasource": "user",
+                "database": "user",
+                "table": "users"
+              }
+            },
+            {
+              "protocol_version": "1.0",
+              "task_id": "trend_003",
+              "task_name": "2026-05-10 指标值",
+              "metric": "user_count",
+              "business_name": "用户数量",
+              "engine": "aurora_mysql",
+              "datasource": "user",
+              "query_type": "sql",
+              "sql": "SELECT COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s",
+              "params": [
+                "2026-05-10",
+                "2026-05-11"
+              ],
+              "meta": {
+                "engine": "aurora_mysql",
+                "datasource": "user",
+                "database": "user",
+                "table": "users"
+              }
+            },
+            {
+              "protocol_version": "1.0",
+              "task_id": "trend_004",
+              "task_name": "2026-05-11 指标值",
+              "metric": "user_count",
+              "business_name": "用户数量",
+              "engine": "aurora_mysql",
+              "datasource": "user",
+              "query_type": "sql",
+              "sql": "SELECT COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s",
+              "params": [
+                "2026-05-11",
+                "2026-05-12"
+              ],
+              "meta": {
+                "engine": "aurora_mysql",
+                "datasource": "user",
+                "database": "user",
+                "table": "users"
+              }
+            },
+            {
+              "protocol_version": "1.0",
+              "task_id": "trend_005",
+              "task_name": "2026-05-12 指标值",
+              "metric": "user_count",
+              "business_name": "用户数量",
+              "engine": "aurora_mysql",
+              "datasource": "user",
+              "query_type": "sql",
+              "sql": "SELECT COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s",
+              "params": [
+                "2026-05-12",
+                "2026-05-13"
+              ],
+              "meta": {
+                "engine": "aurora_mysql",
+                "datasource": "user",
+                "database": "user",
+                "table": "users"
+              }
+            },
+            {
+              "protocol_version": "1.0",
+              "task_id": "trend_006",
+              "task_name": "2026-05-13 指标值",
+              "metric": "user_count",
+              "business_name": "用户数量",
+              "engine": "aurora_mysql",
+              "datasource": "user",
+              "query_type": "sql",
+              "sql": "SELECT COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s",
+              "params": [
+                "2026-05-13",
+                "2026-05-14"
+              ],
+              "meta": {
+                "engine": "aurora_mysql",
+                "datasource": "user",
+                "database": "user",
+                "table": "users"
+              }
+            },
+            {
+              "protocol_version": "1.0",
+              "task_id": "trend_007",
+              "task_name": "2026-05-14 指标值",
+              "metric": "user_count",
+              "business_name": "用户数量",
+              "engine": "aurora_mysql",
+              "datasource": "user",
+              "query_type": "sql",
+              "sql": "SELECT COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s",
+              "params": [
+                "2026-05-14",
+                "2026-05-15"
+              ],
+              "meta": {
+                "engine": "aurora_mysql",
+                "datasource": "user",
+                "database": "user",
+                "table": "users"
+              }
+            }
+          ],
+          "compile_errors": []
+        },
+        "timestamp_ms": 1779437293321
+      },
+      {
+        "step": "execute_queries",
+        "status": "success",
+        "output": {
+          "tool_results": [
+            {
+              "protocol_version": "1.0",
+              "task_id": "trend_001",
+              "task_name": "2026-05-08 指标值",
+              "success": true,
+              "data": {
+                "value": 1310
+              },
+              "error": null,
+              "latency_ms": 108,
+              "query_plan": {
+                "protocol_version": "1.0",
+                "task_id": "trend_001",
+                "task_name": "2026-05-08 指标值",
+                "metric": "user_count",
+                "business_name": "用户数量",
+                "engine": "aurora_mysql",
+                "datasource": "user",
+                "query_type": "sql",
+                "sql": "SELECT COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s",
+                "params": [
+                  "2026-05-08",
+                  "2026-05-09"
+                ],
+                "meta": {
+                  "engine": "aurora_mysql",
+                  "datasource": "user",
+                  "database": "user",
+                  "table": "users"
+                }
+              }
+            },
+            {
+              "protocol_version": "1.0",
+              "task_id": "trend_002",
+              "task_name": "2026-05-09 指标值",
+              "success": true,
+              "data": {
+                "value": 258
+              },
+              "error": null,
+              "latency_ms": 119,
+              "query_plan": {
+                "protocol_version": "1.0",
+                "task_id": "trend_002",
+                "task_name": "2026-05-09 指标值",
+                "metric": "user_count",
+                "business_name": "用户数量",
+                "engine": "aurora_mysql",
+                "datasource": "user",
+                "query_type": "sql",
+                "sql": "SELECT COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s",
+                "params": [
+                  "2026-05-09",
+                  "2026-05-10"
+                ],
+                "meta": {
+                  "engine": "aurora_mysql",
+                  "datasource": "user",
+                  "database": "user",
+                  "table": "users"
+                }
+              }
+            },
+            {
+              "protocol_version": "1.0",
+              "task_id": "trend_003",
+              "task_name": "2026-05-10 指标值",
+              "success": true,
+              "data": {
+                "value": 0
+              },
+              "error": null,
+              "latency_ms": 102,
+              "query_plan": {
+                "protocol_version": "1.0",
+                "task_id": "trend_003",
+                "task_name": "2026-05-10 指标值",
+                "metric": "user_count",
+                "business_name": "用户数量",
+                "engine": "aurora_mysql",
+                "datasource": "user",
+                "query_type": "sql",
+                "sql": "SELECT COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s",
+                "params": [
+                  "2026-05-10",
+                  "2026-05-11"
+                ],
+                "meta": {
+                  "engine": "aurora_mysql",
+                  "datasource": "user",
+                  "database": "user",
+                  "table": "users"
+                }
+              }
+            },
+            {
+              "protocol_version": "1.0",
+              "task_id": "trend_004",
+              "task_name": "2026-05-11 指标值",
+              "success": true,
+              "data": {
+                "value": 1006
+              },
+              "error": null,
+              "latency_ms": 116,
+              "query_plan": {
+                "protocol_version": "1.0",
+                "task_id": "trend_004",
+                "task_name": "2026-05-11 指标值",
+                "metric": "user_count",
+                "business_name": "用户数量",
+                "engine": "aurora_mysql",
+                "datasource": "user",
+                "query_type": "sql",
+                "sql": "SELECT COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s",
+                "params": [
+                  "2026-05-11",
+                  "2026-05-12"
+                ],
+                "meta": {
+                  "engine": "aurora_mysql",
+                  "datasource": "user",
+                  "database": "user",
+                  "table": "users"
+                }
+              }
+            },
+            {
+              "protocol_version": "1.0",
+              "task_id": "trend_005",
+              "task_name": "2026-05-12 指标值",
+              "success": true,
+              "data": {
+                "value": 340
+              },
+              "error": null,
+              "latency_ms": 121,
+              "query_plan": {
+                "protocol_version": "1.0",
+                "task_id": "trend_005",
+                "task_name": "2026-05-12 指标值",
+                "metric": "user_count",
+                "business_name": "用户数量",
+                "engine": "aurora_mysql",
+                "datasource": "user",
+                "query_type": "sql",
+                "sql": "SELECT COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s",
+                "params": [
+                  "2026-05-12",
+                  "2026-05-13"
+                ],
+                "meta": {
+                  "engine": "aurora_mysql",
+                  "datasource": "user",
+                  "database": "user",
+                  "table": "users"
+                }
+              }
+            },
+            {
+              "protocol_version": "1.0",
+              "task_id": "trend_006",
+              "task_name": "2026-05-13 指标值",
+              "success": true,
+              "data": {
+                "value": 336
+              },
+              "error": null,
+              "latency_ms": 123,
+              "query_plan": {
+                "protocol_version": "1.0",
+                "task_id": "trend_006",
+                "task_name": "2026-05-13 指标值",
+                "metric": "user_count",
+                "business_name": "用户数量",
+                "engine": "aurora_mysql",
+                "datasource": "user",
+                "query_type": "sql",
+                "sql": "SELECT COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s",
+                "params": [
+                  "2026-05-13",
+                  "2026-05-14"
+                ],
+                "meta": {
+                  "engine": "aurora_mysql",
+                  "datasource": "user",
+                  "database": "user",
+                  "table": "users"
+                }
+              }
+            },
+            {
+              "protocol_version": "1.0",
+              "task_id": "trend_007",
+              "task_name": "2026-05-14 指标值",
+              "success": true,
+              "data": {
+                "value": 926
+              },
+              "error": null,
+              "latency_ms": 117,
+              "query_plan": {
+                "protocol_version": "1.0",
+                "task_id": "trend_007",
+                "task_name": "2026-05-14 指标值",
+                "metric": "user_count",
+                "business_name": "用户数量",
+                "engine": "aurora_mysql",
+                "datasource": "user",
+                "query_type": "sql",
+                "sql": "SELECT COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s",
+                "params": [
+                  "2026-05-14",
+                  "2026-05-15"
+                ],
+                "meta": {
+                  "engine": "aurora_mysql",
+                  "datasource": "user",
+                  "database": "user",
+                  "table": "users"
+                }
+              }
+            }
+          ]
+        },
+        "timestamp_ms": 1779437294128
+      },
+      {
+        "step": "aggregation_analysis",
+        "status": "success",
+        "output": {
+          "aggregation_type": "trend",
+          "analysis": {
+            "grain": "day",
+            "time_series": [
+              {
+                "time_label": "2026-05-08",
+                "task_id": "trend_001",
+                "task_name": "2026-05-08 指标值",
+                "value": 1310,
+                "success": true,
+                "error": null
+              },
+              {
+                "time_label": "2026-05-09",
+                "task_id": "trend_002",
+                "task_name": "2026-05-09 指标值",
+                "value": 258,
+                "success": true,
+                "error": null
+              },
+              {
+                "time_label": "2026-05-10",
+                "task_id": "trend_003",
+                "task_name": "2026-05-10 指标值",
+                "value": 0,
+                "success": true,
+                "error": null
+              },
+              {
+                "time_label": "2026-05-11",
+                "task_id": "trend_004",
+                "task_name": "2026-05-11 指标值",
+                "value": 1006,
+                "success": true,
+                "error": null
+              },
+              {
+                "time_label": "2026-05-12",
+                "task_id": "trend_005",
+                "task_name": "2026-05-12 指标值",
+                "value": 340,
+                "success": true,
+                "error": null
+              },
+              {
+                "time_label": "2026-05-13",
+                "task_id": "trend_006",
+                "task_name": "2026-05-13 指标值",
+                "value": 336,
+                "success": true,
+                "error": null
+              },
+              {
+                "time_label": "2026-05-14",
+                "task_id": "trend_007",
+                "task_name": "2026-05-14 指标值",
+                "value": 926,
+                "success": true,
+                "error": null
+              }
+            ],
+            "summary_stats": {
+              "points": 7,
+              "min": 0,
+              "max": 1310,
+              "start_value": 1310,
+              "end_value": 926,
+              "change": -384
+            }
+          },
+          "error": null
+        },
+        "timestamp_ms": 1779437294129
+      },
+      {
+        "step": "summarize",
+        "status": "success",
+        "output": {
+          "aggregation_type": "trend",
+          "template": "trend.txt",
+          "answer": "根据统计结果，2026-05-08 到 2026-05-14 期间每天新增用户趋势如下：\n\n时间范围：2026-05-08 至 2026-05-14\n起始值：1310（2026-05-08）\n结束值：926（2026-05-14）\n最高值：1310（2026-05-08）\n最低值：0（2026-05-10）\n\n整体趋势呈现波动下降。新增用户数从第一天的1310人急剧下降到第二天的258人，第三天（2026-05-10）降至0。之后出现反弹，2026-05-11达到1006人，随后两天维持在300多人的水平，最后一天（2026-05-14）又上升到926人。\n\n值得注意的是，2026-05-10（周日）没有新增用户，这可能需要进一步调查原因。整体来看，工作日的新增用户数量普遍高于周末。"
+        },
+        "timestamp_ms": 1779437299693
+      }
+    ],
+    "answer": "根据统计结果，2026-05-08 到 2026-05-14 期间每天新增用户趋势如下：\n\n时间范围：2026-05-08 至 2026-05-14\n起始值：1310（2026-05-08）\n结束值：926（2026-05-14）\n最高值：1310（2026-05-08）\n最低值：0（2026-05-10）\n\n整体趋势呈现波动下降。新增用户数从第一天的1310人急剧下降到第二天的258人，第三天（2026-05-10）降至0。之后出现反弹，2026-05-11达到1006人，随后两天维持在300多人的水平，最后一天（2026-05-14）又上升到926人。\n\n值得注意的是，2026-05-10（周日）没有新增用户，这可能需要进一步调查原因。整体来看，工作日的新增用户数量普遍高于周末。",
+    "end_ms": 1779437299693,
+    "total_latency_ms": 8271
+  },
+  "trace_file": "traces/regression-trend_user_count-1779437291.json"
+}

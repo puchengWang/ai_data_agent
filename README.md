@@ -6,6 +6,13 @@ AI + Semantic Graph + Memory + Analytics Intelligence
 
 Semantic Graph: 是持续建设与系统质量的重中之重。
 
+## 整体思路
+### 思路说明
+```txt
+1. 因为系统属于从0到1，所以整个验证过程中，注重验证思路的成立与框架的能力支撑
+2. 通过单个指标开发，验证框架能够实现上限需求，才会转回来横向扩充业务范围
+3. 将整个验证过程划分了八个阶段；每个阶段都作为MVP，只注重其核心能力，最终确立后，才会进行扩充。
+```
 ### 第一阶段 Runtime MVP
 
 目标： 完成整体技术框架的验证
@@ -20,7 +27,7 @@ Semantic Graph: 是持续建设与系统质量的重中之重。
 ✅ Error Isolation
 ```
 
-结论: 完全达到单指标的MVP的验证目的
+结论: 完全达到单指标的框架MVP的验证目的
 
 ### 第二阶段 Semantic System MVP
 目标: 通过语义程序，直接将DDL文件转换为系统所需的标准业务语义。
@@ -32,16 +39,19 @@ Semantic Graph: 是持续建设与系统质量的重中之重。
 ✅ semantic_generator
 ✅ semantic_loader
 ```
-结果: 总体达到。 细节方面暂时仍需人工调整
+结果: 通过一个表的验证，确认其能够实现。
 
 
 ### 第三阶段 Query Planner
 目标: 从简单统计型上升为分析型AI，支持环比/同比/趋势等，然后进行比较、ranking、分布/维度计算。
 
 ```txt
-Aggregation Planner
+✅ Aggregation Planner
 Analysis Operators
 Query DAG
+
+Note:
+1. 完成Aggregation Planner后，进行了回归测试，同时将summarize prompt进行了独立拆分，使其达到生产系统要求。
 ```
 
 ### 第四阶段 Multi Data Source 联合
@@ -74,6 +84,7 @@ Conversation Semantic Context
 Memory Compression
 Semantic Memory
 ```
+
 ### 第七阶段 Production Engineering
 目标: 完全达到生产系统要求，实现在aws 生态部署
 
