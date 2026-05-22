@@ -1,7 +1,7 @@
 ## ai_data_agent
 AI数据智能体，帮助公司实现业务分析、运营分析、根因分析、商业价值探索
 
-系统真正的核心公式: 
+系统核心公式: 
 AI + Semantic Graph + Memory + Analytics Intelligence
 
 Semantic Graph: 是持续建设与系统质量的重中之重。
