@@ -1,0 +1,197 @@
+{
+  "request_id": "regression-distribution_level-1779443733",
+  "question": "统计 2026-05-14 新增用户的用户等级分布",
+  "start_ms": 1779443733935,
+  "steps": [
+    {
+      "step": "plan_tasks",
+      "status": "success",
+      "output": {
+        "parsed": {
+          "question": "统计 2026-05-14 新增用户的用户等级分布",
+          "metric": "user_count",
+          "params": {
+            "start_time": "2026-05-14",
+            "end_time": "2026-05-15",
+            "grain": "day"
+          },
+          "original_question": "统计 2026-05-14 新增用户的用户等级分布"
+        },
+        "aggregation_plan": {
+          "aggregation_type": "distribution",
+          "dimension": "level",
+          "tasks": [
+            {
+              "task_id": "distribution_001",
+              "task_name": "按level统计分布",
+              "metric": "user_count",
+              "params": {
+                "start_time": "2026-05-14",
+                "end_time": "2026-05-15",
+                "grain": "day",
+                "dimension": "level"
+              },
+              "dimension": "level"
+            }
+          ]
+        }
+      },
+      "timestamp_ms": 1779443735796
+    },
+    {
+      "step": "compile_queries",
+      "status": "success",
+      "output": {
+        "query_plans": [
+          {
+            "protocol_version": "1.0",
+            "task_id": "distribution_001",
+            "task_name": "按level统计分布",
+            "metric": "user_count",
+            "business_name": "用户数量",
+            "engine": "aurora_mysql",
+            "datasource": "user",
+            "query_type": "sql",
+            "sql": "SELECT level AS dimension_value, COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s\nGROUP BY level\nORDER BY value DESC",
+            "params": [
+              "2026-05-14",
+              "2026-05-15"
+            ],
+            "meta": {
+              "engine": "aurora_mysql",
+              "datasource": "user",
+              "database": "user",
+              "table": "users"
+            }
+          }
+        ],
+        "compile_errors": []
+      },
+      "timestamp_ms": 1779443735797
+    },
+    {
+      "step": "execute_queries",
+      "status": "success",
+      "output": {
+        "tool_results": [
+          {
+            "protocol_version": "1.0",
+            "task_id": "distribution_001",
+            "task_name": "按level统计分布",
+            "success": true,
+            "data": {
+              "rows": [
+                {
+                  "dimension_value": 0,
+                  "value": 897
+                },
+                {
+                  "dimension_value": 2,
+                  "value": 20
+                },
+                {
+                  "dimension_value": 3,
+                  "value": 9
+                }
+              ]
+            },
+            "error": null,
+            "latency_ms": 120,
+            "query_plan": {
+              "protocol_version": "1.0",
+              "task_id": "distribution_001",
+              "task_name": "按level统计分布",
+              "metric": "user_count",
+              "business_name": "用户数量",
+              "engine": "aurora_mysql",
+              "datasource": "user",
+              "query_type": "sql",
+              "sql": "SELECT level AS dimension_value, COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s\nGROUP BY level\nORDER BY value DESC",
+              "params": [
+                "2026-05-14",
+                "2026-05-15"
+              ],
+              "meta": {
+                "engine": "aurora_mysql",
+                "datasource": "user",
+                "database": "user",
+                "table": "users"
+              }
+            }
+          }
+        ]
+      },
+      "timestamp_ms": 1779443735917
+    },
+    {
+      "step": "aggregation_analysis",
+      "status": "success",
+      "output": {
+        "aggregation_type": "distribution",
+        "analysis": {
+          "dimension": "level",
+          "rows": [
+            {
+              "dimension_value": 0,
+              "value": 897
+            },
+            {
+              "dimension_value": 2,
+              "value": 20
+            },
+            {
+              "dimension_value": 3,
+              "value": 9
+            }
+          ]
+        },
+        "operator_results": {
+          "contribution": {
+            "success": true,
+            "error": null,
+            "data": {
+              "total_value": 926,
+              "rows": [
+                {
+                  "dimension_value": 0,
+                  "value": 897,
+                  "contribution_rate": 96.87
+                },
+                {
+                  "dimension_value": 2,
+                  "value": 20,
+                  "contribution_rate": 2.16
+                },
+                {
+                  "dimension_value": 3,
+                  "value": 9,
+                  "contribution_rate": 0.97
+                }
+              ],
+              "top_contributor": {
+                "dimension_value": 0,
+                "value": 897,
+                "contribution_rate": 96.87
+              }
+            }
+          }
+        },
+        "error": null
+      },
+      "timestamp_ms": 1779443735917
+    },
+    {
+      "step": "summarize",
+      "status": "success",
+      "output": {
+        "aggregation_type": "distribution",
+        "template": "distribution.txt",
+        "answer": "根据分析结果，2026-05-14新增用户的用户等级分布如下:\n\n- 0级用户: 897人，占比96.87%\n- 2级用户: 20人，占比2.16%\n- 3级用户: 9人，占比0.97%\n\n总计新增用户926人。其中0级用户占比最高，达到96.87%。"
+      },
+      "timestamp_ms": 1779443738495
+    }
+  ],
+  "answer": "根据分析结果，2026-05-14新增用户的用户等级分布如下:\n\n- 0级用户: 897人，占比96.87%\n- 2级用户: 20人，占比2.16%\n- 3级用户: 9人，占比0.97%\n\n总计新增用户926人。其中0级用户占比最高，达到96.87%。",
+  "end_ms": 1779443738495,
+  "total_latency_ms": 4560
+}

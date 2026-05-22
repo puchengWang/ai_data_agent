@@ -147,6 +147,104 @@
         "change": -384
       }
     },
+    "operator_results": {
+      "peak_valley": {
+        "success": true,
+        "error": null,
+        "data": {
+          "peak": {
+            "time_label": "2026-05-08",
+            "task_id": "trend_001",
+            "task_name": "2026-05-08 指标值",
+            "value": 1310,
+            "success": true,
+            "error": null
+          },
+          "valley": {
+            "time_label": "2026-05-10",
+            "task_id": "trend_003",
+            "task_name": "2026-05-10 指标值",
+            "value": 0,
+            "success": true,
+            "error": null
+          }
+        }
+      },
+      "volatility": {
+        "success": true,
+        "error": null,
+        "data": {
+          "avg": 596.57,
+          "stddev": 481.21,
+          "min": 0,
+          "max": 1310,
+          "range": 1310,
+          "volatility_ratio": 80.66,
+          "volatility_level": "high"
+        }
+      },
+      "basic_anomaly": {
+        "success": true,
+        "error": null,
+        "data": {
+          "has_anomaly": true,
+          "method": "avg_diff_ratio",
+          "threshold_ratio": 0.3,
+          "avg_value": 596.57,
+          "anomalies": [
+            {
+              "time_label": "2026-05-08",
+              "value": 1310,
+              "avg_value": 596.57,
+              "diff_ratio": 119.59,
+              "direction": "up"
+            },
+            {
+              "time_label": "2026-05-09",
+              "value": 258,
+              "avg_value": 596.57,
+              "diff_ratio": -56.75,
+              "direction": "down"
+            },
+            {
+              "time_label": "2026-05-10",
+              "value": 0,
+              "avg_value": 596.57,
+              "diff_ratio": -100.0,
+              "direction": "down"
+            },
+            {
+              "time_label": "2026-05-11",
+              "value": 1006,
+              "avg_value": 596.57,
+              "diff_ratio": 68.63,
+              "direction": "up"
+            },
+            {
+              "time_label": "2026-05-12",
+              "value": 340,
+              "avg_value": 596.57,
+              "diff_ratio": -43.01,
+              "direction": "down"
+            },
+            {
+              "time_label": "2026-05-13",
+              "value": 336,
+              "avg_value": 596.57,
+              "diff_ratio": -43.68,
+              "direction": "down"
+            },
+            {
+              "time_label": "2026-05-14",
+              "value": 926,
+              "avg_value": 596.57,
+              "diff_ratio": 55.22,
+              "direction": "up"
+            }
+          ]
+        }
+      }
+    },
     "error": null
   },
   "tasks": [
@@ -380,7 +478,7 @@
         "value": 1310
       },
       "error": null,
-      "latency_ms": 108,
+      "latency_ms": 116,
       "query_plan": {
         "protocol_version": "1.0",
         "task_id": "trend_001",
@@ -412,7 +510,7 @@
         "value": 258
       },
       "error": null,
-      "latency_ms": 119,
+      "latency_ms": 112,
       "query_plan": {
         "protocol_version": "1.0",
         "task_id": "trend_002",
@@ -444,7 +542,7 @@
         "value": 0
       },
       "error": null,
-      "latency_ms": 102,
+      "latency_ms": 123,
       "query_plan": {
         "protocol_version": "1.0",
         "task_id": "trend_003",
@@ -476,7 +574,7 @@
         "value": 1006
       },
       "error": null,
-      "latency_ms": 116,
+      "latency_ms": 113,
       "query_plan": {
         "protocol_version": "1.0",
         "task_id": "trend_004",
@@ -508,7 +606,7 @@
         "value": 340
       },
       "error": null,
-      "latency_ms": 121,
+      "latency_ms": 123,
       "query_plan": {
         "protocol_version": "1.0",
         "task_id": "trend_005",
@@ -540,7 +638,7 @@
         "value": 336
       },
       "error": null,
-      "latency_ms": 123,
+      "latency_ms": 129,
       "query_plan": {
         "protocol_version": "1.0",
         "task_id": "trend_006",
@@ -572,7 +670,7 @@
         "value": 926
       },
       "error": null,
-      "latency_ms": 117,
+      "latency_ms": 119,
       "query_plan": {
         "protocol_version": "1.0",
         "task_id": "trend_007",
@@ -597,13 +695,13 @@
     }
   ],
   "compile_errors": [],
-  "request_id": "regression-trend_user_count-1779437291",
-  "answer": "根据统计结果，2026-05-08 到 2026-05-14 期间每天新增用户趋势如下：\n\n时间范围：2026-05-08 至 2026-05-14\n起始值：1310（2026-05-08）\n结束值：926（2026-05-14）\n最高值：1310（2026-05-08）\n最低值：0（2026-05-10）\n\n整体趋势呈现波动下降。新增用户数从第一天的1310人急剧下降到第二天的258人，第三天（2026-05-10）降至0。之后出现反弹，2026-05-11达到1006人，随后两天维持在300多人的水平，最后一天（2026-05-14）又上升到926人。\n\n值得注意的是，2026-05-10（周日）没有新增用户，这可能需要进一步调查原因。整体来看，工作日的新增用户数量普遍高于周末。",
+  "request_id": "regression-trend_user_count-1779444299",
+  "answer": "根据统计结果，2026-05-08 到 2026-05-14 期间每天新增用户趋势如下：\n\n时间范围内，新增用户数从 1310 人下降到 926 人，整体呈现波动下降趋势。最高值为 1310 人（2026-05-08），最低值为 0 人（2026-05-10）。\n\n最高点出现在 2026-05-08，为 1310 人；最低点出现在 2026-05-10，为 0 人。\n\n波动水平较高，平均新增用户数为 596.57 人，标准差为 481.21 人，波动范围为 0 到 1310 人。\n\n数据中存在多个异常点：\n1. 2026-05-08：1310 人，高于平均值 119.59%\n2. 2026-05-09：258 人，低于平均值 56.75%\n3. 2026-05-10：0 人，低于平均值 100%\n4. 2026-05-11：1006 人，高于平均值 68.63%\n5. 2026-05-12：340 人，低于平均值 43.01%\n6. 2026-05-13：336 人，低于平均值 43.68%\n7. 2026-05-14：926 人，高于平均值 55.22%\n\n这些异常值表明新增用户数在这段时间内波动较大，可能受到特定事件或活动的影响。",
   "error": null,
   "trace": {
-    "request_id": "regression-trend_user_count-1779437291",
+    "request_id": "regression-trend_user_count-1779444299",
     "question": "统计 2026-05-08 到 2026-05-14 每天新增用户趋势",
-    "start_ms": 1779437291422,
+    "start_ms": 1779444299351,
     "steps": [
       {
         "step": "plan_tasks",
@@ -696,7 +794,7 @@
             ]
           }
         },
-        "timestamp_ms": 1779437293320
+        "timestamp_ms": 1779444301393
       },
       {
         "step": "compile_queries",
@@ -853,7 +951,7 @@
           ],
           "compile_errors": []
         },
-        "timestamp_ms": 1779437293321
+        "timestamp_ms": 1779444301394
       },
       {
         "step": "execute_queries",
@@ -869,7 +967,7 @@
                 "value": 1310
               },
               "error": null,
-              "latency_ms": 108,
+              "latency_ms": 116,
               "query_plan": {
                 "protocol_version": "1.0",
                 "task_id": "trend_001",
@@ -901,7 +999,7 @@
                 "value": 258
               },
               "error": null,
-              "latency_ms": 119,
+              "latency_ms": 112,
               "query_plan": {
                 "protocol_version": "1.0",
                 "task_id": "trend_002",
@@ -933,7 +1031,7 @@
                 "value": 0
               },
               "error": null,
-              "latency_ms": 102,
+              "latency_ms": 123,
               "query_plan": {
                 "protocol_version": "1.0",
                 "task_id": "trend_003",
@@ -965,7 +1063,7 @@
                 "value": 1006
               },
               "error": null,
-              "latency_ms": 116,
+              "latency_ms": 113,
               "query_plan": {
                 "protocol_version": "1.0",
                 "task_id": "trend_004",
@@ -997,7 +1095,7 @@
                 "value": 340
               },
               "error": null,
-              "latency_ms": 121,
+              "latency_ms": 123,
               "query_plan": {
                 "protocol_version": "1.0",
                 "task_id": "trend_005",
@@ -1029,7 +1127,7 @@
                 "value": 336
               },
               "error": null,
-              "latency_ms": 123,
+              "latency_ms": 129,
               "query_plan": {
                 "protocol_version": "1.0",
                 "task_id": "trend_006",
@@ -1061,7 +1159,7 @@
                 "value": 926
               },
               "error": null,
-              "latency_ms": 117,
+              "latency_ms": 119,
               "query_plan": {
                 "protocol_version": "1.0",
                 "task_id": "trend_007",
@@ -1086,7 +1184,7 @@
             }
           ]
         },
-        "timestamp_ms": 1779437294128
+        "timestamp_ms": 1779444302229
       },
       {
         "step": "aggregation_analysis",
@@ -1162,9 +1260,107 @@
               "change": -384
             }
           },
+          "operator_results": {
+            "peak_valley": {
+              "success": true,
+              "error": null,
+              "data": {
+                "peak": {
+                  "time_label": "2026-05-08",
+                  "task_id": "trend_001",
+                  "task_name": "2026-05-08 指标值",
+                  "value": 1310,
+                  "success": true,
+                  "error": null
+                },
+                "valley": {
+                  "time_label": "2026-05-10",
+                  "task_id": "trend_003",
+                  "task_name": "2026-05-10 指标值",
+                  "value": 0,
+                  "success": true,
+                  "error": null
+                }
+              }
+            },
+            "volatility": {
+              "success": true,
+              "error": null,
+              "data": {
+                "avg": 596.57,
+                "stddev": 481.21,
+                "min": 0,
+                "max": 1310,
+                "range": 1310,
+                "volatility_ratio": 80.66,
+                "volatility_level": "high"
+              }
+            },
+            "basic_anomaly": {
+              "success": true,
+              "error": null,
+              "data": {
+                "has_anomaly": true,
+                "method": "avg_diff_ratio",
+                "threshold_ratio": 0.3,
+                "avg_value": 596.57,
+                "anomalies": [
+                  {
+                    "time_label": "2026-05-08",
+                    "value": 1310,
+                    "avg_value": 596.57,
+                    "diff_ratio": 119.59,
+                    "direction": "up"
+                  },
+                  {
+                    "time_label": "2026-05-09",
+                    "value": 258,
+                    "avg_value": 596.57,
+                    "diff_ratio": -56.75,
+                    "direction": "down"
+                  },
+                  {
+                    "time_label": "2026-05-10",
+                    "value": 0,
+                    "avg_value": 596.57,
+                    "diff_ratio": -100.0,
+                    "direction": "down"
+                  },
+                  {
+                    "time_label": "2026-05-11",
+                    "value": 1006,
+                    "avg_value": 596.57,
+                    "diff_ratio": 68.63,
+                    "direction": "up"
+                  },
+                  {
+                    "time_label": "2026-05-12",
+                    "value": 340,
+                    "avg_value": 596.57,
+                    "diff_ratio": -43.01,
+                    "direction": "down"
+                  },
+                  {
+                    "time_label": "2026-05-13",
+                    "value": 336,
+                    "avg_value": 596.57,
+                    "diff_ratio": -43.68,
+                    "direction": "down"
+                  },
+                  {
+                    "time_label": "2026-05-14",
+                    "value": 926,
+                    "avg_value": 596.57,
+                    "diff_ratio": 55.22,
+                    "direction": "up"
+                  }
+                ]
+              }
+            }
+          },
           "error": null
         },
-        "timestamp_ms": 1779437294129
+        "timestamp_ms": 1779444302230
       },
       {
         "step": "summarize",
@@ -1172,14 +1368,14 @@
         "output": {
           "aggregation_type": "trend",
           "template": "trend.txt",
-          "answer": "根据统计结果，2026-05-08 到 2026-05-14 期间每天新增用户趋势如下：\n\n时间范围：2026-05-08 至 2026-05-14\n起始值：1310（2026-05-08）\n结束值：926（2026-05-14）\n最高值：1310（2026-05-08）\n最低值：0（2026-05-10）\n\n整体趋势呈现波动下降。新增用户数从第一天的1310人急剧下降到第二天的258人，第三天（2026-05-10）降至0。之后出现反弹，2026-05-11达到1006人，随后两天维持在300多人的水平，最后一天（2026-05-14）又上升到926人。\n\n值得注意的是，2026-05-10（周日）没有新增用户，这可能需要进一步调查原因。整体来看，工作日的新增用户数量普遍高于周末。"
+          "answer": "根据统计结果，2026-05-08 到 2026-05-14 期间每天新增用户趋势如下：\n\n时间范围内，新增用户数从 1310 人下降到 926 人，整体呈现波动下降趋势。最高值为 1310 人（2026-05-08），最低值为 0 人（2026-05-10）。\n\n最高点出现在 2026-05-08，为 1310 人；最低点出现在 2026-05-10，为 0 人。\n\n波动水平较高，平均新增用户数为 596.57 人，标准差为 481.21 人，波动范围为 0 到 1310 人。\n\n数据中存在多个异常点：\n1. 2026-05-08：1310 人，高于平均值 119.59%\n2. 2026-05-09：258 人，低于平均值 56.75%\n3. 2026-05-10：0 人，低于平均值 100%\n4. 2026-05-11：1006 人，高于平均值 68.63%\n5. 2026-05-12：340 人，低于平均值 43.01%\n6. 2026-05-13：336 人，低于平均值 43.68%\n7. 2026-05-14：926 人，高于平均值 55.22%\n\n这些异常值表明新增用户数在这段时间内波动较大，可能受到特定事件或活动的影响。"
         },
-        "timestamp_ms": 1779437299693
+        "timestamp_ms": 1779444309552
       }
     ],
-    "answer": "根据统计结果，2026-05-08 到 2026-05-14 期间每天新增用户趋势如下：\n\n时间范围：2026-05-08 至 2026-05-14\n起始值：1310（2026-05-08）\n结束值：926（2026-05-14）\n最高值：1310（2026-05-08）\n最低值：0（2026-05-10）\n\n整体趋势呈现波动下降。新增用户数从第一天的1310人急剧下降到第二天的258人，第三天（2026-05-10）降至0。之后出现反弹，2026-05-11达到1006人，随后两天维持在300多人的水平，最后一天（2026-05-14）又上升到926人。\n\n值得注意的是，2026-05-10（周日）没有新增用户，这可能需要进一步调查原因。整体来看，工作日的新增用户数量普遍高于周末。",
-    "end_ms": 1779437299693,
-    "total_latency_ms": 8271
+    "answer": "根据统计结果，2026-05-08 到 2026-05-14 期间每天新增用户趋势如下：\n\n时间范围内，新增用户数从 1310 人下降到 926 人，整体呈现波动下降趋势。最高值为 1310 人（2026-05-08），最低值为 0 人（2026-05-10）。\n\n最高点出现在 2026-05-08，为 1310 人；最低点出现在 2026-05-10，为 0 人。\n\n波动水平较高，平均新增用户数为 596.57 人，标准差为 481.21 人，波动范围为 0 到 1310 人。\n\n数据中存在多个异常点：\n1. 2026-05-08：1310 人，高于平均值 119.59%\n2. 2026-05-09：258 人，低于平均值 56.75%\n3. 2026-05-10：0 人，低于平均值 100%\n4. 2026-05-11：1006 人，高于平均值 68.63%\n5. 2026-05-12：340 人，低于平均值 43.01%\n6. 2026-05-13：336 人，低于平均值 43.68%\n7. 2026-05-14：926 人，高于平均值 55.22%\n\n这些异常值表明新增用户数在这段时间内波动较大，可能受到特定事件或活动的影响。",
+    "end_ms": 1779444309552,
+    "total_latency_ms": 10201
   },
-  "trace_file": "traces/regression-trend_user_count-1779437291.json"
+  "trace_file": "traces/regression-trend_user_count-1779444299.json"
 }

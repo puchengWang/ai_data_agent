@@ -1,8 +1,7 @@
 ## ai_data_agent
 AI数据智能体，帮助公司实现业务分析、运营分析、根因分析、商业价值探索
 
-系统核心公式: 
-AI + Semantic Graph + Memory + Analytics Intelligence
+系统核心公式: AI + Semantic Graph + Memory + Analytics Intelligence
 
 Semantic Graph: 是持续建设与系统质量的重中之重。
 
@@ -13,6 +12,19 @@ Semantic Graph: 是持续建设与系统质量的重中之重。
 2. 通过单个指标开发，验证框架能够实现上限需求，才会转回来横向扩充业务范围
 3. 将整个验证过程划分了八个阶段；每个阶段都作为MVP，只注重其核心能力，最终确立后，才会进行扩充。
 ```
+
+### 基本架构
+```txt
+AI Data Agent
+├── Agent Runtime：LangGraph / Bedrock / Tool Calling
+├── Semantic System：metrics / dimensions / tables / glossary
+├── Query Planner：normal / compare / trend / group_by / top_n
+├── Query Executor：Lambda / Aurora / 后续 Athena
+├── Analysis Operators：增长率 / 分布 / 波动 / 异常
+├── Memory：多轮上下文
+└── Output：自然语言 / 图表 / 报告
+```
+
 ### 第一阶段 Runtime MVP
 
 目标： 完成整体技术框架的验证
@@ -43,7 +55,7 @@ Semantic Graph: 是持续建设与系统质量的重中之重。
 
 
 ### 第三阶段 Query Planner
-目标: 从简单统计型上升为分析型AI，支持环比/同比/趋势等，然后进行比较、ranking、分布/维度计算。
+目标: 从简单统计型上升为分析型AI，支持环比/同比/趋势等，然后进行比较、ranking、分布/维度计算，然后上升到能解释和发现变化与异常。
 
 ```txt
 ✅ Aggregation Planner

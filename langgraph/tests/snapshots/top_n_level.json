@@ -28,8 +28,6 @@
     "aggregation_type": "top_n",
     "analysis": {
       "dimension": "level",
-      "limit": 3,
-      "order": "desc",
       "rows": [
         {
           "dimension_value": 0,
@@ -43,10 +41,37 @@
           "dimension_value": 3,
           "value": 9
         }
-      ],
-      "top_item": {
-        "dimension_value": 0,
-        "value": 897
+      ]
+    },
+    "operator_results": {
+      "contribution": {
+        "success": true,
+        "error": null,
+        "data": {
+          "total_value": 926,
+          "rows": [
+            {
+              "dimension_value": 0,
+              "value": 897,
+              "contribution_rate": 96.87
+            },
+            {
+              "dimension_value": 2,
+              "value": 20,
+              "contribution_rate": 2.16
+            },
+            {
+              "dimension_value": 3,
+              "value": 9,
+              "contribution_rate": 0.97
+            }
+          ],
+          "top_contributor": {
+            "dimension_value": 0,
+            "value": 897,
+            "contribution_rate": 96.87
+          }
+        }
       }
     },
     "error": null
@@ -115,7 +140,7 @@
         ]
       },
       "error": null,
-      "latency_ms": 113,
+      "latency_ms": 129,
       "query_plan": {
         "protocol_version": "1.0",
         "task_id": "top_n_001",
@@ -140,13 +165,13 @@
     }
   ],
   "compile_errors": [],
-  "request_id": "regression-top_n_level-1779437303",
-  "answer": "根据分析结果，2026-05-14 新增用户最多的前3个用户等级为:\n\n1. 等级 0: 897 名新用户\n2. 等级 2: 20 名新用户  \n3. 等级 3: 9 名新用户\n\n其中新增用户最多的是等级 0,共有 897 名新用户。",
+  "request_id": "regression-top_n_level-1779444313",
+  "answer": "根据分析结果，2026-05-14 新增用户最多的前3个用户等级为：\n\n1. 等级 0：897 名新用户\n2. 等级 2：20 名新用户\n3. 等级 3：9 名新用户\n\n其中，等级 0 的新增用户数量最多，占总新增用户的 96.87%。",
   "error": null,
   "trace": {
-    "request_id": "regression-top_n_level-1779437303",
+    "request_id": "regression-top_n_level-1779444313",
     "question": "统计 2026-05-14 新增用户最多的前3个用户等级",
-    "start_ms": 1779437303273,
+    "start_ms": 1779444313548,
     "steps": [
       {
         "step": "plan_tasks",
@@ -187,7 +212,7 @@
             ]
           }
         },
-        "timestamp_ms": 1779437305160
+        "timestamp_ms": 1779444315426
       },
       {
         "step": "compile_queries",
@@ -218,7 +243,7 @@
           ],
           "compile_errors": []
         },
-        "timestamp_ms": 1779437305161
+        "timestamp_ms": 1779444315427
       },
       {
         "step": "execute_queries",
@@ -247,7 +272,7 @@
                 ]
               },
               "error": null,
-              "latency_ms": 113,
+              "latency_ms": 129,
               "query_plan": {
                 "protocol_version": "1.0",
                 "task_id": "top_n_001",
@@ -272,7 +297,7 @@
             }
           ]
         },
-        "timestamp_ms": 1779437305274
+        "timestamp_ms": 1779444315556
       },
       {
         "step": "aggregation_analysis",
@@ -281,8 +306,6 @@
           "aggregation_type": "top_n",
           "analysis": {
             "dimension": "level",
-            "limit": 3,
-            "order": "desc",
             "rows": [
               {
                 "dimension_value": 0,
@@ -296,15 +319,42 @@
                 "dimension_value": 3,
                 "value": 9
               }
-            ],
-            "top_item": {
-              "dimension_value": 0,
-              "value": 897
+            ]
+          },
+          "operator_results": {
+            "contribution": {
+              "success": true,
+              "error": null,
+              "data": {
+                "total_value": 926,
+                "rows": [
+                  {
+                    "dimension_value": 0,
+                    "value": 897,
+                    "contribution_rate": 96.87
+                  },
+                  {
+                    "dimension_value": 2,
+                    "value": 20,
+                    "contribution_rate": 2.16
+                  },
+                  {
+                    "dimension_value": 3,
+                    "value": 9,
+                    "contribution_rate": 0.97
+                  }
+                ],
+                "top_contributor": {
+                  "dimension_value": 0,
+                  "value": 897,
+                  "contribution_rate": 96.87
+                }
+              }
             }
           },
           "error": null
         },
-        "timestamp_ms": 1779437305274
+        "timestamp_ms": 1779444315557
       },
       {
         "step": "summarize",
@@ -312,14 +362,14 @@
         "output": {
           "aggregation_type": "top_n",
           "template": "top_n.txt",
-          "answer": "根据分析结果，2026-05-14 新增用户最多的前3个用户等级为:\n\n1. 等级 0: 897 名新用户\n2. 等级 2: 20 名新用户  \n3. 等级 3: 9 名新用户\n\n其中新增用户最多的是等级 0,共有 897 名新用户。"
+          "answer": "根据分析结果，2026-05-14 新增用户最多的前3个用户等级为：\n\n1. 等级 0：897 名新用户\n2. 等级 2：20 名新用户\n3. 等级 3：9 名新用户\n\n其中，等级 0 的新增用户数量最多，占总新增用户的 96.87%。"
         },
-        "timestamp_ms": 1779437307801
+        "timestamp_ms": 1779444317876
       }
     ],
-    "answer": "根据分析结果，2026-05-14 新增用户最多的前3个用户等级为:\n\n1. 等级 0: 897 名新用户\n2. 等级 2: 20 名新用户  \n3. 等级 3: 9 名新用户\n\n其中新增用户最多的是等级 0,共有 897 名新用户。",
-    "end_ms": 1779437307801,
-    "total_latency_ms": 4528
+    "answer": "根据分析结果，2026-05-14 新增用户最多的前3个用户等级为：\n\n1. 等级 0：897 名新用户\n2. 等级 2：20 名新用户\n3. 等级 3：9 名新用户\n\n其中，等级 0 的新增用户数量最多，占总新增用户的 96.87%。",
+    "end_ms": 1779444317876,
+    "total_latency_ms": 4328
   },
-  "trace_file": "traces/regression-top_n_level-1779437303.json"
+  "trace_file": "traces/regression-top_n_level-1779444313.json"
 }

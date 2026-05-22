@@ -2,8 +2,11 @@ from langgraph.graph import StateGraph, END
 from app.observability.tracer import now_ms, write_trace
 from app.protocols.query_protocol import build_tool_result
 from app.planner.aggregation_planner import build_aggregation_plan
-from app.planner.comparison_engine import calculate_change
+# from app.planner.comparison_engine import calculate_change
+from app.analysis.operator_registry import OPERATOR_REGISTRY
+
 from app.summary.summary_template_loader import load_summary_template
+from app.analysis.operator_executor import execute_analysis_operators
 
 from app.state import AgentState
 from app.llm.bedrock_client import invoke_bedrock_json, invoke_bedrock_text
@@ -18,255 +21,27 @@ def aggregation_analysis_node(state: AgentState) -> AgentState:
     aggregation_result = {
         "aggregation_type": aggregation_type,
         "analysis": None,
+        "operator_results": {},
         "error": None,
     }
 
-    if aggregation_type == "compare":
-        results_by_task_id = {
-            item["task_id"]: item
-            for item in state.get("tool_results", [])
-        }
+    try:
+        analysis_input = build_analysis_input(
+            aggregation_type=aggregation_type,
+            aggregation_plan=aggregation_plan,
+            tool_results=state.get("tool_results", []),
+        )
 
-        current_result = results_by_task_id.get("current_period")
-        previous_result = results_by_task_id.get("previous_period")
+        operator_results = execute_analysis_operators(
+            aggregation_type=aggregation_type,
+            analysis_input=analysis_input,
+        )
 
-        if not current_result or not previous_result:
-            aggregation_result["error"] = "Missing current_period or previous_period result"
+        aggregation_result["analysis"] = analysis_input
+        aggregation_result["operator_results"] = operator_results
 
-        elif not current_result.get("success") or not previous_result.get("success"):
-            aggregation_result["error"] = "Current or previous period query failed"
-
-        else:
-            current_value = current_result["data"]["value"]
-            previous_value = previous_result["data"]["value"]
-
-            change_result = calculate_change(
-                current_value=current_value,
-                previous_value=previous_value,
-            )
-
-            aggregation_result["analysis"] = {
-                "current_value": current_value,
-                "previous_value": previous_value,
-                "change": change_result["change"],
-                "change_rate": change_result["change_rate"],
-            }
-
-    elif aggregation_type == "trend":
-        time_series = []
-
-        for item in state.get("tool_results", []):
-            query_plan = item.get("query_plan", {})
-            params = query_plan.get("params", [])
-
-            time_label = None
-
-            # 优先从 query_plan.meta 或 params 推断
-            if query_plan.get("meta", {}).get("time_label"):
-                time_label = query_plan["meta"]["time_label"]
-            elif len(params) >= 1:
-                time_label = params[0]
-
-            if item.get("success"):
-                value = item.get("data", {}).get("value")
-            else:
-                value = None
-
-            time_series.append({
-                "time_label": time_label,
-                "task_id": item.get("task_id"),
-                "task_name": item.get("task_name"),
-                "value": value,
-                "success": item.get("success"),
-                "error": item.get("error"),
-            })
-
-        valid_values = [
-            x["value"] for x in time_series
-            if x["success"] and x["value"] is not None
-        ]
-
-        if not valid_values:
-            aggregation_result["error"] = "No valid trend data"
-
-        else:
-            aggregation_result["analysis"] = {
-                "grain": aggregation_plan.get("grain", "day"),
-                "time_series": time_series,
-                "summary_stats": {
-                    "points": len(valid_values),
-                    "min": min(valid_values),
-                    "max": max(valid_values),
-                    "start_value": valid_values[0],
-                    "end_value": valid_values[-1],
-                    "change": valid_values[-1] - valid_values[0],
-                }
-            }
-
-    elif aggregation_type == "group_by":
-        group_rows = []
-    
-        for item in state.get("tool_results", []):
-            if item.get("success"):
-                rows = item.get("data", {}).get("rows", [])
-                group_rows.extend(rows)
-    
-        if not group_rows:
-            aggregation_result["error"] = "No valid group_by data"
-        else:
-            aggregation_result["analysis"] = {
-                "dimension": aggregation_plan.get("dimension"),
-                "groups": group_rows,
-                "group_count": len(group_rows),
-                "total_value": sum(row.get("value", 0) for row in group_rows),
-            }
-
-    elif aggregation_type == "top_n":
-        rows = []
-    
-        for item in state.get("tool_results", []):
-            if item.get("success"):
-                rows.extend(item.get("data", {}).get("rows", []))
-    
-        if not rows:
-            aggregation_result["error"] = "No valid top_n data"
-        else:
-            aggregation_result["analysis"] = {
-                "dimension": aggregation_plan.get("dimension"),
-                "limit": aggregation_plan.get("limit"),
-                "order": aggregation_plan.get("order", "desc"),
-                "rows": rows,
-                "top_item": rows[0] if rows else None,
-            }
-
-    elif aggregation_type == "distribution":
-        rows = []
-    
-        for item in state.get("tool_results", []):
-            if item.get("success"):
-                rows.extend(item.get("data", {}).get("rows", []))
-    
-        if not rows:
-            aggregation_result["error"] = "No valid distribution data"
-        else:
-            total_value = sum(row.get("value", 0) or 0 for row in rows)
-    
-            distribution_rows = []
-    
-            for row in rows:
-                value = row.get("value", 0) or 0
-    
-                if total_value == 0:
-                    percentage = None
-                else:
-                    percentage = round(value / total_value * 100, 2)
-    
-                distribution_rows.append({
-                    "dimension_value": row.get("dimension_value"),
-                    "value": value,
-                    "percentage": percentage,
-                })
-    
-            aggregation_result["analysis"] = {
-                "dimension": aggregation_plan.get("dimension"),
-                "total_value": total_value,
-                "groups": distribution_rows,
-                "group_count": len(distribution_rows),
-            }
-
-    elif aggregation_type == "compare_by_dimension":
-        results_by_task_id = {
-            item["task_id"]: item
-            for item in state.get("tool_results", [])
-        }
-    
-        current_result = results_by_task_id.get("current_dimension_period")
-        previous_result = results_by_task_id.get("previous_dimension_period")
-    
-        if not current_result or not previous_result:
-            aggregation_result["error"] = "Missing current_dimension_period or previous_dimension_period result"
-    
-        elif not current_result.get("success") or not previous_result.get("success"):
-            aggregation_result["error"] = "Current or previous dimension period query failed"
-    
-        else:
-            current_rows = current_result.get("data", {}).get("rows", [])
-            previous_rows = previous_result.get("data", {}).get("rows", [])
-    
-            previous_map = {
-                str(row.get("dimension_value")): row.get("value", 0) or 0
-                for row in previous_rows
-            }
-    
-            current_map = {
-                str(row.get("dimension_value")): row.get("value", 0) or 0
-                for row in current_rows
-            }
-    
-            dimension_values = sorted(
-                set(current_map.keys()) | set(previous_map.keys())
-            )
-    
-            comparison_rows = []
-    
-            for dimension_value in dimension_values:
-                current_value = current_map.get(dimension_value, 0)
-                previous_value = previous_map.get(dimension_value, 0)
-    
-                change_result = calculate_change(
-                    current_value=current_value,
-                    previous_value=previous_value,
-                )
-    
-                comparison_rows.append({
-                    "dimension_value": dimension_value,
-                    "current_value": current_value,
-                    "previous_value": previous_value,
-                    "change": change_result["change"],
-                    "change_rate": change_result["change_rate"],
-                })
-    
-            aggregation_result["analysis"] = {
-                "dimension": aggregation_plan.get("dimension"),
-                "compare_mode": aggregation_plan.get("compare_mode"),
-                "rows": comparison_rows,
-            }
-
-    elif aggregation_type == "trend_by_dimension":
-        series_map = {}
-    
-        for item in state.get("tool_results", []):
-            query_plan = item.get("query_plan", {})
-            params = query_plan.get("params", [])
-    
-            time_label = params[0] if params else None
-    
-            if not item.get("success"):
-                continue
-    
-            rows = item.get("data", {}).get("rows", [])
-    
-            for row in rows:
-                dimension_value = str(row.get("dimension_value"))
-                value = row.get("value", 0) or 0
-    
-                if dimension_value not in series_map:
-                    series_map[dimension_value] = []
-    
-                series_map[dimension_value].append({
-                    "time_label": time_label,
-                    "value": value,
-                })
-    
-        if not series_map:
-            aggregation_result["error"] = "No valid trend_by_dimension data"
-        else:
-            aggregation_result["analysis"] = {
-                "dimension": aggregation_plan.get("dimension"),
-                "grain": aggregation_plan.get("grain", "day"),
-                "series": series_map,
-                "series_count": len(series_map),
-            }
+    except Exception as e:
+        aggregation_result["error"] = str(e)
 
     trace = state.get("trace", {})
     steps = trace.get("steps", [])
@@ -286,6 +61,183 @@ def aggregation_analysis_node(state: AgentState) -> AgentState:
         "trace": trace,
     }
 
+
+def build_analysis_input(
+    aggregation_type: str,
+    aggregation_plan: dict,
+    tool_results: list,
+) -> dict:
+
+    if aggregation_type == "normal":
+        return {
+            "tool_results": tool_results,
+        }
+
+    if aggregation_type == "compare":
+        results_by_task_id = {
+            item["task_id"]: item
+            for item in tool_results
+        }
+
+        current_result = results_by_task_id.get("current_period")
+        previous_result = results_by_task_id.get("previous_period")
+
+        if not current_result or not previous_result:
+            raise ValueError("Missing current_period or previous_period result")
+
+        if not current_result.get("success") or not previous_result.get("success"):
+            raise ValueError("Current or previous period query failed")
+
+        return {
+            "current_value": current_result["data"]["value"],
+            "previous_value": previous_result["data"]["value"],
+        }
+
+    if aggregation_type in ["group_by", "top_n", "distribution"]:
+        rows = []
+
+        for item in tool_results:
+            if item.get("success"):
+                rows.extend(item.get("data", {}).get("rows", []))
+
+        if not rows:
+            raise ValueError(f"No valid {aggregation_type} data")
+
+        return {
+            "dimension": aggregation_plan.get("dimension"),
+            "rows": rows,
+        }
+
+    if aggregation_type == "trend":
+        time_series = []
+
+        for item in tool_results:
+            query_plan = item.get("query_plan", {})
+            params = query_plan.get("params", [])
+
+            time_label = params[0] if params else None
+
+            value = None
+            if item.get("success"):
+                value = item.get("data", {}).get("value")
+
+            time_series.append({
+                "time_label": time_label,
+                "task_id": item.get("task_id"),
+                "task_name": item.get("task_name"),
+                "value": value,
+                "success": item.get("success"),
+                "error": item.get("error"),
+            })
+
+        valid_values = [
+            item["value"]
+            for item in time_series
+            if item.get("value") is not None
+        ]
+
+        if not valid_values:
+            raise ValueError("No valid trend data")
+
+        return {
+            "grain": aggregation_plan.get("grain", "day"),
+            "time_series": time_series,
+            "summary_stats": {
+                "points": len(valid_values),
+                "min": min(valid_values),
+                "max": max(valid_values),
+                "start_value": valid_values[0],
+                "end_value": valid_values[-1],
+                "change": valid_values[-1] - valid_values[0],
+            },
+        }
+
+    if aggregation_type == "compare_by_dimension":
+        results_by_task_id = {
+            item["task_id"]: item
+            for item in tool_results
+        }
+
+        current_result = results_by_task_id.get("current_dimension_period")
+        previous_result = results_by_task_id.get("previous_dimension_period")
+
+        if not current_result or not previous_result:
+            raise ValueError("Missing current_dimension_period or previous_dimension_period result")
+
+        if not current_result.get("success") or not previous_result.get("success"):
+            raise ValueError("Current or previous dimension period query failed")
+
+        current_rows = current_result.get("data", {}).get("rows", [])
+        previous_rows = previous_result.get("data", {}).get("rows", [])
+
+        current_map = {
+            str(row.get("dimension_value")): row.get("value", 0) or 0
+            for row in current_rows
+        }
+
+        previous_map = {
+            str(row.get("dimension_value")): row.get("value", 0) or 0
+            for row in previous_rows
+        }
+
+        dimension_values = sorted(
+            set(current_map.keys()) | set(previous_map.keys())
+        )
+
+        rows = []
+
+        for dimension_value in dimension_values:
+            rows.append({
+                "dimension_value": dimension_value,
+                "current_value": current_map.get(dimension_value, 0),
+                "previous_value": previous_map.get(dimension_value, 0),
+            })
+
+        return {
+            "dimension": aggregation_plan.get("dimension"),
+            "compare_mode": aggregation_plan.get("compare_mode"),
+            "rows": rows,
+        }
+
+    if aggregation_type == "trend_by_dimension":
+        series_map = {}
+
+        for item in tool_results:
+            query_plan = item.get("query_plan", {})
+            params = query_plan.get("params", [])
+
+            time_label = params[0] if params else None
+
+            if not item.get("success"):
+                continue
+
+            rows = item.get("data", {}).get("rows", [])
+
+            for row in rows:
+                dimension_value = str(row.get("dimension_value"))
+                value = row.get("value", 0) or 0
+
+                if dimension_value not in series_map:
+                    series_map[dimension_value] = []
+
+                series_map[dimension_value].append({
+                    "time_label": time_label,
+                    "value": value,
+                })
+
+        if not series_map:
+            raise ValueError("No valid trend_by_dimension data")
+
+        return {
+            "dimension": aggregation_plan.get("dimension"),
+            "grain": aggregation_plan.get("grain", "day"),
+            "series": series_map,
+            "series_count": len(series_map),
+        }
+
+    return {
+        "tool_results": tool_results,
+    }
 
 def plan_tasks_node(state: AgentState) -> AgentState:
     question = state["question"]

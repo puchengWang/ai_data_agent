@@ -28,9 +28,20 @@
     "aggregation_type": "compare",
     "analysis": {
       "current_value": 926,
-      "previous_value": 336,
-      "change": 590,
-      "change_rate": 175.6
+      "previous_value": 336
+    },
+    "operator_results": {
+      "growth_rate": {
+        "success": true,
+        "error": null,
+        "data": {
+          "current_value": 926,
+          "previous_value": 336,
+          "change": 590,
+          "change_rate": 175.6,
+          "direction": "up"
+        }
+      }
     },
     "error": null
   },
@@ -140,7 +151,7 @@
         "value": 336
       },
       "error": null,
-      "latency_ms": 105,
+      "latency_ms": 125,
       "query_plan": {
         "protocol_version": "1.0",
         "task_id": "previous_period",
@@ -165,13 +176,13 @@
     }
   ],
   "compile_errors": [],
-  "request_id": "regression-compare_user_count-1779437287",
+  "request_id": "regression-compare_user_count-1779444295",
   "answer": "2026-05-14 新增用户数为 926，相比前一天（2026-05-13）的 336 增加了 590 人，增长率为 175.6%。新增用户数量有显著增长。",
   "error": null,
   "trace": {
-    "request_id": "regression-compare_user_count-1779437287",
+    "request_id": "regression-compare_user_count-1779444295",
     "question": "2026-05-14 新增用户相比前一天增长多少？",
-    "start_ms": 1779437287324,
+    "start_ms": 1779444295295,
     "steps": [
       {
         "step": "plan_tasks",
@@ -212,7 +223,7 @@
             ]
           }
         },
-        "timestamp_ms": 1779437289164
+        "timestamp_ms": 1779444297255
       },
       {
         "step": "compile_queries",
@@ -264,7 +275,7 @@
           ],
           "compile_errors": []
         },
-        "timestamp_ms": 1779437289165
+        "timestamp_ms": 1779444297255
       },
       {
         "step": "execute_queries",
@@ -312,7 +323,7 @@
                 "value": 336
               },
               "error": null,
-              "latency_ms": 105,
+              "latency_ms": 125,
               "query_plan": {
                 "protocol_version": "1.0",
                 "task_id": "previous_period",
@@ -337,7 +348,7 @@
             }
           ]
         },
-        "timestamp_ms": 1779437289394
+        "timestamp_ms": 1779444297505
       },
       {
         "step": "aggregation_analysis",
@@ -346,13 +357,24 @@
           "aggregation_type": "compare",
           "analysis": {
             "current_value": 926,
-            "previous_value": 336,
-            "change": 590,
-            "change_rate": 175.6
+            "previous_value": 336
+          },
+          "operator_results": {
+            "growth_rate": {
+              "success": true,
+              "error": null,
+              "data": {
+                "current_value": 926,
+                "previous_value": 336,
+                "change": 590,
+                "change_rate": 175.6,
+                "direction": "up"
+              }
+            }
           },
           "error": null
         },
-        "timestamp_ms": 1779437289395
+        "timestamp_ms": 1779444297506
       },
       {
         "step": "summarize",
@@ -362,12 +384,12 @@
           "template": "compare.txt",
           "answer": "2026-05-14 新增用户数为 926，相比前一天（2026-05-13）的 336 增加了 590 人，增长率为 175.6%。新增用户数量有显著增长。"
         },
-        "timestamp_ms": 1779437291416
+        "timestamp_ms": 1779444299345
       }
     ],
     "answer": "2026-05-14 新增用户数为 926，相比前一天（2026-05-13）的 336 增加了 590 人，增长率为 175.6%。新增用户数量有显著增长。",
-    "end_ms": 1779437291416,
-    "total_latency_ms": 4092
+    "end_ms": 1779444299345,
+    "total_latency_ms": 4050
   },
-  "trace_file": "traces/regression-compare_user_count-1779437287.json"
+  "trace_file": "traces/regression-compare_user_count-1779444295.json"
 }

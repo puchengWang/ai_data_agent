@@ -22,25 +22,51 @@
     "aggregation_type": "distribution",
     "analysis": {
       "dimension": "level",
-      "total_value": 926,
-      "groups": [
+      "rows": [
         {
           "dimension_value": 0,
-          "value": 897,
-          "percentage": 96.87
+          "value": 897
         },
         {
           "dimension_value": 2,
-          "value": 20,
-          "percentage": 2.16
+          "value": 20
         },
         {
           "dimension_value": 3,
-          "value": 9,
-          "percentage": 0.97
+          "value": 9
         }
-      ],
-      "group_count": 3
+      ]
+    },
+    "operator_results": {
+      "contribution": {
+        "success": true,
+        "error": null,
+        "data": {
+          "total_value": 926,
+          "rows": [
+            {
+              "dimension_value": 0,
+              "value": 897,
+              "contribution_rate": 96.87
+            },
+            {
+              "dimension_value": 2,
+              "value": 20,
+              "contribution_rate": 2.16
+            },
+            {
+              "dimension_value": 3,
+              "value": 9,
+              "contribution_rate": 0.97
+            }
+          ],
+          "top_contributor": {
+            "dimension_value": 0,
+            "value": 897,
+            "contribution_rate": 96.87
+          }
+        }
+      }
     },
     "error": null
   },
@@ -104,7 +130,7 @@
         ]
       },
       "error": null,
-      "latency_ms": 114,
+      "latency_ms": 122,
       "query_plan": {
         "protocol_version": "1.0",
         "task_id": "distribution_001",
@@ -129,13 +155,13 @@
     }
   ],
   "compile_errors": [],
-  "request_id": "regression-distribution_level-1779437307",
-  "answer": "根据分析结果,2026-05-14新增用户的用户等级分布如下:\n\n- 0级用户:897人,占比96.87%\n- 2级用户:20人,占比2.16% \n- 3级用户:9人,占比0.97%\n\n总计新增用户926人。其中0级用户占比最高,达到96.87%。",
+  "request_id": "regression-distribution_level-1779444317",
+  "answer": "根据分析结果，2026-05-14新增用户的用户等级分布如下:\n\n- 0级用户: 897人，占比96.87%\n- 2级用户: 20人，占比2.16%\n- 3级用户: 9人，占比0.97%\n\n总计新增用户926人。其中0级用户占比最高，达到96.87%。",
   "error": null,
   "trace": {
-    "request_id": "regression-distribution_level-1779437307",
+    "request_id": "regression-distribution_level-1779444317",
     "question": "统计 2026-05-14 新增用户的用户等级分布",
-    "start_ms": 1779437307808,
+    "start_ms": 1779444317881,
     "steps": [
       {
         "step": "plan_tasks",
@@ -170,7 +196,7 @@
             ]
           }
         },
-        "timestamp_ms": 1779437309880
+        "timestamp_ms": 1779444319626
       },
       {
         "step": "compile_queries",
@@ -201,7 +227,7 @@
           ],
           "compile_errors": []
         },
-        "timestamp_ms": 1779437309881
+        "timestamp_ms": 1779444319626
       },
       {
         "step": "execute_queries",
@@ -230,7 +256,7 @@
                 ]
               },
               "error": null,
-              "latency_ms": 114,
+              "latency_ms": 122,
               "query_plan": {
                 "protocol_version": "1.0",
                 "task_id": "distribution_001",
@@ -255,7 +281,7 @@
             }
           ]
         },
-        "timestamp_ms": 1779437309995
+        "timestamp_ms": 1779444319748
       },
       {
         "step": "aggregation_analysis",
@@ -264,29 +290,55 @@
           "aggregation_type": "distribution",
           "analysis": {
             "dimension": "level",
-            "total_value": 926,
-            "groups": [
+            "rows": [
               {
                 "dimension_value": 0,
-                "value": 897,
-                "percentage": 96.87
+                "value": 897
               },
               {
                 "dimension_value": 2,
-                "value": 20,
-                "percentage": 2.16
+                "value": 20
               },
               {
                 "dimension_value": 3,
-                "value": 9,
-                "percentage": 0.97
+                "value": 9
               }
-            ],
-            "group_count": 3
+            ]
+          },
+          "operator_results": {
+            "contribution": {
+              "success": true,
+              "error": null,
+              "data": {
+                "total_value": 926,
+                "rows": [
+                  {
+                    "dimension_value": 0,
+                    "value": 897,
+                    "contribution_rate": 96.87
+                  },
+                  {
+                    "dimension_value": 2,
+                    "value": 20,
+                    "contribution_rate": 2.16
+                  },
+                  {
+                    "dimension_value": 3,
+                    "value": 9,
+                    "contribution_rate": 0.97
+                  }
+                ],
+                "top_contributor": {
+                  "dimension_value": 0,
+                  "value": 897,
+                  "contribution_rate": 96.87
+                }
+              }
+            }
           },
           "error": null
         },
-        "timestamp_ms": 1779437309996
+        "timestamp_ms": 1779444319749
       },
       {
         "step": "summarize",
@@ -294,14 +346,14 @@
         "output": {
           "aggregation_type": "distribution",
           "template": "distribution.txt",
-          "answer": "根据分析结果,2026-05-14新增用户的用户等级分布如下:\n\n- 0级用户:897人,占比96.87%\n- 2级用户:20人,占比2.16% \n- 3级用户:9人,占比0.97%\n\n总计新增用户926人。其中0级用户占比最高,达到96.87%。"
+          "answer": "根据分析结果，2026-05-14新增用户的用户等级分布如下:\n\n- 0级用户: 897人，占比96.87%\n- 2级用户: 20人，占比2.16%\n- 3级用户: 9人，占比0.97%\n\n总计新增用户926人。其中0级用户占比最高，达到96.87%。"
         },
-        "timestamp_ms": 1779437313388
+        "timestamp_ms": 1779444322071
       }
     ],
-    "answer": "根据分析结果,2026-05-14新增用户的用户等级分布如下:\n\n- 0级用户:897人,占比96.87%\n- 2级用户:20人,占比2.16% \n- 3级用户:9人,占比0.97%\n\n总计新增用户926人。其中0级用户占比最高,达到96.87%。",
-    "end_ms": 1779437313388,
-    "total_latency_ms": 5580
+    "answer": "根据分析结果，2026-05-14新增用户的用户等级分布如下:\n\n- 0级用户: 897人，占比96.87%\n- 2级用户: 20人，占比2.16%\n- 3级用户: 9人，占比0.97%\n\n总计新增用户926人。其中0级用户占比最高，达到96.87%。",
+    "end_ms": 1779444322071,
+    "total_latency_ms": 4190
   },
-  "trace_file": "traces/regression-distribution_level-1779437307.json"
+  "trace_file": "traces/regression-distribution_level-1779444317.json"
 }

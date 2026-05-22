@@ -1,0 +1,858 @@
+{
+  "request_id": "regression-trend_by_dimension_level-1779444328",
+  "question": "统计 2026-05-08 到 2026-05-14 各用户等级新增用户趋势",
+  "start_ms": 1779444328180,
+  "steps": [
+    {
+      "step": "plan_tasks",
+      "status": "success",
+      "output": {
+        "parsed": {
+          "question": "统计 2026-05-08 到 2026-05-14 各用户等级新增用户趋势",
+          "metric": "user_count",
+          "params": {
+            "start_time": "2026-05-08",
+            "end_time": "2026-05-15",
+            "grain": "day"
+          },
+          "original_question": "统计 2026-05-08 到 2026-05-14 各用户等级新增用户趋势"
+        },
+        "aggregation_plan": {
+          "aggregation_type": "trend_by_dimension",
+          "dimension": "level",
+          "grain": "day",
+          "tasks": [
+            {
+              "task_id": "trend_dimension_001",
+              "task_name": "2026-05-08 按level趋势统计",
+              "metric": "user_count",
+              "params": {
+                "start_time": "2026-05-08",
+                "end_time": "2026-05-09",
+                "dimension": "level",
+                "time_label": "2026-05-08"
+              },
+              "dimension": "level"
+            },
+            {
+              "task_id": "trend_dimension_002",
+              "task_name": "2026-05-09 按level趋势统计",
+              "metric": "user_count",
+              "params": {
+                "start_time": "2026-05-09",
+                "end_time": "2026-05-10",
+                "dimension": "level",
+                "time_label": "2026-05-09"
+              },
+              "dimension": "level"
+            },
+            {
+              "task_id": "trend_dimension_003",
+              "task_name": "2026-05-10 按level趋势统计",
+              "metric": "user_count",
+              "params": {
+                "start_time": "2026-05-10",
+                "end_time": "2026-05-11",
+                "dimension": "level",
+                "time_label": "2026-05-10"
+              },
+              "dimension": "level"
+            },
+            {
+              "task_id": "trend_dimension_004",
+              "task_name": "2026-05-11 按level趋势统计",
+              "metric": "user_count",
+              "params": {
+                "start_time": "2026-05-11",
+                "end_time": "2026-05-12",
+                "dimension": "level",
+                "time_label": "2026-05-11"
+              },
+              "dimension": "level"
+            },
+            {
+              "task_id": "trend_dimension_005",
+              "task_name": "2026-05-12 按level趋势统计",
+              "metric": "user_count",
+              "params": {
+                "start_time": "2026-05-12",
+                "end_time": "2026-05-13",
+                "dimension": "level",
+                "time_label": "2026-05-12"
+              },
+              "dimension": "level"
+            },
+            {
+              "task_id": "trend_dimension_006",
+              "task_name": "2026-05-13 按level趋势统计",
+              "metric": "user_count",
+              "params": {
+                "start_time": "2026-05-13",
+                "end_time": "2026-05-14",
+                "dimension": "level",
+                "time_label": "2026-05-13"
+              },
+              "dimension": "level"
+            },
+            {
+              "task_id": "trend_dimension_007",
+              "task_name": "2026-05-14 按level趋势统计",
+              "metric": "user_count",
+              "params": {
+                "start_time": "2026-05-14",
+                "end_time": "2026-05-15",
+                "dimension": "level",
+                "time_label": "2026-05-14"
+              },
+              "dimension": "level"
+            }
+          ]
+        }
+      },
+      "timestamp_ms": 1779444330003
+    },
+    {
+      "step": "compile_queries",
+      "status": "success",
+      "output": {
+        "query_plans": [
+          {
+            "protocol_version": "1.0",
+            "task_id": "trend_dimension_001",
+            "task_name": "2026-05-08 按level趋势统计",
+            "metric": "user_count",
+            "business_name": "用户数量",
+            "engine": "aurora_mysql",
+            "datasource": "user",
+            "query_type": "sql",
+            "sql": "SELECT level AS dimension_value, COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s\nGROUP BY level\nORDER BY value DESC",
+            "params": [
+              "2026-05-08",
+              "2026-05-09"
+            ],
+            "meta": {
+              "engine": "aurora_mysql",
+              "datasource": "user",
+              "database": "user",
+              "table": "users"
+            }
+          },
+          {
+            "protocol_version": "1.0",
+            "task_id": "trend_dimension_002",
+            "task_name": "2026-05-09 按level趋势统计",
+            "metric": "user_count",
+            "business_name": "用户数量",
+            "engine": "aurora_mysql",
+            "datasource": "user",
+            "query_type": "sql",
+            "sql": "SELECT level AS dimension_value, COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s\nGROUP BY level\nORDER BY value DESC",
+            "params": [
+              "2026-05-09",
+              "2026-05-10"
+            ],
+            "meta": {
+              "engine": "aurora_mysql",
+              "datasource": "user",
+              "database": "user",
+              "table": "users"
+            }
+          },
+          {
+            "protocol_version": "1.0",
+            "task_id": "trend_dimension_003",
+            "task_name": "2026-05-10 按level趋势统计",
+            "metric": "user_count",
+            "business_name": "用户数量",
+            "engine": "aurora_mysql",
+            "datasource": "user",
+            "query_type": "sql",
+            "sql": "SELECT level AS dimension_value, COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s\nGROUP BY level\nORDER BY value DESC",
+            "params": [
+              "2026-05-10",
+              "2026-05-11"
+            ],
+            "meta": {
+              "engine": "aurora_mysql",
+              "datasource": "user",
+              "database": "user",
+              "table": "users"
+            }
+          },
+          {
+            "protocol_version": "1.0",
+            "task_id": "trend_dimension_004",
+            "task_name": "2026-05-11 按level趋势统计",
+            "metric": "user_count",
+            "business_name": "用户数量",
+            "engine": "aurora_mysql",
+            "datasource": "user",
+            "query_type": "sql",
+            "sql": "SELECT level AS dimension_value, COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s\nGROUP BY level\nORDER BY value DESC",
+            "params": [
+              "2026-05-11",
+              "2026-05-12"
+            ],
+            "meta": {
+              "engine": "aurora_mysql",
+              "datasource": "user",
+              "database": "user",
+              "table": "users"
+            }
+          },
+          {
+            "protocol_version": "1.0",
+            "task_id": "trend_dimension_005",
+            "task_name": "2026-05-12 按level趋势统计",
+            "metric": "user_count",
+            "business_name": "用户数量",
+            "engine": "aurora_mysql",
+            "datasource": "user",
+            "query_type": "sql",
+            "sql": "SELECT level AS dimension_value, COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s\nGROUP BY level\nORDER BY value DESC",
+            "params": [
+              "2026-05-12",
+              "2026-05-13"
+            ],
+            "meta": {
+              "engine": "aurora_mysql",
+              "datasource": "user",
+              "database": "user",
+              "table": "users"
+            }
+          },
+          {
+            "protocol_version": "1.0",
+            "task_id": "trend_dimension_006",
+            "task_name": "2026-05-13 按level趋势统计",
+            "metric": "user_count",
+            "business_name": "用户数量",
+            "engine": "aurora_mysql",
+            "datasource": "user",
+            "query_type": "sql",
+            "sql": "SELECT level AS dimension_value, COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s\nGROUP BY level\nORDER BY value DESC",
+            "params": [
+              "2026-05-13",
+              "2026-05-14"
+            ],
+            "meta": {
+              "engine": "aurora_mysql",
+              "datasource": "user",
+              "database": "user",
+              "table": "users"
+            }
+          },
+          {
+            "protocol_version": "1.0",
+            "task_id": "trend_dimension_007",
+            "task_name": "2026-05-14 按level趋势统计",
+            "metric": "user_count",
+            "business_name": "用户数量",
+            "engine": "aurora_mysql",
+            "datasource": "user",
+            "query_type": "sql",
+            "sql": "SELECT level AS dimension_value, COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s\nGROUP BY level\nORDER BY value DESC",
+            "params": [
+              "2026-05-14",
+              "2026-05-15"
+            ],
+            "meta": {
+              "engine": "aurora_mysql",
+              "datasource": "user",
+              "database": "user",
+              "table": "users"
+            }
+          }
+        ],
+        "compile_errors": []
+      },
+      "timestamp_ms": 1779444330004
+    },
+    {
+      "step": "execute_queries",
+      "status": "success",
+      "output": {
+        "tool_results": [
+          {
+            "protocol_version": "1.0",
+            "task_id": "trend_dimension_001",
+            "task_name": "2026-05-08 按level趋势统计",
+            "success": true,
+            "data": {
+              "rows": [
+                {
+                  "dimension_value": 0,
+                  "value": 1287
+                },
+                {
+                  "dimension_value": 3,
+                  "value": 23
+                }
+              ]
+            },
+            "error": null,
+            "latency_ms": 121,
+            "query_plan": {
+              "protocol_version": "1.0",
+              "task_id": "trend_dimension_001",
+              "task_name": "2026-05-08 按level趋势统计",
+              "metric": "user_count",
+              "business_name": "用户数量",
+              "engine": "aurora_mysql",
+              "datasource": "user",
+              "query_type": "sql",
+              "sql": "SELECT level AS dimension_value, COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s\nGROUP BY level\nORDER BY value DESC",
+              "params": [
+                "2026-05-08",
+                "2026-05-09"
+              ],
+              "meta": {
+                "engine": "aurora_mysql",
+                "datasource": "user",
+                "database": "user",
+                "table": "users"
+              }
+            }
+          },
+          {
+            "protocol_version": "1.0",
+            "task_id": "trend_dimension_002",
+            "task_name": "2026-05-09 按level趋势统计",
+            "success": true,
+            "data": {
+              "rows": [
+                {
+                  "dimension_value": 0,
+                  "value": 252
+                },
+                {
+                  "dimension_value": 3,
+                  "value": 6
+                }
+              ]
+            },
+            "error": null,
+            "latency_ms": 113,
+            "query_plan": {
+              "protocol_version": "1.0",
+              "task_id": "trend_dimension_002",
+              "task_name": "2026-05-09 按level趋势统计",
+              "metric": "user_count",
+              "business_name": "用户数量",
+              "engine": "aurora_mysql",
+              "datasource": "user",
+              "query_type": "sql",
+              "sql": "SELECT level AS dimension_value, COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s\nGROUP BY level\nORDER BY value DESC",
+              "params": [
+                "2026-05-09",
+                "2026-05-10"
+              ],
+              "meta": {
+                "engine": "aurora_mysql",
+                "datasource": "user",
+                "database": "user",
+                "table": "users"
+              }
+            }
+          },
+          {
+            "protocol_version": "1.0",
+            "task_id": "trend_dimension_003",
+            "task_name": "2026-05-10 按level趋势统计",
+            "success": true,
+            "data": {
+              "value": null
+            },
+            "error": null,
+            "latency_ms": 122,
+            "query_plan": {
+              "protocol_version": "1.0",
+              "task_id": "trend_dimension_003",
+              "task_name": "2026-05-10 按level趋势统计",
+              "metric": "user_count",
+              "business_name": "用户数量",
+              "engine": "aurora_mysql",
+              "datasource": "user",
+              "query_type": "sql",
+              "sql": "SELECT level AS dimension_value, COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s\nGROUP BY level\nORDER BY value DESC",
+              "params": [
+                "2026-05-10",
+                "2026-05-11"
+              ],
+              "meta": {
+                "engine": "aurora_mysql",
+                "datasource": "user",
+                "database": "user",
+                "table": "users"
+              }
+            }
+          },
+          {
+            "protocol_version": "1.0",
+            "task_id": "trend_dimension_004",
+            "task_name": "2026-05-11 按level趋势统计",
+            "success": true,
+            "data": {
+              "rows": [
+                {
+                  "dimension_value": 0,
+                  "value": 987
+                },
+                {
+                  "dimension_value": 3,
+                  "value": 19
+                }
+              ]
+            },
+            "error": null,
+            "latency_ms": 140,
+            "query_plan": {
+              "protocol_version": "1.0",
+              "task_id": "trend_dimension_004",
+              "task_name": "2026-05-11 按level趋势统计",
+              "metric": "user_count",
+              "business_name": "用户数量",
+              "engine": "aurora_mysql",
+              "datasource": "user",
+              "query_type": "sql",
+              "sql": "SELECT level AS dimension_value, COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s\nGROUP BY level\nORDER BY value DESC",
+              "params": [
+                "2026-05-11",
+                "2026-05-12"
+              ],
+              "meta": {
+                "engine": "aurora_mysql",
+                "datasource": "user",
+                "database": "user",
+                "table": "users"
+              }
+            }
+          },
+          {
+            "protocol_version": "1.0",
+            "task_id": "trend_dimension_005",
+            "task_name": "2026-05-12 按level趋势统计",
+            "success": true,
+            "data": {
+              "rows": [
+                {
+                  "dimension_value": 0,
+                  "value": 330
+                },
+                {
+                  "dimension_value": 3,
+                  "value": 8
+                },
+                {
+                  "dimension_value": 2,
+                  "value": 2
+                }
+              ]
+            },
+            "error": null,
+            "latency_ms": 123,
+            "query_plan": {
+              "protocol_version": "1.0",
+              "task_id": "trend_dimension_005",
+              "task_name": "2026-05-12 按level趋势统计",
+              "metric": "user_count",
+              "business_name": "用户数量",
+              "engine": "aurora_mysql",
+              "datasource": "user",
+              "query_type": "sql",
+              "sql": "SELECT level AS dimension_value, COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s\nGROUP BY level\nORDER BY value DESC",
+              "params": [
+                "2026-05-12",
+                "2026-05-13"
+              ],
+              "meta": {
+                "engine": "aurora_mysql",
+                "datasource": "user",
+                "database": "user",
+                "table": "users"
+              }
+            }
+          },
+          {
+            "protocol_version": "1.0",
+            "task_id": "trend_dimension_006",
+            "task_name": "2026-05-13 按level趋势统计",
+            "success": true,
+            "data": {
+              "rows": [
+                {
+                  "dimension_value": 0,
+                  "value": 322
+                },
+                {
+                  "dimension_value": 2,
+                  "value": 8
+                },
+                {
+                  "dimension_value": 3,
+                  "value": 6
+                }
+              ]
+            },
+            "error": null,
+            "latency_ms": 117,
+            "query_plan": {
+              "protocol_version": "1.0",
+              "task_id": "trend_dimension_006",
+              "task_name": "2026-05-13 按level趋势统计",
+              "metric": "user_count",
+              "business_name": "用户数量",
+              "engine": "aurora_mysql",
+              "datasource": "user",
+              "query_type": "sql",
+              "sql": "SELECT level AS dimension_value, COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s\nGROUP BY level\nORDER BY value DESC",
+              "params": [
+                "2026-05-13",
+                "2026-05-14"
+              ],
+              "meta": {
+                "engine": "aurora_mysql",
+                "datasource": "user",
+                "database": "user",
+                "table": "users"
+              }
+            }
+          },
+          {
+            "protocol_version": "1.0",
+            "task_id": "trend_dimension_007",
+            "task_name": "2026-05-14 按level趋势统计",
+            "success": true,
+            "data": {
+              "rows": [
+                {
+                  "dimension_value": 0,
+                  "value": 897
+                },
+                {
+                  "dimension_value": 2,
+                  "value": 20
+                },
+                {
+                  "dimension_value": 3,
+                  "value": 9
+                }
+              ]
+            },
+            "error": null,
+            "latency_ms": 128,
+            "query_plan": {
+              "protocol_version": "1.0",
+              "task_id": "trend_dimension_007",
+              "task_name": "2026-05-14 按level趋势统计",
+              "metric": "user_count",
+              "business_name": "用户数量",
+              "engine": "aurora_mysql",
+              "datasource": "user",
+              "query_type": "sql",
+              "sql": "SELECT level AS dimension_value, COUNT(rid) AS value\n            FROM users\n        \nWHERE atime >= %s\n  AND atime < %s\nGROUP BY level\nORDER BY value DESC",
+              "params": [
+                "2026-05-14",
+                "2026-05-15"
+              ],
+              "meta": {
+                "engine": "aurora_mysql",
+                "datasource": "user",
+                "database": "user",
+                "table": "users"
+              }
+            }
+          }
+        ]
+      },
+      "timestamp_ms": 1779444330868
+    },
+    {
+      "step": "aggregation_analysis",
+      "status": "success",
+      "output": {
+        "aggregation_type": "trend_by_dimension",
+        "analysis": {
+          "dimension": "level",
+          "grain": "day",
+          "series": {
+            "0": [
+              {
+                "time_label": "2026-05-08",
+                "value": 1287
+              },
+              {
+                "time_label": "2026-05-09",
+                "value": 252
+              },
+              {
+                "time_label": "2026-05-11",
+                "value": 987
+              },
+              {
+                "time_label": "2026-05-12",
+                "value": 330
+              },
+              {
+                "time_label": "2026-05-13",
+                "value": 322
+              },
+              {
+                "time_label": "2026-05-14",
+                "value": 897
+              }
+            ],
+            "3": [
+              {
+                "time_label": "2026-05-08",
+                "value": 23
+              },
+              {
+                "time_label": "2026-05-09",
+                "value": 6
+              },
+              {
+                "time_label": "2026-05-11",
+                "value": 19
+              },
+              {
+                "time_label": "2026-05-12",
+                "value": 8
+              },
+              {
+                "time_label": "2026-05-13",
+                "value": 6
+              },
+              {
+                "time_label": "2026-05-14",
+                "value": 9
+              }
+            ],
+            "2": [
+              {
+                "time_label": "2026-05-12",
+                "value": 2
+              },
+              {
+                "time_label": "2026-05-13",
+                "value": 8
+              },
+              {
+                "time_label": "2026-05-14",
+                "value": 20
+              }
+            ]
+          },
+          "series_count": 3
+        },
+        "operator_results": {
+          "peak_valley": {
+            "success": true,
+            "error": null,
+            "data": {
+              "0": {
+                "peak": {
+                  "time_label": "2026-05-08",
+                  "value": 1287
+                },
+                "valley": {
+                  "time_label": "2026-05-09",
+                  "value": 252
+                }
+              },
+              "3": {
+                "peak": {
+                  "time_label": "2026-05-08",
+                  "value": 23
+                },
+                "valley": {
+                  "time_label": "2026-05-09",
+                  "value": 6
+                }
+              },
+              "2": {
+                "peak": {
+                  "time_label": "2026-05-14",
+                  "value": 20
+                },
+                "valley": {
+                  "time_label": "2026-05-12",
+                  "value": 2
+                }
+              }
+            }
+          },
+          "volatility": {
+            "success": true,
+            "error": null,
+            "data": {
+              "0": {
+                "avg": 679.17,
+                "stddev": 434.43,
+                "min": 252,
+                "max": 1287,
+                "range": 1035,
+                "volatility_ratio": 63.96,
+                "volatility_level": "high"
+              },
+              "3": {
+                "avg": 11.83,
+                "stddev": 7.31,
+                "min": 6,
+                "max": 23,
+                "range": 17,
+                "volatility_ratio": 61.79,
+                "volatility_level": "high"
+              },
+              "2": {
+                "avg": 10.0,
+                "stddev": 9.17,
+                "min": 2,
+                "max": 20,
+                "range": 18,
+                "volatility_ratio": 91.7,
+                "volatility_level": "high"
+              }
+            }
+          },
+          "basic_anomaly": {
+            "success": true,
+            "error": null,
+            "data": {
+              "0": {
+                "has_anomaly": true,
+                "method": "avg_diff_ratio",
+                "threshold_ratio": 0.3,
+                "avg_value": 679.17,
+                "anomalies": [
+                  {
+                    "time_label": "2026-05-08",
+                    "value": 1287,
+                    "avg_value": 679.17,
+                    "diff_ratio": 89.5,
+                    "direction": "up"
+                  },
+                  {
+                    "time_label": "2026-05-09",
+                    "value": 252,
+                    "avg_value": 679.17,
+                    "diff_ratio": -62.9,
+                    "direction": "down"
+                  },
+                  {
+                    "time_label": "2026-05-11",
+                    "value": 987,
+                    "avg_value": 679.17,
+                    "diff_ratio": 45.33,
+                    "direction": "up"
+                  },
+                  {
+                    "time_label": "2026-05-12",
+                    "value": 330,
+                    "avg_value": 679.17,
+                    "diff_ratio": -51.41,
+                    "direction": "down"
+                  },
+                  {
+                    "time_label": "2026-05-13",
+                    "value": 322,
+                    "avg_value": 679.17,
+                    "diff_ratio": -52.59,
+                    "direction": "down"
+                  },
+                  {
+                    "time_label": "2026-05-14",
+                    "value": 897,
+                    "avg_value": 679.17,
+                    "diff_ratio": 32.07,
+                    "direction": "up"
+                  }
+                ]
+              },
+              "3": {
+                "has_anomaly": true,
+                "method": "avg_diff_ratio",
+                "threshold_ratio": 0.3,
+                "avg_value": 11.83,
+                "anomalies": [
+                  {
+                    "time_label": "2026-05-08",
+                    "value": 23,
+                    "avg_value": 11.83,
+                    "diff_ratio": 94.37,
+                    "direction": "up"
+                  },
+                  {
+                    "time_label": "2026-05-09",
+                    "value": 6,
+                    "avg_value": 11.83,
+                    "diff_ratio": -49.3,
+                    "direction": "down"
+                  },
+                  {
+                    "time_label": "2026-05-11",
+                    "value": 19,
+                    "avg_value": 11.83,
+                    "diff_ratio": 60.56,
+                    "direction": "up"
+                  },
+                  {
+                    "time_label": "2026-05-12",
+                    "value": 8,
+                    "avg_value": 11.83,
+                    "diff_ratio": -32.39,
+                    "direction": "down"
+                  },
+                  {
+                    "time_label": "2026-05-13",
+                    "value": 6,
+                    "avg_value": 11.83,
+                    "diff_ratio": -49.3,
+                    "direction": "down"
+                  }
+                ]
+              },
+              "2": {
+                "has_anomaly": true,
+                "method": "avg_diff_ratio",
+                "threshold_ratio": 0.3,
+                "avg_value": 10.0,
+                "anomalies": [
+                  {
+                    "time_label": "2026-05-12",
+                    "value": 2,
+                    "avg_value": 10.0,
+                    "diff_ratio": -80.0,
+                    "direction": "down"
+                  },
+                  {
+                    "time_label": "2026-05-14",
+                    "value": 20,
+                    "avg_value": 10.0,
+                    "diff_ratio": 100.0,
+                    "direction": "up"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "error": null
+      },
+      "timestamp_ms": 1779444330869
+    },
+    {
+      "step": "summarize",
+      "status": "success",
+      "output": {
+        "aggregation_type": "trend_by_dimension",
+        "template": "trend_by_dimension.txt",
+        "answer": "根据2026年5月8日至14日各用户等级新增用户趋势分析结果，我们可以得出以下结论：\n\n1. 用户等级0的新增用户数量波动较大。最高点出现在5月8日，达到1287人；最低点在5月9日，仅252人。整体呈现高波动性，波动比率为63.96%。\n\n2. 用户等级3的新增用户数量相对较少，但也呈现高波动性。最高点同样在5月8日，为23人；最低点在5月9日和13日，均为6人。波动比率为61.79%。\n\n3. 用户等级2的数据只有3天，但波动最为剧烈。从5月12日的2人迅速上升到5月14日的20人，波动比率高达91.7%。\n\n4. 增长最明显的是用户等级2，从2人增长到20人；下降最明显的是用户等级0，从1287人下降到252人。\n\n5. 所有用户等级都存在异常点。用户等级0的异常最为明显，5月8日和9日分别出现了显著的上升和下降。用户等级3在5月8日也出现了明显的上升异常。用户等级2在5月14日出现了显著的上升异常。\n\n6. 总体来看，用户等级0的新增用户数量最多，但波动也最大。用户等级2虽然数量较少，但增长势头最强。用户等级3的新增用户数量相对稳定，但仍有明显波动。\n\n这些趋势表明各用户等级的新增用户数量存在较大的日间差异，可能"
+      },
+      "timestamp_ms": 1779444340694
+    }
+  ],
+  "answer": "根据2026年5月8日至14日各用户等级新增用户趋势分析结果，我们可以得出以下结论：\n\n1. 用户等级0的新增用户数量波动较大。最高点出现在5月8日，达到1287人；最低点在5月9日，仅252人。整体呈现高波动性，波动比率为63.96%。\n\n2. 用户等级3的新增用户数量相对较少，但也呈现高波动性。最高点同样在5月8日，为23人；最低点在5月9日和13日，均为6人。波动比率为61.79%。\n\n3. 用户等级2的数据只有3天，但波动最为剧烈。从5月12日的2人迅速上升到5月14日的20人，波动比率高达91.7%。\n\n4. 增长最明显的是用户等级2，从2人增长到20人；下降最明显的是用户等级0，从1287人下降到252人。\n\n5. 所有用户等级都存在异常点。用户等级0的异常最为明显，5月8日和9日分别出现了显著的上升和下降。用户等级3在5月8日也出现了明显的上升异常。用户等级2在5月14日出现了显著的上升异常。\n\n6. 总体来看，用户等级0的新增用户数量最多，但波动也最大。用户等级2虽然数量较少，但增长势头最强。用户等级3的新增用户数量相对稳定，但仍有明显波动。\n\n这些趋势表明各用户等级的新增用户数量存在较大的日间差异，可能",
+  "end_ms": 1779444340694,
+  "total_latency_ms": 12514
+}

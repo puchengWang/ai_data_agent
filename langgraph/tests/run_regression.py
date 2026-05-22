@@ -87,6 +87,25 @@ def validate_case_result(
             f"tool_results contains failed tasks: {len(failed_tool_results)}"
         )
 
+    expected_operators = case.get("expected_operators", [])
+    
+    operator_results = (
+        result.get("aggregation_result", {})
+        .get("operator_results", {})
+    )
+    
+    for operator_name in expected_operators:
+        operator_result = operator_results.get(operator_name)
+    
+        if not operator_result:
+            errors.append(f"operator_result not found: {operator_name}")
+            continue
+    
+        if not operator_result.get("success"):
+            errors.append(
+                f"operator_result failed: {operator_name}, error={operator_result.get('error')}"
+            )
+
     answer = result.get("answer")
 
     if not answer:
@@ -98,6 +117,8 @@ def validate_case_result(
         "actual_aggregation_type": actual_aggregation_type,
         "query_plan_count": len(query_plans),
         "tool_result_count": len(tool_results),
+        "operator_result_count": len(operator_results),
+        "operator_results": list(operator_results.keys()),
         "answer": answer,
     }
 
@@ -139,6 +160,9 @@ def run_case(graph, case: Dict[str, Any]) -> Dict[str, Any]:
             "duration_ms": duration_ms,
             "expected_aggregation_type": case.get("expected_aggregation_type"),
             "actual_aggregation_type": validation["actual_aggregation_type"],
+            "expected_operators": case.get("expected_operators", []),
+            "actual_operators": validation["operator_results"],
+            "operator_result_count": validation["operator_result_count"],
             "query_plan_count": validation["query_plan_count"],
             "tool_result_count": validation["tool_result_count"],
             "snapshot_path": snapshot_path,
@@ -194,6 +218,8 @@ def write_report(results: List[Dict[str, Any]]) -> None:
             f.write(f"  expected: {r['expected_aggregation_type']}\n")
             f.write(f"  actual: {r['actual_aggregation_type']}\n")
             f.write(f"  duration_ms: {r['duration_ms']}\n")
+            f.write(f"  expected_operators: {r.get('expected_operators')}\n")
+            f.write(f"  actual_operators: {r.get('actual_operators')}\n")
 
             if r["errors"]:
                 f.write(f"  errors: {r['errors']}\n")

@@ -22,7 +22,7 @@
     "aggregation_type": "group_by",
     "analysis": {
       "dimension": "level",
-      "groups": [
+      "rows": [
         {
           "dimension_value": 0,
           "value": 897
@@ -35,9 +35,38 @@
           "dimension_value": 3,
           "value": 9
         }
-      ],
-      "group_count": 3,
-      "total_value": 926
+      ]
+    },
+    "operator_results": {
+      "contribution": {
+        "success": true,
+        "error": null,
+        "data": {
+          "total_value": 926,
+          "rows": [
+            {
+              "dimension_value": 0,
+              "value": 897,
+              "contribution_rate": 96.87
+            },
+            {
+              "dimension_value": 2,
+              "value": 20,
+              "contribution_rate": 2.16
+            },
+            {
+              "dimension_value": 3,
+              "value": 9,
+              "contribution_rate": 0.97
+            }
+          ],
+          "top_contributor": {
+            "dimension_value": 0,
+            "value": 897,
+            "contribution_rate": 96.87
+          }
+        }
+      }
     },
     "error": null
   },
@@ -101,7 +130,7 @@
         ]
       },
       "error": null,
-      "latency_ms": 121,
+      "latency_ms": 137,
       "query_plan": {
         "protocol_version": "1.0",
         "task_id": "group_by_001",
@@ -126,13 +155,13 @@
     }
   ],
   "compile_errors": [],
-  "request_id": "regression-group_by_level-1779437299",
-  "answer": "2026-05-14按用户等级的新增用户数量统计如下:\n\n0级: 897人\n2级: 20人\n3级: 9人\n\n总计新增用户926人。其中0级用户数量最多,为897人。",
+  "request_id": "regression-group_by_level-1779444309",
+  "answer": "2026-05-14按用户等级的新增用户数量统计如下:\n\n- 等级0: 897人\n- 等级2: 20人\n- 等级3: 9人\n\n其中等级0的新增用户数量最多,为897人,占总新增用户的96.87%。",
   "error": null,
   "trace": {
-    "request_id": "regression-group_by_level-1779437299",
+    "request_id": "regression-group_by_level-1779444309",
     "question": "统计 2026-05-14 按用户等级的新增用户数量",
-    "start_ms": 1779437299701,
+    "start_ms": 1779444309558,
     "steps": [
       {
         "step": "plan_tasks",
@@ -167,7 +196,7 @@
             ]
           }
         },
-        "timestamp_ms": 1779437301532
+        "timestamp_ms": 1779444311467
       },
       {
         "step": "compile_queries",
@@ -198,7 +227,7 @@
           ],
           "compile_errors": []
         },
-        "timestamp_ms": 1779437301532
+        "timestamp_ms": 1779444311467
       },
       {
         "step": "execute_queries",
@@ -227,7 +256,7 @@
                 ]
               },
               "error": null,
-              "latency_ms": 121,
+              "latency_ms": 137,
               "query_plan": {
                 "protocol_version": "1.0",
                 "task_id": "group_by_001",
@@ -252,7 +281,7 @@
             }
           ]
         },
-        "timestamp_ms": 1779437301654
+        "timestamp_ms": 1779444311605
       },
       {
         "step": "aggregation_analysis",
@@ -261,7 +290,7 @@
           "aggregation_type": "group_by",
           "analysis": {
             "dimension": "level",
-            "groups": [
+            "rows": [
               {
                 "dimension_value": 0,
                 "value": 897
@@ -274,13 +303,42 @@
                 "dimension_value": 3,
                 "value": 9
               }
-            ],
-            "group_count": 3,
-            "total_value": 926
+            ]
+          },
+          "operator_results": {
+            "contribution": {
+              "success": true,
+              "error": null,
+              "data": {
+                "total_value": 926,
+                "rows": [
+                  {
+                    "dimension_value": 0,
+                    "value": 897,
+                    "contribution_rate": 96.87
+                  },
+                  {
+                    "dimension_value": 2,
+                    "value": 20,
+                    "contribution_rate": 2.16
+                  },
+                  {
+                    "dimension_value": 3,
+                    "value": 9,
+                    "contribution_rate": 0.97
+                  }
+                ],
+                "top_contributor": {
+                  "dimension_value": 0,
+                  "value": 897,
+                  "contribution_rate": 96.87
+                }
+              }
+            }
           },
           "error": null
         },
-        "timestamp_ms": 1779437301655
+        "timestamp_ms": 1779444311606
       },
       {
         "step": "summarize",
@@ -288,14 +346,14 @@
         "output": {
           "aggregation_type": "group_by",
           "template": "group_by.txt",
-          "answer": "2026-05-14按用户等级的新增用户数量统计如下:\n\n0级: 897人\n2级: 20人\n3级: 9人\n\n总计新增用户926人。其中0级用户数量最多,为897人。"
+          "answer": "2026-05-14按用户等级的新增用户数量统计如下:\n\n- 等级0: 897人\n- 等级2: 20人\n- 等级3: 9人\n\n其中等级0的新增用户数量最多,为897人,占总新增用户的96.87%。"
         },
-        "timestamp_ms": 1779437303267
+        "timestamp_ms": 1779444313544
       }
     ],
-    "answer": "2026-05-14按用户等级的新增用户数量统计如下:\n\n0级: 897人\n2级: 20人\n3级: 9人\n\n总计新增用户926人。其中0级用户数量最多,为897人。",
-    "end_ms": 1779437303267,
-    "total_latency_ms": 3566
+    "answer": "2026-05-14按用户等级的新增用户数量统计如下:\n\n- 等级0: 897人\n- 等级2: 20人\n- 等级3: 9人\n\n其中等级0的新增用户数量最多,为897人,占总新增用户的96.87%。",
+    "end_ms": 1779444313544,
+    "total_latency_ms": 3986
   },
-  "trace_file": "traces/regression-group_by_level-1779437299.json"
+  "trace_file": "traces/regression-group_by_level-1779444309.json"
 }

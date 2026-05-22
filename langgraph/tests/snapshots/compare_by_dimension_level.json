@@ -38,25 +38,53 @@
         {
           "dimension_value": "0",
           "current_value": 897,
-          "previous_value": 322,
-          "change": 575,
-          "change_rate": 178.57
+          "previous_value": 322
         },
         {
           "dimension_value": "2",
           "current_value": 20,
-          "previous_value": 8,
-          "change": 12,
-          "change_rate": 150.0
+          "previous_value": 8
         },
         {
           "dimension_value": "3",
           "current_value": 9,
-          "previous_value": 6,
-          "change": 3,
-          "change_rate": 50.0
+          "previous_value": 6
         }
       ]
+    },
+    "operator_results": {
+      "growth_rate": {
+        "success": true,
+        "error": null,
+        "data": {
+          "rows": [
+            {
+              "dimension_value": "0",
+              "current_value": 897,
+              "previous_value": 322,
+              "change": 575,
+              "change_rate": 178.57,
+              "direction": "up"
+            },
+            {
+              "dimension_value": "2",
+              "current_value": 20,
+              "previous_value": 8,
+              "change": 12,
+              "change_rate": 150.0,
+              "direction": "up"
+            },
+            {
+              "dimension_value": "3",
+              "current_value": 9,
+              "previous_value": 6,
+              "change": 3,
+              "change_rate": 50.0,
+              "direction": "up"
+            }
+          ]
+        }
+      }
     },
     "error": null
   },
@@ -196,7 +224,7 @@
         ]
       },
       "error": null,
-      "latency_ms": 118,
+      "latency_ms": 130,
       "query_plan": {
         "protocol_version": "1.0",
         "task_id": "previous_dimension_period",
@@ -221,13 +249,13 @@
     }
   ],
   "compile_errors": [],
-  "request_id": "regression-compare_by_dimension_level-1779437313",
-  "answer": "根据分析结果，2026-05-14各用户等级相比前一天新增用户的增长情况如下：\n\n0级用户:\n- 当前值: 897\n- 对比值: 322\n- 变化值: +575\n- 变化率: +178.57%\n\n2级用户:\n- 当前值: 20\n- 对比值: 8\n- 变化值: +12\n- 变化率: +150.00%\n\n3级用户:\n- 当前值: 9\n- 对比值: 6\n- 变化值: +3\n- 变化率: +50.00%\n\n增长最多的是0级用户,新增575人。\n增长率最高的也是0级用户,增长了178.57%。\n\n所有用户等级都呈现增长趋势,没有出现下降的情况。",
+  "request_id": "regression-compare_by_dimension_level-1779444322",
+  "answer": "根据分析结果，2026-05-14各用户等级相比前一天新增用户的增长情况如下：\n\n1. 等级0：当前值897，对比值322，增加575，增长率178.57%\n2. 等级2：当前值20，对比值8，增加12，增长率150.00%\n3. 等级3：当前值9，对比值6，增加3，增长率50.00%\n\n增长最多的是等级0，新增用户增加了575人。\n增长率最高的也是等级0，增长率为178.57%。\n\n所有用户等级都呈现增长趋势，没有出现下降的情况。",
   "error": null,
   "trace": {
-    "request_id": "regression-compare_by_dimension_level-1779437313",
+    "request_id": "regression-compare_by_dimension_level-1779444322",
     "question": "2026-05-14 各用户等级相比前一天新增用户增长多少？",
-    "start_ms": 1779437313395,
+    "start_ms": 1779444322079,
     "steps": [
       {
         "step": "plan_tasks",
@@ -273,7 +301,7 @@
             ]
           }
         },
-        "timestamp_ms": 1779437315272
+        "timestamp_ms": 1779444323858
       },
       {
         "step": "compile_queries",
@@ -325,7 +353,7 @@
           ],
           "compile_errors": []
         },
-        "timestamp_ms": 1779437315273
+        "timestamp_ms": 1779444323859
       },
       {
         "step": "execute_queries",
@@ -399,7 +427,7 @@
                 ]
               },
               "error": null,
-              "latency_ms": 118,
+              "latency_ms": 130,
               "query_plan": {
                 "protocol_version": "1.0",
                 "task_id": "previous_dimension_period",
@@ -424,7 +452,7 @@
             }
           ]
         },
-        "timestamp_ms": 1779437315509
+        "timestamp_ms": 1779444324106
       },
       {
         "step": "aggregation_analysis",
@@ -438,29 +466,57 @@
               {
                 "dimension_value": "0",
                 "current_value": 897,
-                "previous_value": 322,
-                "change": 575,
-                "change_rate": 178.57
+                "previous_value": 322
               },
               {
                 "dimension_value": "2",
                 "current_value": 20,
-                "previous_value": 8,
-                "change": 12,
-                "change_rate": 150.0
+                "previous_value": 8
               },
               {
                 "dimension_value": "3",
                 "current_value": 9,
-                "previous_value": 6,
-                "change": 3,
-                "change_rate": 50.0
+                "previous_value": 6
               }
             ]
           },
+          "operator_results": {
+            "growth_rate": {
+              "success": true,
+              "error": null,
+              "data": {
+                "rows": [
+                  {
+                    "dimension_value": "0",
+                    "current_value": 897,
+                    "previous_value": 322,
+                    "change": 575,
+                    "change_rate": 178.57,
+                    "direction": "up"
+                  },
+                  {
+                    "dimension_value": "2",
+                    "current_value": 20,
+                    "previous_value": 8,
+                    "change": 12,
+                    "change_rate": 150.0,
+                    "direction": "up"
+                  },
+                  {
+                    "dimension_value": "3",
+                    "current_value": 9,
+                    "previous_value": 6,
+                    "change": 3,
+                    "change_rate": 50.0,
+                    "direction": "up"
+                  }
+                ]
+              }
+            }
+          },
           "error": null
         },
-        "timestamp_ms": 1779437315510
+        "timestamp_ms": 1779444324107
       },
       {
         "step": "summarize",
@@ -468,14 +524,14 @@
         "output": {
           "aggregation_type": "compare_by_dimension",
           "template": "compare_by_dimension.txt",
-          "answer": "根据分析结果，2026-05-14各用户等级相比前一天新增用户的增长情况如下：\n\n0级用户:\n- 当前值: 897\n- 对比值: 322\n- 变化值: +575\n- 变化率: +178.57%\n\n2级用户:\n- 当前值: 20\n- 对比值: 8\n- 变化值: +12\n- 变化率: +150.00%\n\n3级用户:\n- 当前值: 9\n- 对比值: 6\n- 变化值: +3\n- 变化率: +50.00%\n\n增长最多的是0级用户,新增575人。\n增长率最高的也是0级用户,增长了178.57%。\n\n所有用户等级都呈现增长趋势,没有出现下降的情况。"
+          "answer": "根据分析结果，2026-05-14各用户等级相比前一天新增用户的增长情况如下：\n\n1. 等级0：当前值897，对比值322，增加575，增长率178.57%\n2. 等级2：当前值20，对比值8，增加12，增长率150.00%\n3. 等级3：当前值9，对比值6，增加3，增长率50.00%\n\n增长最多的是等级0，新增用户增加了575人。\n增长率最高的也是等级0，增长率为178.57%。\n\n所有用户等级都呈现增长趋势，没有出现下降的情况。"
         },
-        "timestamp_ms": 1779437319908
+        "timestamp_ms": 1779444328175
       }
     ],
-    "answer": "根据分析结果，2026-05-14各用户等级相比前一天新增用户的增长情况如下：\n\n0级用户:\n- 当前值: 897\n- 对比值: 322\n- 变化值: +575\n- 变化率: +178.57%\n\n2级用户:\n- 当前值: 20\n- 对比值: 8\n- 变化值: +12\n- 变化率: +150.00%\n\n3级用户:\n- 当前值: 9\n- 对比值: 6\n- 变化值: +3\n- 变化率: +50.00%\n\n增长最多的是0级用户,新增575人。\n增长率最高的也是0级用户,增长了178.57%。\n\n所有用户等级都呈现增长趋势,没有出现下降的情况。",
-    "end_ms": 1779437319908,
-    "total_latency_ms": 6513
+    "answer": "根据分析结果，2026-05-14各用户等级相比前一天新增用户的增长情况如下：\n\n1. 等级0：当前值897，对比值322，增加575，增长率178.57%\n2. 等级2：当前值20，对比值8，增加12，增长率150.00%\n3. 等级3：当前值9，对比值6，增加3，增长率50.00%\n\n增长最多的是等级0，新增用户增加了575人。\n增长率最高的也是等级0，增长率为178.57%。\n\n所有用户等级都呈现增长趋势，没有出现下降的情况。",
+    "end_ms": 1779444328175,
+    "total_latency_ms": 6096
   },
-  "trace_file": "traces/regression-compare_by_dimension_level-1779437313.json"
+  "trace_file": "traces/regression-compare_by_dimension_level-1779444322.json"
 }
