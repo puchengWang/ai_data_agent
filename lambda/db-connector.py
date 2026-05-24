@@ -9,7 +9,7 @@ import pymysql
 DB_HOST = "rds-user-aurora-cluster.cluster-ro-c1rmcdqnulkf.ap-southeast-1.rds.amazonaws.com"
 DB_PORT = 3306
 DB_USER = "bedrock"
-DB_PASSWORD = "lwYINjj3R3PZcZIX"
+DB_PASSWORD = "lwYINjj3R3PZcZIX1" -- 伪密码
 DB_NAME = "user"
 
 
