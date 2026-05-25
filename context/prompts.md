@@ -14,8 +14,44 @@
 2. 当前项目阶段
 3. 当前优先事项
 4. 下一步建议
+5. 不要分析整个项目
+
+
+
 
 然后等待我下一步指令。
+```
+
+### 模块级控制，降低token消耗
+```
+本次 Codex session 只处理【模块名】。
+
+项目背景：
+这是一个企业级 AI Data Analyst 项目。
+当前目标是通过 LangGraph + Semantic Layer + Athena Executor 实现自然语言数据分析。
+
+允许范围：
+- 【模块目录】
+- context/AGENTS.md
+- context/architecture.md
+- context/current_state.md
+- context/next_steps.md
+
+禁止范围：
+- 不要修改其他模块
+- 不要重构无关代码
+- 不要扫描整个仓库
+- 不要引入新的大规模架构变化
+
+任务目标：
+1. ...
+2. ...
+3. ...
+
+输出要求：
+1. 先说明计划
+2. 再修改代码
+3. 生成相关的测试案例和执行命令，不要自动执行，人工手动执行。
 ```
 
 
