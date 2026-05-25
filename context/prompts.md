@@ -26,7 +26,7 @@
 
 请分别输出：
 
-1. current_status.md
+1. current_status.md(只保存当前有效状态)
 2. next_steps.md
 3. architecture.md（如果架构发生变化）
 4. 新的 decision log（如果有重要技术决策）
@@ -55,6 +55,12 @@ session summary 需要包含：
 - 新决策
 - 当前风险
 - 下一步行动
+
+并自动移除：
+
+- 已完成 todo
+- 已废弃方案
+- 已确认无效的架构讨论
 
 请直接输出 markdown 内容。
 ```

@@ -36,6 +36,26 @@ def is_follow_up_question(question: str) -> bool:
     return any(keyword in question for keyword in FOLLOW_UP_KEYWORDS)
 
 
+def build_inherited_context(last_context: Dict[str, Any]) -> Dict[str, Any]:
+    return {
+        "last_question": last_context.get("question"),
+        "last_resolved_question": last_context.get("resolved_question"),
+        "last_aggregation_type": last_context.get("aggregation_type"),
+        "last_metric": last_context.get("metric"),
+        "last_dimension": last_context.get("dimension"),
+        "last_params": last_context.get("params"),
+        "last_tasks": last_context.get("tasks"),
+        "last_query_plans": last_context.get("query_plans"),
+        "last_analysis": last_context.get("aggregation_result"),
+        "last_structured_insight": last_context.get("structured_insight"),
+        "last_follow_up_suggestions": last_context.get(
+            "follow_up_suggestions",
+            [],
+        ),
+        "last_answer": last_context.get("answer"),
+    }
+
+
 def resolve_question_with_context(
     question: str,
     last_context: Dict[str, Any],
@@ -92,18 +112,7 @@ def resolve_question_with_context(
             "inherited_context": {},
         }
 
-    inherited_context = {
-        "last_question": last_context.get("question"),
-        "last_resolved_question": last_context.get("resolved_question"),
-        "last_aggregation_type": last_context.get("aggregation_type"),
-        "last_metric": last_context.get("metric"),
-        "last_dimension": last_context.get("dimension"),
-        "last_params": last_context.get("params"),
-        "last_tasks": last_context.get("tasks"),
-        "last_query_plans": last_context.get("query_plans"),
-        "last_analysis": last_context.get("aggregation_result"),
-        "last_answer": last_context.get("answer"),
-    }
+    inherited_context = build_inherited_context(last_context)
 
     resolved_question = f"""
 基于上一轮分析上下文：
@@ -122,6 +131,12 @@ def resolve_question_with_context(
 
 上一轮参数：
 {inherited_context.get("last_params")}
+
+上一轮结构化洞察：
+{inherited_context.get("last_structured_insight")}
+
+上一轮系统建议追问：
+{inherited_context.get("last_follow_up_suggestions")}
 
 用户追问：
 {question}

@@ -18,6 +18,8 @@ class AgentState(TypedDict, total=False):
 
     aggregation_plan: Dict[str, Any]
     aggregation_result: Dict[str, Any]
+    structured_insight: Dict[str, Any]
+    follow_up_suggestions: List[Dict[str, Any]]
     tasks: List[Dict[str, Any]]
     query_plans: List[Dict[str, Any]]
     tool_results: List[Dict[str, Any]]

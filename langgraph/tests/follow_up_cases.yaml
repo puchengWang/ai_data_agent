@@ -51,3 +51,29 @@ cases:
         expected_is_follow_up: false
         expected_context_used: false
         expected_aggregation_type: normal
+
+  - name: memory_only_should_preserve_last_analysis
+    session_id: follow-up-test-005
+    turns:
+      - question: "统计 2026-05-08 到 2026-05-14 各用户等级新增用户趋势"
+        expected_is_follow_up: false
+        expected_context_used: false
+        expected_aggregation_type: trend_by_dimension
+        expected_last_analysis_type: trend_by_dimension
+        expected_last_analysis_question: "统计 2026-05-08 到 2026-05-14 各用户等级新增用户趋势"
+
+      - question: "哪个等级下降最多？"
+        expected_is_follow_up: true
+        expected_context_used: true
+        expected_memory_only: true
+        expected_last_analysis_type: trend_by_dimension
+        expected_last_analysis_question: "统计 2026-05-08 到 2026-05-14 各用户等级新增用户趋势"
+        expected_last_answer_question: "哪个等级下降最多？"
+
+      - question: "哪个等级增长最多？"
+        expected_is_follow_up: true
+        expected_context_used: true
+        expected_memory_only: true
+        expected_last_analysis_type: trend_by_dimension
+        expected_last_analysis_question: "统计 2026-05-08 到 2026-05-14 各用户等级新增用户趋势"
+        expected_last_answer_question: "哪个等级增长最多？"

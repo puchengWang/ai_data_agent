@@ -1,7 +1,9 @@
+import argparse
 import json
-import shutil
+import re
 import sys
 import time
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any, Dict, List
 
@@ -11,7 +13,8 @@ import yaml
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT))
 
-from app.graph import build_graph  # noqa: E402
+import app.graph as graph_module  # noqa: E402
+import app.memory.context_strategy as context_strategy_module  # noqa: E402
 
 
 TEST_CASE_FILE = PROJECT_ROOT / "tests" / "follow_up_cases.yaml"
@@ -22,6 +25,175 @@ SESSION_DIR = PROJECT_ROOT / "sessions"
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 SNAPSHOT_DIR.mkdir(parents=True, exist_ok=True)
 SESSION_DIR.mkdir(parents=True, exist_ok=True)
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Run follow-up regression cases.",
+    )
+    parser.add_argument(
+        "--mock-bedrock",
+        action="store_true",
+        help="Mock Bedrock parsing, context strategy, and memory-only answers.",
+    )
+    return parser.parse_args()
+
+
+def mock_bedrock_json(prompt: str) -> Dict[str, Any]:
+    question = _extract_question_from_parser_prompt(prompt)
+    params = _parse_time_params(question)
+
+    if _contains_dimension(question):
+        params["dimension"] = "level"
+
+    limit = _extract_limit(question)
+    if limit:
+        params["limit"] = limit
+
+    return {
+        "metric": "user_count",
+        "params": params,
+    }
+
+
+def mock_bedrock_text(prompt: str) -> str:
+    return (
+        "Mock Bedrock memory answer: 真实 Bedrock 当前不可用，"
+        "本次仅用于验证 follow-up memory 行为。"
+    )
+
+
+def mock_context_strategy_json(prompt: str) -> Dict[str, Any]:
+    question = _extract_question_from_context_prompt(prompt)
+
+    reset_keywords = [
+        "重新开始",
+        "忽略上文",
+        "不要参考之前",
+        "新问题",
+        "清空上下文",
+        "重新分析",
+    ]
+
+    if any(keyword in question for keyword in reset_keywords):
+        return {
+            "use_context": False,
+            "reset_context": True,
+            "reason": "mock_matched_reset_keyword",
+        }
+
+    if _has_complete_date_range(question):
+        return {
+            "use_context": False,
+            "reset_context": False,
+            "reason": "mock_complete_question",
+        }
+
+    follow_up_keywords = [
+        "哪个",
+        "哪一个",
+        "为什么",
+        "继续",
+        "再看",
+        "下降最多",
+        "增长最多",
+        "和昨天比",
+        "和上周比",
+        "那",
+        "这个",
+        "刚才",
+        "上面",
+    ]
+
+    if any(keyword in question for keyword in follow_up_keywords):
+        return {
+            "use_context": True,
+            "reset_context": False,
+            "reason": "mock_matched_follow_up_keyword",
+        }
+
+    return {
+        "use_context": False,
+        "reset_context": False,
+        "reason": "mock_default_no_context",
+    }
+
+
+def install_bedrock_mocks() -> None:
+    graph_module.invoke_bedrock_json = mock_bedrock_json
+    graph_module.invoke_bedrock_text = mock_bedrock_text
+    context_strategy_module.invoke_bedrock_json = mock_context_strategy_json
+
+
+def _extract_question_from_parser_prompt(prompt: str) -> str:
+    match = re.search(r"用户问题：\s*(.*?)\s*输出格式：", prompt, re.S)
+    if match:
+        return match.group(1).strip()
+
+    return prompt
+
+
+def _extract_question_from_context_prompt(prompt: str) -> str:
+    match = re.search(r"当前用户问题：\s*(.*?)\s*判断规则：", prompt, re.S)
+    if match:
+        return match.group(1).strip()
+
+    return prompt
+
+
+def _parse_time_params(question: str) -> Dict[str, Any]:
+    date_matches = re.findall(r"\d{4}-\d{2}-\d{2}", question)
+
+    if len(date_matches) >= 2:
+        start_dt = datetime.strptime(date_matches[0], "%Y-%m-%d")
+        end_dt = datetime.strptime(date_matches[1], "%Y-%m-%d") + timedelta(days=1)
+        return {
+            "start_time": start_dt.strftime("%Y-%m-%d"),
+            "end_time": end_dt.strftime("%Y-%m-%d"),
+            "grain": "day",
+        }
+
+    if len(date_matches) == 1:
+        start_dt = datetime.strptime(date_matches[0], "%Y-%m-%d")
+        end_dt = start_dt + timedelta(days=1)
+        return {
+            "start_time": start_dt.strftime("%Y-%m-%d"),
+            "end_time": end_dt.strftime("%Y-%m-%d"),
+            "grain": "day",
+        }
+
+    raise ValueError(
+        "Mock Bedrock parser requires at least one YYYY-MM-DD date in the question."
+    )
+
+
+def _contains_dimension(question: str) -> bool:
+    dimension_keywords = [
+        "level",
+        "等级",
+        "用户等级",
+        "各",
+        "按",
+        "分布",
+    ]
+    return any(keyword in question for keyword in dimension_keywords)
+
+
+def _extract_limit(question: str) -> int | None:
+    match = re.search(r"前\s*(\d+)", question)
+    if match:
+        return int(match.group(1))
+
+    match = re.search(r"top\s*(\d+)", question.lower())
+    if match:
+        return int(match.group(1))
+
+    return None
+
+
+def _has_complete_date_range(question: str) -> bool:
+    date_matches = re.findall(r"\d{4}-\d{2}-\d{2}", question)
+    return bool(date_matches)
 
 
 def load_cases() -> List[Dict[str, Any]]:
@@ -39,6 +211,16 @@ def delete_session_file(session_id: str) -> None:
 
     if path.exists():
         path.unlink()
+
+
+def load_session_file(session_id: str) -> Dict[str, Any]:
+    path = SESSION_DIR / f"{session_id}.json"
+
+    if not path.exists():
+        return {}
+
+    with open(path, "r", encoding="utf-8") as f:
+        return json.load(f)
 
 
 def get_context_used(result: Dict[str, Any]) -> bool:
@@ -113,6 +295,65 @@ def validate_turn(
     return errors
 
 
+def validate_session_after_turn(
+    expected: Dict[str, Any],
+    session_data: Dict[str, Any],
+) -> List[str]:
+    errors = []
+
+    last_analysis_context = (
+        session_data.get("last_analysis_context")
+        or {}
+    )
+    last_answer = session_data.get("last_answer") or {}
+    last_follow_up_suggestions = (
+        session_data.get("last_follow_up_suggestions")
+        or []
+    )
+
+    if "expected_last_analysis_type" in expected:
+        actual = last_analysis_context.get("aggregation_type")
+        expected_value = expected["expected_last_analysis_type"]
+
+        if actual != expected_value:
+            errors.append(
+                "last_analysis_context aggregation_type mismatch: "
+                f"expected={expected_value}, actual={actual}"
+            )
+
+    if "expected_last_analysis_question" in expected:
+        actual = last_analysis_context.get("question")
+        expected_value = expected["expected_last_analysis_question"]
+
+        if actual != expected_value:
+            errors.append(
+                "last_analysis_context question mismatch: "
+                f"expected={expected_value}, actual={actual}"
+            )
+
+    if "expected_last_answer_question" in expected:
+        actual = last_answer.get("question")
+        expected_value = expected["expected_last_answer_question"]
+
+        if actual != expected_value:
+            errors.append(
+                "last_answer question mismatch: "
+                f"expected={expected_value}, actual={actual}"
+            )
+
+    if expected.get("expected_last_analysis_type"):
+        if "structured_insight" not in last_analysis_context:
+            errors.append("last_analysis_context missing structured_insight")
+
+        if "follow_up_suggestions" not in last_analysis_context:
+            errors.append("last_analysis_context missing follow_up_suggestions")
+
+        if not isinstance(last_follow_up_suggestions, list):
+            errors.append("last_follow_up_suggestions must be a list")
+
+    return errors
+
+
 def save_turn_snapshot(case_name: str, turn_index: int, result: Dict[str, Any]) -> str:
     path = SNAPSHOT_DIR / f"{case_name}_turn_{turn_index}.json"
 
@@ -147,6 +388,9 @@ def run_case(graph, case: Dict[str, Any]) -> Dict[str, Any]:
             duration_ms = int((time.time() - start_time) * 1000)
 
             errors = validate_turn(turn, result)
+            session_data = load_session_file(session_id)
+            session_errors = validate_session_after_turn(turn, session_data)
+            errors.extend(session_errors)
 
             snapshot_path = save_turn_snapshot(case_name, index, result)
 
@@ -161,6 +405,18 @@ def run_case(graph, case: Dict[str, Any]) -> Dict[str, Any]:
                 "context_used": get_context_used(result),
                 "used_memory_only": result.get("used_memory_only", False),
                 "aggregation_type": result.get("aggregation_plan", {}).get("aggregation_type"),
+                "last_analysis_type": (
+                    session_data.get("last_analysis_context", {})
+                    .get("aggregation_type")
+                ),
+                "last_analysis_question": (
+                    session_data.get("last_analysis_context", {})
+                    .get("question")
+                ),
+                "last_answer_question": (
+                    session_data.get("last_answer", {})
+                    .get("question")
+                ),
                 "snapshot_path": snapshot_path,
                 "answer": result.get("answer"),
             }
@@ -227,6 +483,9 @@ def write_report(results: List[Dict[str, Any]]) -> None:
                 f.write(f"    context_used: {turn.get('context_used')}\n")
                 f.write(f"    used_memory_only: {turn.get('used_memory_only')}\n")
                 f.write(f"    aggregation_type: {turn.get('aggregation_type')}\n")
+                f.write(f"    last_analysis_type: {turn.get('last_analysis_type')}\n")
+                f.write(f"    last_analysis_question: {turn.get('last_analysis_question')}\n")
+                f.write(f"    last_answer_question: {turn.get('last_answer_question')}\n")
 
                 if turn.get("errors"):
                     f.write(f"    errors: {turn['errors']}\n")
@@ -238,16 +497,23 @@ def write_report(results: List[Dict[str, Any]]) -> None:
 
 
 def main():
+    args = parse_args()
+
+    if args.mock_bedrock:
+        install_bedrock_mocks()
+
     cases = load_cases()
 
     if not cases:
         raise ValueError("No follow-up test cases found")
 
-    graph = build_graph()
+    graph = graph_module.build_graph()
 
     results = []
 
-    print(f"Running {len(cases)} follow-up regression cases...\n")
+    mode = "mock_bedrock" if args.mock_bedrock else "real_bedrock"
+    print(f"Running {len(cases)} follow-up regression cases...")
+    print(f"mode: {mode}\n")
 
     for case in cases:
         print(f"Running case: {case['name']}")

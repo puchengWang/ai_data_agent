@@ -8,7 +8,7 @@ def main():
 
     initial_state = {
         "session_id": "test-session-001",
-        "question": "比5月19日增长了多少",
+        "question": "2026-05-21新增用户量是多少",
         "request_id": "session-test-002",
     }
 

@@ -5,11 +5,17 @@ from app.planner.aggregation_planner import build_aggregation_plan
 # from app.planner.comparison_engine import calculate_change
 from app.analysis.operator_registry import OPERATOR_REGISTRY
 
-from app.memory.session_store import load_session, save_session
+from app.memory.session_store import (
+    default_session_data,
+    load_session,
+    save_session,
+)
 from app.memory.context_resolver import resolve_question_with_context
 
 from app.summary.summary_template_loader import load_summary_template
 from app.analysis.operator_executor import execute_analysis_operators
+from app.insight.structured_insight import build_structured_insight
+from app.follow_up.suggestion_generator import generate_follow_up_suggestions
 
 from app.state import AgentState
 from app.llm.bedrock_client import invoke_bedrock_json, invoke_bedrock_text
@@ -75,13 +81,22 @@ def answer_from_memory_node(state: AgentState) -> AgentState:
     }
 
 
+def get_context_for_resolution(session_data: dict) -> dict:
+    return (
+        session_data.get("last_analysis_context")
+        or session_data.get("last_context")
+        or {}
+    )
+
+
 def load_memory_node(state: AgentState) -> AgentState:
     session_id = state.get("session_id", "default-session")
     session_data = load_session(session_id)
+    context_for_resolution = get_context_for_resolution(session_data)
 
     resolved = resolve_question_with_context(
         question=state["question"],
-        last_context=session_data.get("last_context") or {},
+        last_context=context_for_resolution,
     )
 
     inherited_context = resolved.get("inherited_context") or {}
@@ -95,6 +110,43 @@ def load_memory_node(state: AgentState) -> AgentState:
         "reset_context": resolved.get("reset_context", False),
         "context_strategy": resolved.get("context_strategy", {}),
         "inherited_context": inherited_context,
+    }
+
+
+def build_analysis_context(state: AgentState) -> dict:
+    aggregation_plan = state.get("aggregation_plan", {})
+
+    context = {
+        "question": state.get("question"),
+        "resolved_question": state.get("resolved_question"),
+        "aggregation_type": aggregation_plan.get("aggregation_type"),
+        "metric": None,
+        "dimension": aggregation_plan.get("dimension"),
+        "params": None,
+        "tasks": state.get("tasks"),
+        "query_plans": state.get("query_plans"),
+        "aggregation_result": state.get("aggregation_result"),
+        "structured_insight": state.get("structured_insight"),
+        "follow_up_suggestions": state.get("follow_up_suggestions"),
+        "answer": state.get("answer"),
+    }
+
+    tasks = state.get("tasks", [])
+    if tasks:
+        context["metric"] = tasks[0].get("metric")
+        context["params"] = tasks[0].get("params")
+
+    return context
+
+
+def build_answer_context(state: AgentState) -> dict:
+    return {
+        "question": state.get("question"),
+        "resolved_question": state.get("resolved_question"),
+        "answer": state.get("answer"),
+        "used_memory_only": state.get("used_memory_only", False),
+        "memory_answer_source": state.get("memory_answer_source"),
+        "trace_file": state.get("trace_file"),
     }
 
 def aggregation_analysis_node(state: AgentState) -> AgentState:
@@ -141,6 +193,57 @@ def aggregation_analysis_node(state: AgentState) -> AgentState:
     return {
         **state,
         "aggregation_result": aggregation_result,
+        "trace": trace,
+    }
+
+
+def structured_insight_node(state: AgentState) -> AgentState:
+    structured_insight = build_structured_insight(
+        question=state.get("question", ""),
+        aggregation_plan=state.get("aggregation_plan", {}),
+        aggregation_result=state.get("aggregation_result", {}),
+        tool_results=state.get("tool_results", []),
+    )
+
+    trace = state.get("trace", {})
+    steps = trace.get("steps", [])
+
+    steps.append({
+        "step": "structured_insight",
+        "status": "success",
+        "output": structured_insight,
+        "timestamp_ms": now_ms(),
+    })
+
+    trace["steps"] = steps
+
+    return {
+        **state,
+        "structured_insight": structured_insight,
+        "trace": trace,
+    }
+
+
+def follow_up_suggestions_node(state: AgentState) -> AgentState:
+    suggestions = generate_follow_up_suggestions(
+        structured_insight=state.get("structured_insight", {}),
+    )
+
+    trace = state.get("trace", {})
+    steps = trace.get("steps", [])
+
+    steps.append({
+        "step": "follow_up_suggestions",
+        "status": "success",
+        "output": suggestions,
+        "timestamp_ms": now_ms(),
+    })
+
+    trace["steps"] = steps
+
+    return {
+        **state,
+        "follow_up_suggestions": suggestions,
         "trace": trace,
     }
 
@@ -592,6 +695,8 @@ def build_graph():
     workflow.add_node("compile_queries", compile_queries_node)
     workflow.add_node("execute_queries", execute_queries_node)
     workflow.add_node("aggregation_analysis", aggregation_analysis_node)
+    workflow.add_node("build_structured_insight", structured_insight_node)
+    workflow.add_node("generate_follow_up_suggestions", follow_up_suggestions_node)
     workflow.add_node("summarize", summarize_node)
     workflow.add_node("save_memory", save_memory_node)
 
@@ -611,7 +716,9 @@ def build_graph():
     workflow.add_edge("plan_tasks", "compile_queries")
     workflow.add_edge("compile_queries", "execute_queries")
     workflow.add_edge("execute_queries", "aggregation_analysis")
-    workflow.add_edge("aggregation_analysis", "summarize")
+    workflow.add_edge("aggregation_analysis", "build_structured_insight")
+    workflow.add_edge("build_structured_insight", "generate_follow_up_suggestions")
+    workflow.add_edge("generate_follow_up_suggestions", "summarize")
     workflow.add_edge("summarize", "save_memory")
     workflow.add_edge("save_memory", END)
 
@@ -620,31 +727,11 @@ def build_graph():
 
 def save_memory_node(state: AgentState) -> AgentState:
     session_id = state.get("session_id", "default-session")
-    session_data = state.get("memory", {
-        "session_id": session_id,
-        "turns": [],
-        "last_context": {},
-    })
+    session_data = state.get("memory") or default_session_data(session_id)
 
     aggregation_plan = state.get("aggregation_plan", {})
-
-    last_context = {
-        "question": state.get("question"),
-        "resolved_question": state.get("resolved_question"),
-        "aggregation_type": aggregation_plan.get("aggregation_type"),
-        "metric": None,
-        "dimension": aggregation_plan.get("dimension"),
-        "params": None,
-        "tasks": state.get("tasks"),
-        "query_plans": state.get("query_plans"),
-        "aggregation_result": state.get("aggregation_result"),
-        "answer": state.get("answer"),
-    }
-
-    tasks = state.get("tasks", [])
-    if tasks:
-        last_context["metric"] = tasks[0].get("metric")
-        last_context["params"] = tasks[0].get("params")
+    used_memory_only = state.get("used_memory_only", False)
+    answer_context = build_answer_context(state)
 
     session_data.setdefault("turns", []).append({
         "question": state.get("question"),
@@ -653,13 +740,28 @@ def save_memory_node(state: AgentState) -> AgentState:
         "aggregation_type": aggregation_plan.get("aggregation_type"),
         "trace_file": state.get("trace_file"),
         "used_memory_only": state.get("used_memory_only", False),
+        "follow_up_suggestion_count": len(state.get("follow_up_suggestions", [])),
     })
 
-    session_data["last_context"] = last_context
+    session_data["last_answer"] = answer_context
+
+    if not used_memory_only:
+        analysis_context = build_analysis_context(state)
+        session_data["last_analysis_context"] = analysis_context
+        session_data["last_context"] = analysis_context
+        session_data["last_follow_up_suggestions"] = (
+            state.get("follow_up_suggestions") or []
+        )
+    else:
+        session_data["last_context"] = (
+            session_data.get("last_analysis_context")
+            or session_data.get("last_context")
+            or {}
+        )
 
     save_session(session_id, session_data)
 
     return {
         **state,
         "memory": session_data,
-    }    
+    }
