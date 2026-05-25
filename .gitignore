@@ -1,3 +1,5 @@
 __pycache__/
 *.pyc
+langgraph/sessions
+langgraph/traces
 venv/
